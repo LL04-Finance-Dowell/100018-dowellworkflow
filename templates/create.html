@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+Create Work Flow{% endblock %}
+
+{% block content %}
+
+<h1>Work Flow Create Form</h1>
+
+{% if message %}
+    <h3> {{ message }} </h3>
+{% endif%}
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" class="btn btn-outline-success" value="Create">
+</form>
+
+{% endblock %}
