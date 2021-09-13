@@ -37,6 +37,9 @@ Log Out</a>
 </div>
 </li>
 </ul>
+<div class="nav-right">
+<a href="{% url 'doc_new' %}">+ New Document</a>
+</div>
 {% else %}
 <form class="form-inline ml-auto">
 <a href="{% url 'login' %}" class="btn btn-outline-secondary">

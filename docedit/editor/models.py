@@ -1,7 +1,6 @@
 from django.db import models
-from django.urls import reverse
 from accounts.models import CustomUser
-
+from django.urls import reverse
 
 class Document(models.Model):
 	user = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name='document',null=True)
@@ -12,4 +11,9 @@ class Document(models.Model):
 
 	def __str__(self):
 		return self.title
+
+	# def get_absolute_url(self): 
+	# 	return reverse('doc_detail',  args=[str(self.id)])
+
+
 

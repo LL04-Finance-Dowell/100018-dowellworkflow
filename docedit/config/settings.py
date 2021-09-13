@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-&e$!s@q3ldo8@c6gt6*a$6#qle3!&h&ol^0cl*=3gumi$okzaq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['100018.pythonanywhere.com']
+ALLOWED_HOSTS = ['127.0.0.1','100018.pythonanywhere.com']
 
 
 # Application definition
@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'accounts',
     'pages',
     'crispy_forms',
-    'editor'
+    'editor',
+    'django_summernote'
 
 ]
 
@@ -138,3 +139,10 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR, 'media/'
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+SUMMERNOTE_THEME = 'bs4' 
