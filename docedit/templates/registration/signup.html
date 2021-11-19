@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Sign Up{% endblock title%}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/log_in-Sign_up.css' %}"/>
+<div id="login-content">
+    <div id="in-container">
+        <div class="container" style="background-color: #fff; max-width: 480px; border: 1px solid #c5c5c5; border-radius: 1%; padding-top: 15px; padding-bottom: 15px; margin-top: 15px; margin-bottom: 15px; box-shadow: 0px 0px 5px #c5c5c5;">
+                <div style="padding: 10px">
+                    <h2 class="form-heading">Sign Up</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+
+                        <button class="btn btn-success" type="submit" style="width: 100%">Sign Up</button>
+                    </form>
+                </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
