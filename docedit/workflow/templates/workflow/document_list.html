@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+Documents{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 640px;">
+{% if message %}
+    <h3> {{ message }} </h3>
+{% endif%}
+
+<h1 class="text-center">Documents List</h1>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Pending Step</th>
+      <th scope="col">Signing Link</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for document in object_list %}
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td>{{ document.document_name|title }}</td>
+      <td>
+            {% if document.internal_wf_step %}
+
+                {% if document.internal_wf_step == 'complete' %}
+                    {% if document.external_wf_step %}
+                        {{ document.external_wf_step|title }}
+
+                        {% for step in document.document_type.external_work_flow.steps.all %}
+                            {% if step.name == document.external_wf_step %}
+                                - {{ step.authority | title }}
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {{ document.internal_wf_step|title }}
+
+                        {% for step in document.document_type.internal_work_flow.steps.all %}
+                            {% if step.name == document.internal_wf_step %}
+                                - {{ step.authority | title }}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% else %}
+                    {{ document.internal_wf_step|title }}
+
+                    {% for step in document.document_type.internal_work_flow.steps.all %}
+                        {% if step.name == document.internal_wf_step %}
+                            - {{ step.authority | title }}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+            {% elif document.external_wf_step %}
+                {{ document.external_wf_step|title }}
+
+                {% for step in document.document_type.external_work_flow.steps.all %}
+                    {% if step.name == document.external_wf_step %}
+                        - {{ step.authority | title }}
+                    {% endif %}
+                {% endfor %}
+
+            {% else %}
+                Not in workflow
+            {% endif %}
+      </td>
+
+
+      <td>
+        {% if document.document_type.internal_work_flow is not None and document.internal_wf_step != 'complete' %}
+
+            {% for step in document.document_type.internal_work_flow.steps.all %}
+                {% if step.name == document.internal_wf_step and step.authority == request.user %}
+                    <a href="{% url 'workflow:verify-document' document.id %}">Sign It</a>
+                {% endif %}
+            {% endfor %}
+
+        {% elif document.document_type.external_work_flow is not None and document.external_wf_step != 'complete'%}
+
+            {% for step in document.document_type.external_work_flow.steps.all %}
+                {% if step.name == document.external_wf_step and step.authority == request.user %}
+                    <a href="{% url 'workflow:verify-document' document.id %}">Sign It</a>
+                {% endif %}
+            {% endfor %}
+
+        {% else %}
+
+        {% endif %}
+
+      </td>
+    </tr>
+    {% empty %}
+    <td colspan="5" class="text-center">
+        No documents for sign.
+    </td>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+</div>
+
+{% endblock %}
+
+
+
+
+

@@ -1,0 +1,317 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% load static %}
+{% block title %}
+Documents{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 720px;">
+{% if message %}
+    <h3> {{ message }} </h3>
+{% endif%}
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <h1 class="text-center">Document Types List</h1>
+    <a id="add-new-dt" class="btn btn-link" data-toggle="modal" data-target="#addWorkFlowModal">Add New</a>
+    <script>
+        const internalWFList = [];
+        const externalWFList = [];
+        var new_entry = true;
+    </script>
+</div>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Internal Steps</th>
+      <th scope="col">External Steps</th>
+      <th scope="col">Update</th>
+      <th scope="col">Delete</th>
+    </tr>
+  </thead>
+  <tbody id="tbody_dt">
+    {% for dt in object_list %}
+    <tr data-id="{{ dt.id }}">
+      <th scope="row">{{ forloop.counter }} </th>
+      <td>{{ dt.title|title }}</td>
+      <td>
+            {% if dt.internal_work_flow %}
+                {% for step in dt.internal_work_flow.steps.all %}
+                    {{ step.name }} - {{step.authority}}
+                {% endfor %}
+            {% else %}
+                No internal workflow
+            {% endif %}
+      </td>
+
+      <td>
+            {% if dt.external_work_flow %}
+                {% for step in dt.external_work_flow.steps.all %}
+                    {{ step }}
+                {% endfor %}
+            {% else %}
+                No external workflow
+            {% endif %}
+      </td>
+
+      <td>
+        <div style="display: none !important;" class="contentDIV">
+            <div>{{ dt.title }}</div>
+            <ul>
+                {% if dt.internal_work_flow %}
+                    {% for step in dt.internal_work_flow.steps.all %}
+                        <li>{{ step.name }},{{step.authority}}</li>
+                    {% endfor %}
+                {% else %}
+                    None
+                {% endif %}
+            </ul>
+            <ul>
+                {% if dt.external_work_flow %}
+                    {% for step in dt.external_work_flow.steps.all %}
+                        <li>{{ step.name }},{{step.authority}}</li>
+                    {% endfor %}
+                {% else %}
+                    None
+                {% endif %}
+            </ul>
+
+        </div>
+
+        {% if request.user.is_staff %}
+            <a class="btn btn-outline-secondary btn-sm up-wf">Update</a>
+        {% endif %}
+
+      </td>
+      <td>
+        {% if request.user.is_staff %}
+            <a class="btn btn-outline-danger btn-sm rm-wf">Remove</a>
+        {% endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <td colspan="5" class="text-center">
+        No document Type added.
+    </td>
+    {% endfor %}
+  </tbody>
+</table>
+<style type="text/css">
+    .contentDIV{
+        display: none !important;
+    }
+
+</style>
+
+
+
+
+
+<!-- Model HTML    -->
+<div class="modal fade" id="addWorkFlowModal" tabindex="-1" role="dialog" aria-labelledby="addWorkFlowModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Document Type Form</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+
+                    <div class="modal-body">
+                       <div class="form-group">
+                          <div class="row">
+                            <label for="documentType-title" class="form-label col-md-5">Document Type Title
+                              <span class="asteriskField">*</span></label>
+                            <input autofocus="true" type="text" class="form-control col-md-6" id="documentType-title"  required>
+                          </div>
+                          <small id="docTypeFieldError" class="text-danger"></small>
+                        </div>
+
+                        {% for wf in workflow %}
+                                <div class="mb-3">
+                                      <div class="form-group text-center">
+                                        <h4 class="text-info">{{ wf|title }} Work Flow</h4>
+                                      </div>
+
+                                        <table class="table table-sm table-hover table-dark">
+                                          <thead>
+                                            <tr>
+                                              <th scope="col" class="text-center"><small>Step No.</small></th>
+                                              <th scope="col" class="text-center"><small>Step Name</small></th>
+                                              <th scope="col" class="text-center"><small>Authority</small></th>
+                                              <th scope="col" class="text-center"></th>
+                                            </tr>
+                                          </thead>
+                                          <tbody id="{{wf}}_table">
+                                            <td colspan="4" class="text-center">
+                                                No Steps.
+                                            </td>
+                                          </tbody>
+                                        </table>
+                                        <div class="form-row" id="step-form">
+                                          <div class="col-md-5 mb-3">
+                                            <label for="{{ wf }}StepName" class="col-form-label-sm">Step Name</label>
+                                            <input type="text" class="form-control form-control-sm" id="{{ wf }}StepName" placeholder="Step Name" required>
+                                          </div>
+                                          <div class="col-md-5 mb-3">
+                                            <label for="authorityID" class="col-form-label-sm">Authority</label>
+                                            <select id="{{ wf }}authorityID" class="form-control form-control-sm">
+                                              <option selected>None</option>
+                                              {% for user in user_list %}
+                                                      <option>{{ user.username }}</option>
+                                              {% empty %}
+                                                  <option>None</option>
+                                              {% endfor %}
+                                            </select>
+                                          </div>
+                                          <div class="col-md-2 mb-3 d-flex justify-content-center align-items-center">
+                                            <a class="btn btn-primary" id="add_{{wf}}_step">Add</a>
+                                          </div>
+                                        </div>
+                                        <small class="text-danger" id="{{wf}}_step_form_error"></small>
+
+                              </div>
+                 {% endfor %}
+
+              <div class="modal-footer">
+                <a class="btn btn-outline-danger" data-dismiss="modal" id="close-modal">Cancel</a>
+                <a class="btn btn-outline-success" id="addDocumentType">Add Document Type</a>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+{% csrf_token %}
+
+<!-- script for this page - remove and update -->
+<script type="text/javascript">
+
+    const addBtn = document.getElementById('add-new-dt');
+    addBtn.onclick = (e) => {
+        const dtTitle = document.getElementById('documentType-title');
+        dtTitle.value = '';
+
+        const external_table = document.getElementById('external_table');
+        external_table.innerHTML = '';
+
+        if(e.isTrusted){
+            new_entry = true;
+            const internal_table = document.getElementById('internal_table');
+            internal_table.innerHTML = ''
+
+            if(internalWFList.length != 0){
+                while(internalWFList.length > 0){
+                    internalWFList.pop()
+                }
+            }
+            if(externalWFList.length != 0){
+                while(externalWFList.length > 0){
+                    externalWFList.pop()
+                }
+            }
+        }
+    };
+
+
+    const removeBtns = document.querySelectorAll('.rm-wf');
+    removeBtns.forEach((item, index, list) => {
+        item.onclick =  (e) => {
+            const this_id = e.target.parentNode.parentNode.dataset.id;
+
+            /* making remove request */
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const removeDTRequest = new Request('/workflow/wf_api/delete-wf/', {headers: {'X-CSRFToken': csrftoken}} );
+            requestBody = {
+              id: this_id
+            }
+
+            fetch(removeDTRequest, {
+                method: 'DELETE',
+                mode: 'same-origin',
+                body: JSON.stringify(requestBody)
+            }).then(async function(response) {
+                const responseJSON = await response.json();
+                console.log(responseJSON);
+                e.target.parentNode.parentNode.remove();
+            });
+
+        }
+    });
+
+    var update_ID = '';
+    var targetElement = '';
+    const updateBtns = document.querySelectorAll('.up-wf');
+    updateBtns.forEach((item, index, list) => {
+        item.onclick = (e) => {
+            const this_id = e.target.parentNode.parentNode.dataset.id;
+            const dataHTML = e.target.parentNode.children[0];
+
+            new_entry = false;
+            update_ID = this_id;
+            targetRowElement = e.target.parentNode.parentNode;
+
+            if(internalWFList.length != 0){
+                while(internalWFList.length > 0){
+                    internalWFList.pop()
+                }
+            }
+            if(externalWFList.length != 0){
+                while(externalWFList.length > 0){
+                    externalWFList.pop()
+                }
+            }
+
+            for( let i = 0; i < dataHTML.children[1].children.length ; i++){
+                let nm_auth = dataHTML.children[1].children[i].innerHTML.split(',');
+                let step = {
+                    name: nm_auth[0],
+                    authority: nm_auth[1]
+                }
+                internalWFList.push(step)
+            }
+
+            for( i = 0; i < dataHTML.children[2].children.length ; i++){
+                let nm_auth = dataHTML.children[2].children[i].innerHTML.split(',');
+                let step = {
+                    name: nm_auth[0],
+                    authority: nm_auth[1]
+                }
+                externalWFList.push(step)
+            }
+
+            document.getElementById('add-new-dt').click();
+
+            const dtTitle = document.getElementById('documentType-title');
+            dtTitle.value = dataHTML.children[0].innerHTML;
+
+            const internal_table = document.getElementById('internal_table');
+            internal_table.innerHTML = ''
+
+            internalWFList.map((item, index, list) => createRowInTable(item, list, internal_table));
+
+            const external_table = document.getElementById('external_table');
+            external_table.innerHTML = ''
+
+            externalWFList.map((item, index, list) => createRowInTable(item, list, external_table));
+
+        }
+    });
+
+</script>
+
+<!-- add new we model script -->
+<script type="text/javascript" src="{% static 'js/add_document_type.js' %}"></script>
+
+</div>
+
+{% endblock %}
+
+
+
+
+
