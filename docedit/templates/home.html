@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock title %}
+{% block content %}
+
+<style type="text/css">
+    .home-content-container{
+        display:  flex;
+        height: 100vh;
+        justify-content: center;
+        background-color: #343a40;
+
+        background-image: url("https://www.eitco.de/wp-content/uploads/2020/04/digitale-akte.jpg");
+    	background-repeat: no-repeat;
+    	background-position: center;
+    	background-size: cover;
+    }
+
+    #card-parent{
+        display: flex;
+        flex-direction: row;
+    }
+
+    .greet-heading{
+        background-color: #000000b5;
+        margin-bottom: 10px;
+        border-radius: 5%;
+    }
+
+    .card-container{
+        display: block;
+        width: 240px;
+        height: 200px;
+        margin: 10px;
+        background-color: #000c;
+        border-radius: 3%;
+        opacity: 0.8;
+    }
+
+    .card-container:hover{
+        box-shadow: 0px 0px 5px #fff;
+        opacity: 1.0;
+    }
+    .inner-card-container{
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: inherit;
+    }
+    .card-text{
+        color: #1cdfe6;
+    }
+
+    .card-title{
+        border-bottom: 2px solid #ff2020;
+        width: 100%;
+        color: #ffbe5c;
+    }
+    .png-images{
+        width: 100px;
+    }
+    .card-link1:hover{
+        text-decoration: none;
+    }
+
+     @media screen and (max-width: 720px) {
+        #card-parent{
+            flex-direction: column !important;
+        }
+
+     }
+
+
+</style>
+
+    <div class="home-content-container">
+			<div style="display: flex; flex-direction: column; justify-content: center;">
+				<h1 class="text-center text-white-50 greet-heading">Welcome {{ user.username|title }},</h1>
+				<div id="card-parent">
+                    <a class="card-link1" href="{% url 'editor:editor' %}">
+    					<div class="card-container">
+    					    <div class="inner-card-container">
+    					        <h5 class="card-title">Create Document</h5>
+        						<p class="card-text text-center">Create documents followed by workflow and approval process.</p>
+        						<!--img class="png-images" style="margin-block-end: 15px !important;" src="{% static 'template_images/work-flow2.png' %}"-->
+    					    </div>
+    					</div>
+    				</a>
+
+
+                    <a class="card-link1" href="{% url 'workflow:documents-in-workflow' %}">
+    					<div class="card-container">
+    					    <div class="inner-card-container">
+    					        <h5 class="card-title">Sign Document</h5>
+    					        <p class="card-text text-center">Save time with eSignatures and sign documents on few clicks.</p>
+    					        <!--img style="width: 160px !important; height: 85px; margin: 25px;" src="{% static 'template_images/sign.png' %}"-->
+    					    </div>
+    					</div
+					</a>
+
+                    <a class="card-link1" href="{% url 'workflow:created-document-list' %} ">
+    					<div class="card-container">
+    					    <div class="inner-card-container">
+    					        <h5 class="card-title">View Documents</h5>
+    					        <p class="card-text text-center">View and track status of your documents added in workflow and approval process.</p>
+    					        <!--img class="card-image-top png-images" src="{% static 'template_images/created.png' %}"-->
+    					    </div>
+    					</div>
+                    </a>
+				</div>
+			</div>
+
+
+
+	</div>
+
+{% endblock content %}
