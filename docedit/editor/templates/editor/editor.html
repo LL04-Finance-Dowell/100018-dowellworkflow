@@ -5,6 +5,7 @@ Create Document
 {% endblock %}
 
 {% block content %}
+
 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 <div style="display:none">
     <p id="current-user">{{ request.user }}</p>
@@ -53,6 +54,43 @@ Create Document
               </div>
               <!-- End Modal -->
 
+<!-- Begin Modal2  -->
+<div id="myModal2" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close2">&times;</span>
+                <!-- Editable table -->
+                <div class="table-content" id ="editable_table">
+                    <table class="table-light table table-borded table-responsive table-striped table-list" id="newModalTable">
+                        <thead class="table-light">
+                            <tr>
+                                <td>Sample</td>
+                                <td>Sample</td>
+                                <td>Sample</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                    <button class="btn btn-info" id="add"><span class="glyphicon glyphicon-plus-sign"></span>Add New Members</button>
+                    <button class="btn btn-success" id="addNewColumn"><span class="glyphicon glyphicon-edit-sign"></span>Add New Column</button>
+
+                <button id="submitTableChanges">Submit</button>
+                </div>
+                  <!-- Editable table -->
+
+                </div>
+
+            </div>
+            <!-- End Modal2 -->
+
         <div class="menu-container">
             <div style="display: flex; flex-direction:row; justify-content: space-around;">
                 <small id="file_id" style="display: none"></small>
@@ -83,7 +121,7 @@ Create Document
     <style>
 /* MOdal Css */
     /* The Modal (background) */
-.modal {
+.modal, .modal2  {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
@@ -97,7 +135,7 @@ Create Document
 }
 
 /* Modal Content/Box */
-.modal-content {
+.modal-content, .model-content2 {
   background-color: #fefefe;
   margin: 15% auto; /* 15% from the top and centered */
   padding: 20px;
@@ -106,7 +144,7 @@ Create Document
 }
 
 /* The Close Button */
-.close {
+.close, .close2 {
   color: #aaa;
   float: right;
   font-size: 28px;
@@ -114,7 +152,8 @@ Create Document
 }
 
 .close:hover,
-.close:focus {
+.close:focus, .close2:hover,
+.close2:focus  {
   color: black;
   text-decoration: none;
   cursor: pointer;
@@ -156,6 +195,10 @@ Create Document
     }
 
 /*end ofdropdown Styles*/
+
+
+
+
 
         .doc-container{
             display: block;
@@ -319,7 +362,7 @@ Create Document
                 resizing = true;
                 event.preventDefault();
                 const holder = event.target.parentNode;
-                //
+
                 const holderSize = (function () {
             	    const holderSize = {
             		    width : parseInt(holder.style.width.slice(0, -2)) ,
@@ -383,6 +426,7 @@ Create Document
             //Create Dropdown with id passed
             function getDropDownField(id){
                 //display automatic empty drop down
+                console.log("id = ".concat(id.toString()));
                 let dropDownDiv = document.createElement("address");
                 dropDownDiv.setAttribute("id", "dropDownDiv".concat(id.toString()));
                 dropDownDiv.setAttribute("class", "dropDownDiv");
@@ -409,23 +453,33 @@ Create Document
 
 //Create Table with id passed
             function getTableField(id){
-                //display automatic empty drop down
+                 //display Auto Tabel
+                console.log("getTable id = ".concat(id.toString()));
                 let tableDiv = document.createElement("address");
                 tableDiv.setAttribute("id", "tableDiv".concat(id.toString()));
                 tableDiv.setAttribute("class", "tableDiv");
-                tableDiv.style.width = "200px";
+                tableDiv.style.width = "70%";
+                tableDiv.style.height = "70%";
+                tableDiv.style.top = "inherit";
+                tableDiv.style.bottom = "inherit";
+                // tableDiv.style.width = "200px";
                 let table = document.createElement("table");
                 let thead = document.createElement("thead");
                 let tbody = document.createElement("tbody");
                 table.setAttribute("class", "form-table form-table-sm");
+                table.setAttribute("id", "t".concat(id.toString()));
+                table.style.height = "inherit";
+                table.style.width = "inherit";
+                table.style.top = "inherit";
+                table.style.bottom = "inherit";
                 // Creating and adding data to first row of the table
                 let row_1 = document.createElement('tr');
-                let heading_1 = document.createElement('th');
-                heading_1.innerHTML = "Sr. No.";
-                let heading_2 = document.createElement('th');
-                heading_2.innerHTML = "Name";
-                let heading_3 = document.createElement('th');
-                heading_3.innerHTML = "Company";
+                let heading_1 = document.createElement('td');
+                heading_1.innerHTML = "Sample Heading";
+                let heading_2 = document.createElement('td');
+                heading_2.innerHTML = "Sample Heading";
+                let heading_3 = document.createElement('td');
+                heading_3.innerHTML = "Sample Heading";
 
                 row_1.appendChild(heading_1);
                 row_1.appendChild(heading_2);
@@ -437,9 +491,9 @@ Create Document
                 let row_2_data_1 = document.createElement('td');
                 row_2_data_1.innerHTML = "1.";
                 let row_2_data_2 = document.createElement('td');
-                row_2_data_2.innerHTML = "James Clerk";
+                row_2_data_2.innerHTML = "Sample Input";
                 let row_2_data_3 = document.createElement('td');
-                row_2_data_3.innerHTML = "Netflix";
+                row_2_data_3.innerHTML = "Sample Input";
 
                 row_2.appendChild(row_2_data_1);
                 row_2.appendChild(row_2_data_2);
@@ -453,9 +507,9 @@ Create Document
                 let row_3_data_1 = document.createElement('td');
                 row_3_data_1.innerHTML = "2.";
                 let row_3_data_2 = document.createElement('td');
-                row_3_data_2.innerHTML = "Adam White";
+                row_3_data_2.innerHTML = "Sample Input";
                 let row_3_data_3 = document.createElement('td');
-                row_3_data_3.innerHTML = "Microsoft";
+                row_3_data_3.innerHTML = "Sample Input";
 
                 row_3.appendChild(row_3_data_1);
                 row_3.appendChild(row_3_data_2);
@@ -468,8 +522,107 @@ Create Document
                 return tableDiv;
 
             }
+            //Create The Table to fill in custom field values
+
+            function createTableForm(defaulTb){
+                             console.log(defaulTb);
+                var modal = document.getElementById("myModal2");
+                // Get the button that opens the modal
+                // var btn = document.getElementById("myBtn");
+                mdTable = document.getElementById("tbl");
+
+                let reqIdWitht = defaulTb.getAttribute('id');
+                reqId = reqIdWitht.match(/(\d+)/)[0];
+                console.log("reqId ".concat(reqId.toString()));
+                defaulTb.setAttribute("id", "tb".concat(reqId));
+                defaulTb.classList.add("table" ,"table-borded", "table-responsive", "table-striped", "table-list","table-light");
+                //Assigning
+                submitTableChanges  = document.getElementById("submitTableChanges");
+                changedTable  = document.getElementById("newModalTable");
+
+                // if (changedTable != "undefined" || changedTable != null){
+                    if(changedTable){
+                        changedTable.parentNode.replaceChild(defaulTb, changedTable);
+                }
+                else{
+                    element = document.getElementById("editable_table");
+                    element.append(defaulTb);
+                }
+
+                modal.style.display = "block";//apply
+                $(".table-list").SetEditable({
+                        $addButton: $('#add')
+                    });
+
+                submitTableChanges.onclick = (e) =>{
+                    e.preventDefault();
+
+                    changedTable  = document.getElementById("tb".concat(reqId));
+
+                divTable  = document.getElementById("tableDiv".concat(reqId));
+            //   if (document.getElementById(reqId)!= "undefined" || document.getElementById(reqId) != null){
+            if (document.getElementById(reqIdWitht)){
+                defaultTableField = document.getElementById(reqIdWitht);
+                console.log("default Table Normals times");
+
+                // console.log(defaultSelectField.parentNode);
+                // divDropDown.removeChild(defaultSelectField);
+                defaultTableField.parentNode.removeChild(defaultTableField);
+               }
+               var tr_length = changedTable.rows[1].cells.length
+               var changedTableLength = changedTable.rows.length;
+               if (changedTable.rows[1].cells[tr_length-1].classList.contains("crud_buttons")){
+
+               for (var y = 1; y < changedTableLength; y++){
+                   changedTable.rows[y].deleteCell(tr_length-1);
+                //    changedTable.rows[y].deleteCell(tr_length-2);
+               }
+            }
+                changedTable.deleteRow(0);
+               changedTable.setAttribute("id", reqIdWitht);
+               divTable.append(changedTable);
+                modal.style.display = "none";
+                }
 
 
+
+                // Get the <span> element that closes the modal
+
+                var span = document.getElementsByClassName("close2")[0];
+                span.onclick = function(e) {
+
+                    e.preventDefault();
+                    changedTable  = document.getElementById("tb".concat(reqId));
+
+divTable  = document.getElementById("tableDiv".concat(reqId));
+//   if (document.getElementById(reqId)!= "undefined" || document.getElementById(reqId) != null){
+if (document.getElementById(reqIdWitht)){
+defaultTableField = document.getElementById(reqIdWitht);
+console.log("default Table Normals times");
+
+// console.log(defaultSelectField.parentNode);
+// divDropDown.removeChild(defaultSelectField);
+defaultTableField.parentNode.removeChild(defaultTableField);
+}
+
+var tr_length = changedTable.rows[1].cells.length
+               var changedTableLength = changedTable.rows.length;
+               if (changedTable.rows[1].cells[tr_length-1].classList.contains("crud_buttons")){
+
+               for (var y = 1; y < changedTableLength; y++){
+                   changedTable.rows[y].deleteCell(tr_length-1);
+                //    changedTable.rows[y].deleteCell(tr_length-2);
+               }
+            }
+            changedTable.deleteRow(0);
+            changedTable.setAttribute("id", reqIdWitht);
+            divTable.append(changedTable);
+            modal.style.display = "none";
+                }
+
+
+
+}
 
 //Create The Dropdown Form to fill in custom field values
             function createDropDownForm (defaulSl){
@@ -566,10 +719,14 @@ Create Document
                 changedDropDown  = document.getElementById("sl".concat(reqId));
 
                 divDropDown  = document.getElementById("dropDownDiv".concat(reqId));
-               if (document.getElementById(reqId)!= undefined){
+            //   if (document.getElementById(reqId)!= "undefined" || document.getElementById(reqId) != null){
+            if (document.getElementById(reqId)){
                 defaultSelectField = document.getElementById(reqId);
-                console.log(defaultSelectField);
-                divDropDown.removeChild(defaultSelectField);
+                console.log("default selected Normals times");
+
+                // console.log(defaultSelectField.parentNode);
+                // divDropDown.removeChild(defaultSelectField);
+                defaultSelectField.parentNode.removeChild(defaultSelectField);
                }
                 changedDropDown.setAttribute("id", reqId);
                 divDropDown.append(changedDropDown);
@@ -581,17 +738,20 @@ Create Document
                     changedDropDown  = document.getElementById("sl".concat(reqId));
 
                 divDropDown  = document.getElementById("dropDownDiv".concat(reqId));
-               if (document.getElementById(reqId)!= undefined){
+            //   if (document.getElementById(reqId)!= "undefined" || document.getElementById(reqId)!= null){
+                if (document.getElementById(reqId)){
+                   console.log("deafult Selectf Field in spna click");
                 defaultSelectField = document.getElementById(reqId);
                 console.log(defaultSelectField);
-                divDropDown.removeChild(defaultSelectField);
+                // divDropDown.removeChild(defaultSelectField);
+                defaultSelectField.parentNode.removeChild(defaultSelectField);
                }
                 changedDropDown.setAttribute("id", reqId);
                 divDropDown.append(changedDropDown);
                 modal.style.display = "none";
-                modal.style.display = "none";
                 }
             }
+
             //Handle Edit when Clicked
             function  getEditBtn(){
                 const editBtn = document.createElement('span');
@@ -600,7 +760,7 @@ Create Document
                 editBtn.style.margin = '5px';
                 editBtn.className = 'closeBtn';
                 editBtn.innerHTML = '<i class="fas fa-edit" style="color: #000;"></i>';
-
+                editBtn.classList.add("float-right", "col-md-4");
                 editBtn.onmouseover = (event) => {
                     event.target.style.cursor = 'pointer';
                     event.target.style.color = '#f00';
@@ -613,26 +773,104 @@ Create Document
                 editBtn.onclick = (eventclk) => {
                     eventclk.preventDefault();
 
-                    var big_elemet = eventclk.target.parentNode.parentNode.parentNode.children
+                    var big_elemet = eventclk.target.parentNode.parentNode.children
                     var newSelect = "";
+                    var newSelectId= " ";
                     for(var i=0; i<big_elemet.length; i++){
                         childd = big_elemet[i];
                         if (childd.tagName == 'ADDRESS'){
-                        console.log(childd);
+                        console.log("i is address ".concat(i.toString()));
+                        console.log("child = ".concat(childd.toString()));
                         newSelect=childd;
+
+                    }else{
+                        console.log("i is NOT address ".concat(i.toString()));
+                        console.log("child = ".concat(childd.toString()));
+
                     }
                     }
-                    if (newSelect != undefined){
+                    // if (newSelect != "undefined" && newSelect != null){
+                    if(newSelect){
                     createDropDownForm(newSelect.children[0]);
+
                     }
                     else{
                         console.log("Undefined NewSelect");
+                        newSelectId = newSelect.getAttribute('id');
+                        var getDigit = newSelectId.match(/(\d+)/);
+                        console.log("newDigit = ".concat(getDigit.toString()));
+
+                        let myNewSelect = document.createElement("select");
+                        myNewSelect.setAttribute("id", getDigit.toString());
+                        createDropDownForm(myNewSelect);
+                    }
+                };
+                return editBtn;
+            }
+
+        //Handle Edit when Clicked
+         function  getEditTableBtn(){
+                 const editBtn = document.createElement('span');
+                editBtn.style.textAlign = 'center';
+                editBtn.style.fontSize = '0.8em';
+                editBtn.style.margin = '5px';
+                editBtn.className = 'closeBtn';
+                editBtn.setAttribute("id", "tableEditor");
+                editBtn.innerHTML = '<i class="fas fa-table" style="color: #000;"></i>';
+                editBtn.classList.add("float-right", "col-md-4");
+                editBtn.onmouseover = (event) => {
+                    event.target.style.cursor = 'pointer';
+                    event.target.style.color = '#f00';
+                };
+
+                editBtn.onmouseout = (event) => {
+                    event.target.style.color = '#000';
+                };
+
+                editBtn.onclick = (eventclk) => {
+                    eventclk.preventDefault();
+
+                    var big_elemet = eventclk.target.parentNode.parentNode.children
+                    console.log("big sjsjsj");
+                    console.log(big_elemet);
+                    var newTable = "";
+                    var newTableId = " ";
+                    for(var i=0; i<big_elemet.length; i++){
+                        childd = big_elemet[i];
+                        if (childd.tagName == 'ADDRESS'){
+                            console.log("i for table is address ".concat(i.toString()));
+                        console.log("table child = ".concat(childd.toString()));
+                        newTable=childd;
+                    }else{
+                        console.log("i for tableis NOT address ".concat(i.toString()));
+                        console.log(" table child = ".concat(childd.toString()));
+                    }
+                    }
+                    // if (newTable != undefined){
+                    if (newTable){
+                        console.log("Table ".concat(newTable.children[0]).toString());
+                        console.log("Passed Table Id ".concat(newTable.children[0].getAttribute("id").toString()));
+                    createTableForm(newTable.children[0]);
+                    // console.log("Passed Table Id ".concat(newTable.children[0].getAttribute("id").toString()));
+
+                    }
+                    else{
+                        console.log("Undefined NewTable");
+                        newTableId = childd.getAttribute('id');
+                        var getDigit = newTableId.match(/(\d+)/);
+                        console.log("newDigit = ".concat(getDigit[0].toString()));
+
+                        let myNewTable = document.createElement("table");
+                        myNewTable.setAttribute("id", "t".concat(getDigit[0].toString()));
+                        createTableForm(myNewTable);
 
                     }
 
                 };
                 return editBtn;
             }
+
+        // Date field
         function getDateField(value){
             let dd = undefined;
             if( value ){
@@ -690,7 +928,6 @@ Create Document
                 const cont = ev.target.parentNode
                 cont.replaceChild( image, ev.target);
             }
-
             return imgField;
         }
 
@@ -702,8 +939,7 @@ Create Document
             image.style.cursor = 'grab';
             image.setAttribute('draggable', false);
             image.setAttribute('contenteditable', true);
-
-            return image
+            return image;
         }
 
 
@@ -920,12 +1156,36 @@ Create Document
         }
 
         //Draggin element over page
-        function dragElementOverPage( event ) {
+        const dragElementOverPage = ( event ) => {
+            //holderDIV.setAttribute('data-idD', );
+            let holder;
             if(!resizing){
                 let initX = event.screenX;
                 let initY = event.screenY;
 
-                const holder = event.target;
+                // if(event.target.className === 'holderDIV'){
+                //     holder = event.target;
+                // }
+                /* Ensure That target has changed */
+                var counterCheck = true;
+                var tempTarget =  event.target;
+                var hitTarget = "";
+                while(counterCheck){
+
+                    // if(tempTarget.className === 'holderDIV'){
+                        if(tempTarget.classList.contains("holderDIV")){
+                        hitTarget = tempTarget;
+                        counterCheck = false;
+                    }
+                    tempTarget = tempTarget.parentNode;
+                    console.log("temp Target");
+                    console.log(tempTarget);
+                    console.log("hitTarget");
+                    console.log(hitTarget);
+
+                }
+
+                holder = hitTarget;
                 const holderPos = (function () {
                     const holderPos = {
                         top : parseInt(holder.style.top.slice(0, -2)),
@@ -990,6 +1250,36 @@ Create Document
             }
         };
 
+        function getHolderMenu(){
+            //putting functional menu on holder
+            const holderMenu = document.createElement('div');
+
+            holderMenu.style.display = 'flex';
+            holderMenu.style.alignItems = 'center';
+            holderMenu.style.justifyContent = 'space-around';
+            holderMenu.style.height = '35px';
+            holderMenu.style.width = '180px';
+            holderMenu.style.borderRadius = '0%';
+            holderMenu.style.position = 'absolute';
+            holderMenu.style.right = '0px';
+            holderMenu.style.top = '-40px';
+
+
+            holderMenu.style.backgroundColor = 'rgb(129 129 129 / 50%)';
+
+            holderMenu.className = 'holder-menu';
+
+            holderMenu.append(getSelectOptionsField());
+            holderMenu.append(getDeleteBtn());
+
+
+            // holderMenu.append(getEditBtn());
+            //holderMenu.style.transform = 'translateX(-50%)';
+
+            return holderMenu
+        }
+
+
         //Input field holder
         function getHolderDIV(measure){
             //creating holder for every input field over the page
@@ -997,6 +1287,7 @@ Create Document
             holderDIV.style.border = '1px dashed rgb(255 191 0)';
             holderDIV.style.position = 'absolute';
             holderDIV.style.overflow = 'visible';
+            holderDIV.style.display = 'flex';
             holderDIV.style.cursor = 'move';
             holderDIV.className = 'holderDIV';
             holderDIV.setAttribute('data-idD', 'INPUT_HOLDER');
@@ -1016,33 +1307,15 @@ Create Document
             const resizerBR = getResizer('bottom', 'right');
             holderDIV.append(resizerBR);
 
-            //putting functional menu on holder
-            const holderMenu = document.createElement('div');
-            holderMenu.style.position = 'absolute';
-            holderMenu.style.height = '30px';
-            holderMenu.style.minWidth = '150px';
-            holderMenu.style.right = '0px';
-            holderMenu.style.top = '-32px';
-            holderMenu.style.display = 'block';
-            holderMenu.style.borderRadius = '0%';
-            holderMenu.className = 'holder-menu';
-            holderMenu.style.backgroundColor = 'rgb(129 129 129 / 50%)';
-            //holderMenu.style.transform = 'translateX(-50%)';
-            holderMenu.append(getSelectOptionsField());
-            holderMenu.append(getDeleteBtn());
-            holderMenu.append(getEditBtn());
-
-
-
+            const holderMenu = getHolderMenu();
 
             holderDIV.append(holderMenu);
 
             holderDIV.onfocusin = focusInEvent;
 
-            holderDIV.addEventListener('mousedown', (event) => {
+            holderDIV.onmousedown = holderDIV.addEventListener('mousedown', (event) => {
                 dragElementOverPage(event)
             }, false);
-
             return holderDIV
         }
 
@@ -1078,6 +1351,7 @@ Create Document
 
             let inputField = document.createElement('div') ;
             inputField.setAttribute('draggable', false);
+            let editButtonField = undefined;
 
             switch ( typeOfOperation ) {
                 case 'TEXT_BUTTON':
@@ -1103,32 +1377,63 @@ Create Document
 
                 case 'TABLE':
                     inputField = undefined;
-                    holderDIV.setAttribute("class", "tableInput");
-                    var tableElements = document.querySelectorAll('.tableInput');
+                    // holderDIV.setAttribute("class", "tableInput");
+                    holderDIV.classList.add("tableInput");
+                    // holderDIV.append(getEditBtn());
+
+
+                    var tableElements = document.querySelectorAll('.tableDiv');
                     // console.log(dropDownElements[0])
                     var needed_length = tableElements.length
                     for (i = 0; i <needed_length ; i++) {
-                        tableElements[i].setAttribute("id", (i+1).toString() );
+                        // tableElements[i].setAttribute("id", (i+1).toString() );
+                        console.log("tableElements[i] count ".concat(i));
+                        console.log("tableElements[] before change ".concat(tableElements[i].getAttribute("id")));
+                        console.log("tableElements[i].parent before change".concat(tableElements[i].children[0].getAttribute("id")));
+                        tableElements[i].removeAttribute("id");
+                        tableElements[i].setAttribute("id", "tableDiv".concat((i+1).toString()))
+                        tableElements[i].children[0].removeAttribute("id");
+                        tableElements[i].children[0].setAttribute("id", "t".concat((i+1).toString()))
+                        var getDigit = "hdhdhd288888829292".match(/(\d+)/);
+                        console.log(getDigit[0]);
+                        console.log("newDigit = ".concat(getDigit.toString()));
+
+                        console.log("tableElements[i] atfter change".concat(tableElements[i].getAttribute("id")));
+                        console.log("tableElements[i].parent after change ".concat(tableElements[i].children[0].getAttribute("id")));
                     }
                     // alert(dropDown_length);
                     // textFHolder.setAttribute("id", )
                     inputField = getTableField(needed_length+1);
+                    editButtonField = getEditTableBtn();
                     break;
 
                 case 'DROPDOWN':
-                    holderDIV.setAttribute("class", "dropDown");
+                    // holderDIV.setAttribute("class", "dropDown");
+                    holderDIV.classList.add("dropDown");
                     // holderDIV.append(getEditBtn());
 
 
-                    var dropDownElements = document.querySelectorAll('.dropDown');
+                    var dropDownElements = document.querySelectorAll('.dropDownDiv');
                     // console.log(dropDownElements[0])
                     var needed_length = dropDownElements.length
                     for (i = 0; i <needed_length ; i++) {
-                        dropDownElements[i].setAttribute("id", (i+1).toString() );
+                        // dropDownElements[i].setAttribute("id", (i+1).toString() );
+
+                        console.log("dropDownElements[i] count ".concat(i));
+                        console.log("dropDownElements[i] before change ".concat(dropDownElements[i].getAttribute("id")));
+                        console.log("dropDownElements[i].parent before change".concat(dropDownElements[i].children[0].getAttribute("id")));
+                        dropDownElements[i].removeAttribute("id");
+                        dropDownElements[i].setAttribute("id", "dropDownDiv".concat((i+1).toString()))
+                        dropDownElements[i].children[0].removeAttribute("id");
+                        dropDownElements[i].children[0].setAttribute("id", (i+1).toString())
+                        console.log("dropDownElements[i] atfter change".concat(dropDownElements[i].getAttribute("id")));
+                        console.log("dropDownElements[i].parent after change ".concat(dropDownElements[i].children[0].getAttribute("id")));
+
                     }
                     // alert(dropDown_length);
                     // textFHolder.setAttribute("id", )
                     inputField = getDropDownField(needed_length+1);
+                    editButtonField = getEditBtn();
                     break;
 
                 default:
@@ -1144,8 +1449,12 @@ Create Document
             }
 
             holderDIV.append(inputField);
-            event.target.append(holderDIV);
+            if (editButtonField != undefined){
+                holderDIV.classList.add("clearfix");
+                holderDIV.append(editButtonField);
+            }
 
+            event.target.append(holderDIV);
             inputField.focus();
 
         };
@@ -1282,11 +1591,10 @@ Create Document
                 let inputField = undefined;
 
                 if( item.type === "TEXT_INPUT" ){
-
                     inputField = getTextField();
                     inputField.value = item.data;
-                }
 
+                }
 
                 if( item.type === "DATE_INPUT" ){
                     inputField = getDateField();
@@ -1296,6 +1604,10 @@ Create Document
                 if( item.type === "IMG_INPUT" ){
                     inputField = renderImageField();
                     inputField.src = item.data;
+                }
+
+                if ( item.authorized_user != currUser.innerHTML ){
+                    inputField.setAttribute('disabled', true);
                 }
 
                 holder.append(inputField)
@@ -1430,6 +1742,7 @@ Create Document
 
 
     </script>
+
 
 </div>
 {% endblock %}
