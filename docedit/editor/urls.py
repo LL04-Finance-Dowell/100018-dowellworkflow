@@ -7,16 +7,20 @@ from .views import DocumentCreateView, Editor, TemplateEditor, CreateTemplate, D
 app_name = 'editor'
 
 urlpatterns = [
+    #   editor related routes
     path('<int:id>/', login_required(Editor.as_view()), name="editor"),
     path('create-document/', login_required(DocumentCreateView.as_view()), name="create-document"),
     path('api/save-file/', login_required(views.save_file), name="save-file"),
     path('api/file-list/', login_required(views.get_files), name="files-list"),
     path('api/get-file/', login_required(views.editor_file), name="get-file"),
 
+
+    #   template related routes
     path('api/save-template/', login_required(views.save_template), name="save-template"),
     path('template-editor/<int:id>/', login_required(TemplateEditor.as_view()), name="template-editor"),
     path('create-template', login_required(CreateTemplate.as_view()), name="create-template"),
 
+    #   document related routes
     path('add-document/', login_required(DocumentWorkFlowAddView.as_view()), name="add-document"),
     path('created-document-list/', login_required(DocumentCreatedListView.as_view()), name='created-document-list'),
     path('documents-in-workflow/', login_required(DocumentExecutionListView.as_view()), name="documents-in-workflow"),
