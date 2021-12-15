@@ -1,0 +1,86 @@
+        <!-- Begin Modal  -->
+        <div id="myModal" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+              <span class="close">&times;</span>
+              <form id ="changeDropdownForm">
+                <label for="name">Item:</label>
+                <input type="text" id="name" placeholder="Enter Item" autocomplete="off">
+
+                <button id="addDropdownItemBtn">Add</button>
+
+                <label for="list">Item List:</label>
+                <div class = "dropDownDivModal">
+                <select class ="form-select form-select-sm" id="newModalDropdown" name="list" size = 1 >
+                    <option value = "0">0</option>
+                </select>
+                </div>
+                <button id="removeDropdownItemBtn">Remove Selected Item</button>
+                <button id="submitChanges">Submit</button>
+
+            </form>
+            </div>
+
+        </div>
+        <!-- End Modal -->
+
+        <!-- Begin Modal2  -->
+        <div id="myModal2" class="modal">
+
+            <!-- Modal content -->
+           <div class="modal-content">
+              <span class="close2">&times;</span>
+                        <!-- Editable table -->
+
+            <div class="table-content" id ="editable_table">
+                <table class="table table-borded table-striped table-list" id="newModalTable">
+                    <thead class="table-light">
+                        <tr>
+                            <td>Name</td>
+                            <td>Gental</td>
+                            <td>eMail</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <button class="btn btn-info" id="add"><span class="glyphicon glyphicon-plus-sign"></span>Add New Row</button>
+                <button class="btn btn-success" id="addNewColumn"><span class="glyphicon glyphicon-edit-sign"></span>Add New Column</button>
+
+
+                <button id="submitTableChanges">Submit</button>
+            </div>
+              <!-- Editable table -->
+
+            </div>
+
+         </div>
+        <!-- End Modal2 -->
+        <!-- Start of modal 3 -->
+        <div id="myModal3" class="modal">
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <span class="close3">&times;</span>
+                        <!-- Editable table -->
+                        <div class="dateFormatEditor" id="editableDateFormat">
+                            <h3>Choose Date Format </h3>
+                            <select id="myselect">
+                                <option value="DD, dd MM yyyy">eg Thursday, 14 January 2020</option>
+                                <option value="dd-mm-yy">eg 14-01-20</option>
+                                <option value="D, dd M yyyy">eg. Thur, 14 Jan 2020</option>
+                                <option value="mm-dd-yyyy">eg. 01-14-2020</option>
+                                <option value="dd-mm-yyyy">eg. 14-01-2020</option>
+                            </select>
+                            <button id="submitDateFormat">Submit</button>
+                        </div>
+                    <!-- Editable table -->
+                </div>
+            </div>
+        <!-- End of Modal 3     -->
