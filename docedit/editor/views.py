@@ -1,7 +1,6 @@
 import os
 import json
 import random
-from accounts.models import CustomUser
 from django.views.generic.list import ListView
 
 from django.shortcuts import render, redirect, get_object_or_404
@@ -12,10 +11,6 @@ from django.contrib import messages
 from django.views import View
 from .forms import CreateDocumentForm, CreateTemplateForm
 
-
-
-
-
 def get_name():
     chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0987654321'
     string = ''
@@ -24,6 +19,9 @@ def get_name():
         string += chars[random.randrange(0, len(chars) - 1 , 1)]
 
     return string
+
+
+
 
 
 def get_userlist(doc_type):
@@ -54,6 +52,7 @@ class Editor(View):
         doc_obj = {
             'id': document.id,
             'name': document.document_name,
+            'created_by': document.created_by.username,
             'auth_user_list': [user.username for user in document.auth_user_list.all()],
             'file': data,
             'verify': self.verify,
@@ -122,6 +121,8 @@ class TemplateEditor(Editor):
         doc_obj = {
             'id': document.id,
             'name': document.template_name,
+            'created_by': document.created_by.username,
+            'auth_user_list': [user.username for user in document.auth_user_list.all()],
             'file': data,
             'verify': self.verify,
             'template': self.is_template
@@ -153,14 +154,13 @@ def save_template(request):
 class CreateTemplate(View):
     is_template = True
     form = CreateTemplateForm()
-
     def get(self, request):
         context = {
             'form': self.form,
             'files': Template.objects.all()
         }
 
-        return render(request, 'editor/create_document.html', context=context)
+        return render(request, 'doc_template/create_template.html', context=context)
 
     def post(self, request, *args, **kwargs):
         form = CreateTemplateForm(request.POST)
@@ -171,12 +171,22 @@ class CreateTemplate(View):
             form.instance.file = path
             with open(path, 'w') as f:
                 f.write('')
+            form.instance.created_by = request.user
             template = form.save()
+
+            for usr in get_userlist(template.document_type):
+                template.auth_user_list.add(usr)
+
+            template.save()
             return redirect('editor:template-editor', id=template.id)
 
         else:
             messages.error(request, 'Unable to create template.')
-            return redirect('editor:create-template')
+            context = {
+                'form': self.form,
+                'files': Template.objects.all()
+            }
+            return render(request, 'doc_template/create_template.html', context=context)
 
 
 
@@ -395,5 +405,41 @@ def save_file(request):
 
 
     return JsonResponse({ 'status': 'OK' , 'file': file_obj})
+
+
+
+def request_document(request):
+    if request.method == 'POST':
+        form = RequestDocumentForm(request.POST)
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            print(form.cleaned_data)
+            path = os.path.join(settings.MEDIA_ROOT, get_name() + '.json')
+
+            template = Template.objects.filter(document_type=form.cleaned_data['document_type'])[0]
+
+            if template :
+                temp_path = template.file.path
+
+                with open(temp_path, 'r') as tempF:
+                    data = tempF.read()
+
+            with open(path, 'w') as f:
+                f.write(data)
+            doc = EditorFile(document_name=form.cleaned_data['document_name'], document_type=template.document_type, file=path, created_by=request.user)
+            doc.save()
+            for usr in get_userlist(doc.document_type):
+                doc.auth_user_list.add(usr)
+            doc.save()
+            print('Document saved...')
+            return redirect('editor:editor', id=doc.id)
+    else:
+        print('Form is invalid')
+        form = RequestDocumentForm();
+
+    return render(request, 'editor/request_document.html', {'form': form})
+
 
 '''
