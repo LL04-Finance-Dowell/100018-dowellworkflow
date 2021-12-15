@@ -6,125 +6,182 @@ Create Document
 
 {% block content %}
 
-<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+{% load static %}
+{{ document.id|json_script:"documentID" }}
+{{ document.name|json_script:"documentName" }}
+
+{% if document.auth_user_list %}
+    {{ document.auth_user_list|json_script:"auth_user_list" }}
+{% endif %}
+{{ document.file|json_script:"file-data" }}
+{{ document.verify|json_script:"verify" }}
+{{ document.template|json_script:"template" }}
+{{ document.created_by|json_script:"created_by" }}
+{{ request.user.username|json_script:"curr_user" }}
+
+
 <div style="display:none">
     <p id="current-user">{{ request.user }}</p>
     <ul id="user-list">
-    {% for user in users %}
+    {% for user in document.auth_user_list %}
         <li>{{ user }}</li>
     {% endfor %}
     </ul>
 </div>
 
+{% if document.template %}{% endif %}
+
+
+
 <div>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+
     <script src="https://unpkg.com/pdf-lib"></script>
-    <div style="display:flex; ">
-        <div class="doc-container">
+
+    <!--Beginning of Text Formatting Form-->
+     {% include 'editor/text_format.html' %}
+    <!--End of Text FOrmatting Form-->
+     <!--Modal classes-->
+    {% include 'editor/modal_classes.html' %}
+
+
+
+
+    <div class = "row">
+        <div class="doc-container col-md-9">
             <div class="page">
-                <div id="pdf-file" class="doc-content">
+                <div id="pdf-file" style = "width:90%;" class="doc-content">
 
                 </div>
             </div>
         </div>
 
-         <!-- Begin Modal  -->
-            <div id="myModal" class="modal">
 
-                <!-- Modal content -->
-                <div class="modal-content">
-                  <span class="close">&times;</span>
-                  <form id ="changeDropdownForm">
-                    <label for="name">Item:</label>
-                    <input type="text" id="name" placeholder="Enter Item" autocomplete="off">
 
-                    <button id="addDropdownItemBtn">Add</button>
 
-                    <label for="list">Item List:</label>
-                    <div class = "dropDownDivModal">
-                    <select class ="form-select form-select-sm" id="newModalDropdown" name="list" size = 1 >
-                        <option value = "0">0</option>
-                    </select>
+        <div class="menu-container col-md-3">
+            <!--<div style="display: flex; flex-direction:row; justify-content: space-around;">-->
+            <!--    <small id="file_id" style="display: none"></small>-->
+            <!--    <small id="file_name"></small>-->
+
+            <!--</div>-->
+            {% if request.user.username == document.created_by %}
+                <h6>Fields</h6>
+                <div class = "row">
+                    <div class = "col-md-12">
+                    <div class="button-container">
+                        <!--<div class= "row">-->
+                        <div id="edP-btn" class="drag-btn" draggable="true"><p class="btn-text">Editable P</p><i class="far fa-align-justify"></i></div>
+                        <div id="txt-btn" class="drag-btn" draggable="true"><p class="btn-text">Text</p><i class="fas fa-align-left"></i></div>
+                        <div id="img-btn" class="drag-btn" draggable="true"><p class="btn-text">Image</p><i class="far fa-image"></i></div>
+                        <div id="table-btn" class="drag-btn" draggable="true"><p class="btn-text">Table</p><i class="fas fa-table"></i></div>
+                        <div id="signature-btn" class="drag-btn" draggable="true"><p class="btn-text">Signature</p><i class="fas fa-signature"></i></div>
+                        <div id="date-btn" class="drag-btn" draggable="true"><p class="btn-text">Date</p><i class="fas fa-calendar-day"></i></div>
+                    <!--</div>-->
                     </div>
-                    <button id="removeDropdownItemBtn">Remove Selected Item</button>
-                    <button id="submitChanges">Submit</button>
-
-                </form>
+                    <div class = "button-container2">
+                   <div id="dropdown-btn" class="drag-btn mb-3"  draggable="true"><p class="btn-text">Dropdown</p><i class="far fa-list-alt"></i></div>
+                    </div>
+                    <!--<div class="button-container">-->
+                        <!--<div class= "row">-->
+                    <!--    <div id="signature-btn" class="drag-btn" draggable="true"><p class="btn-text">Signature</p><i class="fas fa-signature"></i></div>-->
+                    <!--    <div id="date-btn" class="drag-btn" draggable="true"><p class="btn-text">Date</p><i class="fas fa-calendar-day"></i></div>-->
+                    <!--    <div id="dropdown-btn" class="drag-btn" style ="display:none;" draggable="true"><p class="btn-text">Dropdown</p><i class="far fa-list-alt"></i></div>-->
+                    <!--</div>-->
+                    <!--</div>-->
                 </div>
-
-              </div>
-              <!-- End Modal -->
-
-<!-- Begin Modal2  -->
-<div id="myModal2" class="modal">
-
-    <!-- Modal content -->
-    <div class="modal-content">
-      <span class="close2">&times;</span>
-                <!-- Editable table -->
-                <div class="table-content" id ="editable_table">
-                    <table class="table-light table table-borded table-responsive table-striped table-list" id="newModalTable">
-                        <thead class="table-light">
-                            <tr>
-                                <td>Sample</td>
-                                <td>Sample</td>
-                                <td>Sample</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-                    <button class="btn btn-info" id="add"><span class="glyphicon glyphicon-plus-sign"></span>Add New Members</button>
-                    <button class="btn btn-success" id="addNewColumn"><span class="glyphicon glyphicon-edit-sign"></span>Add New Column</button>
-
-                <button id="submitTableChanges">Submit</button>
+            {% endif %}
+                <div class = "col-md-12">{% csrf_token %}
+                    {% if document.verify %}
+                        <h3>Sign, Save and submit</h3>
+                        <form method="post">{% csrf_token %}
+                            <input type="hidden" name="id_" value="{{  document.id }}" />
+                            <input type="hidden" name="documentData" id="documentData"/>
+                            <button onclick="signSubmit()" class="btn btn-outline-info">Save Signature</button>
+                            <input style="display: none" type="submit" class="btn btn-outline-success mt-3" id="Signed"/>
+                        </form>
+                    {% elif document.template %}
+                        <button id='save-template-btn' class="btn btn-outline-success mt-3">Save Template</button>
+                    {% else %}
+                        <a style="display:none" class="btn btn-outline-primary mt-3" id="show-btn">Show PDF</a>
+                        <iframe id="pdf" style="display: none; width: 100%; height: 100vh;"></iframe>
+                        <button id="addToWorkFlowButton" class="btn btn-outline-primary mt-3"/ type="submit">Process Document</button>
+                        <button id='save-btn' class="btn btn-outline-success mt-3">Save Document</button>
+                    {% endif %}
                 </div>
-                  <!-- Editable table -->
-
-                </div>
-
             </div>
-            <!-- End Modal2 -->
-
-        <div class="menu-container">
-            <div style="display: flex; flex-direction:row; justify-content: space-around;">
-                <small id="file_id" style="display: none"></small>
-                <small id="file_name"></small>
-
-            </div>
-            <h6>Fields</h6>
-            <div class="button-container">
-                <div id="txt-btn" class="drag-btn" draggable="true"><p class="btn-text">Text</p><i class="fas fa-align-left"></i></div>
-                <div id="img-btn" class="drag-btn" draggable="true"><p class="btn-text">Image</p><i class="far fa-image"></i></div>
-                <div id="table-btn" class="drag-btn" draggable="true"><p class="btn-text">Table</p><i class="fas fa-table"></i></div>
-                <div id="signature-btn" class="drag-btn" draggable="true"><p class="btn-text">Signature</p><i class="fas fa-signature"></i></div>
-                <div id="date-btn" class="drag-btn" draggable="true"><p class="btn-text">Date</p><i class="fas fa-calendar-day"></i></div>
-                <div id="dropdown-btn" class="drag-btn" draggable="true"><p class="btn-text">Dropdown</p><i class="far fa-list-alt"></i></div>
-
-            </div>{% csrf_token %}
-            <button id='save-btn' class="btn btn-outline-success mt-3">Save</button>
-
-            <a class="btn btn-outline-primary mt-3" href="{% url 'workflow:add-document' %}">Add In WorkFlow</a>
-            <a style="display:none" class="btn btn-outline-primary mt-3" id="show-btn">Show PDF</a>
-            <button class="btn btn-outline-primary mt-3" id="view-files">View files</button>
-            <iframe id="pdf" style="display: none; width: 100%; height: 100vh;"></iframe>
 
         </div>
 
     </div>
 
     <style>
+
+/*Table CSS*/
+table, th, td{
+    border: 1px solid #ddd;
+    empty-cells: show;
+  /*padding: 8px;*/
+
+}
+table, th, td{
+    border: 1px solid #ddd;
+    empty-cells: show;
+  /*padding: 8px;*/
+
+}
+thead, tbody{
+    width: inherit;
+
+}
+
+/* Border styles*/
+.boxed-md.boxed-padded {
+    padding-bottom: 13px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.boxed-md {
+    border: 1px solid #ccc;
+    margin-bottom: 14px;
+    margin-top: 14px;
+}
+
+.boxed-md>.text-center .h3 {
+    background-color: #fff;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.h3 {
+    margin-top: 15px;
+    margin-bottom:18px;
+       font-size: 20px;
+}
+.boxed-md>.text-center {
+    margin-top: -12px;
+    margin-bottom: 12px;
+}
+
+#modalTxtForm{
+    position: absolute;
+  left: 0px;
+  top: 0px;
+  z-index: 10;
+    display:none;
+}
+.compFormArticle {
+    /*background-color: #e1e0e9;*/
+     background-color:#5a6268;
+}
+/*End of border styles*/
 /* MOdal Css */
     /* The Modal (background) */
+
 .modal, .modal2  {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  z-index: 10; /* Sit on top */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -224,12 +281,14 @@ Create Document
         }
 
         .menu-container{
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            display: block;
+            /*flex-direction: column;*/
+            /*align-items: center;*/
 
             margin: 10px auto;
         }
+
+
 
         ::-webkit-resizer {
           display: none;
@@ -240,6 +299,16 @@ Create Document
             grid-template-columns: 48% 48%;
             grid-gap: 10px;
             height: 200px;
+            width: 280px;
+            padding: 10px;
+            align-items: center;
+
+        }
+        .button-container2{
+            display: grid;
+            grid-template-columns: 48% 48%;
+            grid-gap: 10px;
+            height: 67px;
             width: 280px;
             padding: 10px;
             align-items: center;
@@ -260,7 +329,7 @@ Create Document
 
         }
 
-        .holderDIV::hover {
+        .holderDIV:hover {
             border: 1px dashed rgb(255 191 0);
         }
 
@@ -286,1463 +355,12 @@ Create Document
         }
 
     </style>
-
-
-    <script>
-
-        const fileContent = [];
-
-        let resizing = false;
-
-        const txtBtn = document.getElementById("txt-btn");
-        const imgBtn = document.getElementById("img-btn");
-        const tableBtn = document.getElementById("table-btn");
-        const dateBtn = document.getElementById("date-btn");
-        const signatureBtn = document.getElementById("signature-btn");
-        const dropDownBtn = document.getElementById("dropdown-btn");
-
-        txtBtn.ondragstart = (event) => {
-            event.dataTransfer.setData("text/plain", "TEXT_BUTTON");
-        }
-
-        imgBtn.ondragstart = (event) => {
-            event.dataTransfer.setData("text/plain", "IMG_BUTTON");
-        }
-
-        tableBtn.ondragstart = (event) => {
-            event.dataTransfer.setData("text/plain", "TABLE");
-        }
-
-        dateBtn.ondragstart = (event) => {
-            event.dataTransfer.setData("text/plain", "DATE");
-        }
-
-        signatureBtn.ondragstart = (event) => {
-            event.dataTransfer.setData("text/plain", "SIGN");
-        }
-        dropDownBtn.ondragstart = (event) => {
-                event.dataTransfer.setData("text/plain", "DROPDOWN");
-            }
-
-        function getResizer(attr1, attr2){
-            const resizer = document.createElement('span');
-            resizer.style.width = '5px';
-            resizer.style.height = '5px';
-            resizer.style.display = 'block';
-            resizer.className = 'resizeBtn';
-            resizer.style.position = 'absolute';
-            resizer.style.backgroundColor = '#00aaff';
-
-            if ( attr1 === 'top') {
-                resizer.style.top = '-3px';
-            } else {
-                resizer.style.bottom = '-3px';
-            }
-
-            if ( attr2 === 'left') {
-                resizer.style.left = '-3px';
-            } else {
-                resizer.style.right = '-3px';
-            }
-
-            if ( attr1 == 'top' && attr2 === 'right' || attr1 == 'bottom' && attr2 === 'left'){
-                resizer.onmouseover = (event) => {
-                    event.target.style.cursor = 'nesw-resize';
-                };
-            } else {
-                resizer.onmouseover = (event) => {
-                    event.target.style.cursor = 'nwse-resize';
-                };
-            }
-
-
-            resizer.onmousedown = (event) => {
-                let initX = event.screenX;
-                let initY = event.screenY;
-                resizing = true;
-                event.preventDefault();
-                const holder = event.target.parentNode;
-
-                const holderSize = (function () {
-            	    const holderSize = {
-            		    width : parseInt(holder.style.width.slice(0, -2)) ,
-                        height : parseInt(holder.style.height.slice(0, -2)),
-                        top : parseInt(holder.style.top.slice(0, -2)),
-            	        left : parseInt(holder.style.left.slice(0, -2))//elemLeft : 0
-            	    }
-                	return Object.seal(holderSize);
-                })();
-
-                window.addEventListener('mousemove', resizeElement);
-                function resizeElement(ev) {
-                    if(attr1 == 'bottom' && attr2 == 'right') {
-                        holder.style.width = ((ev.screenX - initX) + holderSize.width) + 'px';
-                        holder.style.height = ((ev.screenY - initY) + holderSize.height) + 'px'
-                    } else if(attr1 == 'bottom' && attr2 == 'left')  {
-                        holder.style.left = (holderSize.left + (ev.screenX - initX)) + 'px';
-                        holder.style.width = (holderSize.width - (ev.screenX - initX)) + 'px';
-                        holder.style.height = ((ev.screenY - initY) + holderSize.height) + 'px';
-                    } else if(attr1 == 'top' && attr2 == 'left')  {
-                        holder.style.top = (holderSize.top + (ev.screenY - initY)) + 'px';
-                        holder.style.left = (holderSize.left + (ev.screenX - initX)) + 'px';
-                        holder.style.width = (holderSize.width - (ev.screenX - initX)) + 'px';
-                        holder.style.height = (holderSize.height - (ev.screenY - initY)) + 'px';
-                    } else if(attr1 == 'top' && attr2 == 'right')  {
-                        holder.style.top = (holderSize.top + (ev.screenY - initY)) + 'px';
-                        holder.style.width = (holderSize.width + (ev.screenX - initX)) + 'px';
-                        holder.style.height = (holderSize.height - (ev.screenY - initY)) + 'px';
-                    }
-
-                }
-
-                window.addEventListener('mouseup', stopResizing);
-                function stopResizing(ev){
-                    window.removeEventListener('mousemove', resizeElement);
-                    window.removeEventListener('mouseup', stopResizing);
-                    resizing = false;
-
-                }
-            }
-            return resizer;
-        }
-
-        function getTextField(){
-            const textField = document.createElement('textarea');
-            textField.type = 'text';
-            textField.style.width = '100%';
-            textField.style.height = '80%';
-            textField.style.margin = '1%';
-            textField.style.fontSize = '1em';
-            textField.style.border = 'none';
-            textField.style.resize = 'none';
-            textField.style.backgroundColor = '#0000';
-            textField.style.borderRadius = '0px';
-            textField.style.outline = '0px';
-            textField.style.overflow = 'overlay';
-
-            return textField;
-        }
-
-            //Create Dropdown with id passed
-            function getDropDownField(id){
-                //display automatic empty drop down
-                console.log("id = ".concat(id.toString()));
-                let dropDownDiv = document.createElement("address");
-                dropDownDiv.setAttribute("id", "dropDownDiv".concat(id.toString()));
-                dropDownDiv.setAttribute("class", "dropDownDiv");
-                dropDownDiv.style.width = "200px";
-
-                let selectField = document.createElement('select');
-
-                selectField.setAttribute("id", id.toString());
-                // selectField.setAttribute("class", "selectDropDown");
-                selectField.setAttribute("class", "form-select form-select-sm");
-
-
-
-
-                let defaultOptionField = document.createElement('option');
-                defaultOptionField.value="0"
-                defaultOptionField.text = " "
-                selectField.add(defaultOptionField)
-
-                dropDownDiv.append(selectField)
-                return dropDownDiv;
-
-            }
-
-//Create Table with id passed
-            function getTableField(id){
-                 //display Auto Tabel
-                console.log("getTable id = ".concat(id.toString()));
-                let tableDiv = document.createElement("address");
-                tableDiv.setAttribute("id", "tableDiv".concat(id.toString()));
-                tableDiv.setAttribute("class", "tableDiv");
-                tableDiv.style.width = "70%";
-                tableDiv.style.height = "70%";
-                tableDiv.style.top = "inherit";
-                tableDiv.style.bottom = "inherit";
-                // tableDiv.style.width = "200px";
-                let table = document.createElement("table");
-                let thead = document.createElement("thead");
-                let tbody = document.createElement("tbody");
-                table.setAttribute("class", "form-table form-table-sm");
-                table.setAttribute("id", "t".concat(id.toString()));
-                table.style.height = "inherit";
-                table.style.width = "inherit";
-                table.style.top = "inherit";
-                table.style.bottom = "inherit";
-                // Creating and adding data to first row of the table
-                let row_1 = document.createElement('tr');
-                let heading_1 = document.createElement('td');
-                heading_1.innerHTML = "Sample Heading";
-                let heading_2 = document.createElement('td');
-                heading_2.innerHTML = "Sample Heading";
-                let heading_3 = document.createElement('td');
-                heading_3.innerHTML = "Sample Heading";
-
-                row_1.appendChild(heading_1);
-                row_1.appendChild(heading_2);
-                row_1.appendChild(heading_3);
-                thead.appendChild(row_1);
-
-                // Creating and adding data to second row of the table
-                let row_2 = document.createElement('tr');
-                let row_2_data_1 = document.createElement('td');
-                row_2_data_1.innerHTML = "1.";
-                let row_2_data_2 = document.createElement('td');
-                row_2_data_2.innerHTML = "Sample Input";
-                let row_2_data_3 = document.createElement('td');
-                row_2_data_3.innerHTML = "Sample Input";
-
-                row_2.appendChild(row_2_data_1);
-                row_2.appendChild(row_2_data_2);
-                row_2.appendChild(row_2_data_3);
-                tbody.appendChild(row_2);
-
-
-
-                // Creating and adding data to third row of the table
-                let row_3 = document.createElement('tr');
-                let row_3_data_1 = document.createElement('td');
-                row_3_data_1.innerHTML = "2.";
-                let row_3_data_2 = document.createElement('td');
-                row_3_data_2.innerHTML = "Sample Input";
-                let row_3_data_3 = document.createElement('td');
-                row_3_data_3.innerHTML = "Sample Input";
-
-                row_3.appendChild(row_3_data_1);
-                row_3.appendChild(row_3_data_2);
-                row_3.appendChild(row_3_data_3);
-                tbody.appendChild(row_3);
-
-                table.appendChild(thead);
-                table.appendChild(tbody);
-                tableDiv.append(table);
-                return tableDiv;
-
-            }
-            //Create The Table to fill in custom field values
-
-            function createTableForm(defaulTb){
-                             console.log(defaulTb);
-                var modal = document.getElementById("myModal2");
-                // Get the button that opens the modal
-                // var btn = document.getElementById("myBtn");
-                mdTable = document.getElementById("tbl");
-
-                let reqIdWitht = defaulTb.getAttribute('id');
-                reqId = reqIdWitht.match(/(\d+)/)[0];
-                console.log("reqId ".concat(reqId.toString()));
-                defaulTb.setAttribute("id", "tb".concat(reqId));
-                defaulTb.classList.add("table" ,"table-borded", "table-responsive", "table-striped", "table-list","table-light");
-                //Assigning
-                submitTableChanges  = document.getElementById("submitTableChanges");
-                changedTable  = document.getElementById("newModalTable");
-
-                // if (changedTable != "undefined" || changedTable != null){
-                    if(changedTable){
-                        changedTable.parentNode.replaceChild(defaulTb, changedTable);
-                }
-                else{
-                    element = document.getElementById("editable_table");
-                    element.append(defaulTb);
-                }
-
-                modal.style.display = "block";//apply
-                $(".table-list").SetEditable({
-                        $addButton: $('#add')
-                    });
-
-                submitTableChanges.onclick = (e) =>{
-                    e.preventDefault();
-
-                    changedTable  = document.getElementById("tb".concat(reqId));
-
-                divTable  = document.getElementById("tableDiv".concat(reqId));
-            //   if (document.getElementById(reqId)!= "undefined" || document.getElementById(reqId) != null){
-            if (document.getElementById(reqIdWitht)){
-                defaultTableField = document.getElementById(reqIdWitht);
-                console.log("default Table Normals times");
-
-                // console.log(defaultSelectField.parentNode);
-                // divDropDown.removeChild(defaultSelectField);
-                defaultTableField.parentNode.removeChild(defaultTableField);
-               }
-               var tr_length = changedTable.rows[1].cells.length
-               var changedTableLength = changedTable.rows.length;
-               if (changedTable.rows[1].cells[tr_length-1].classList.contains("crud_buttons")){
-
-               for (var y = 1; y < changedTableLength; y++){
-                   changedTable.rows[y].deleteCell(tr_length-1);
-                //    changedTable.rows[y].deleteCell(tr_length-2);
-               }
-            }
-                changedTable.deleteRow(0);
-               changedTable.setAttribute("id", reqIdWitht);
-               divTable.append(changedTable);
-                modal.style.display = "none";
-                }
-
-
-
-                // Get the <span> element that closes the modal
-
-                var span = document.getElementsByClassName("close2")[0];
-                span.onclick = function(e) {
-
-                    e.preventDefault();
-                    changedTable  = document.getElementById("tb".concat(reqId));
-
-divTable  = document.getElementById("tableDiv".concat(reqId));
-//   if (document.getElementById(reqId)!= "undefined" || document.getElementById(reqId) != null){
-if (document.getElementById(reqIdWitht)){
-defaultTableField = document.getElementById(reqIdWitht);
-console.log("default Table Normals times");
-
-// console.log(defaultSelectField.parentNode);
-// divDropDown.removeChild(defaultSelectField);
-defaultTableField.parentNode.removeChild(defaultTableField);
-}
-
-var tr_length = changedTable.rows[1].cells.length
-               var changedTableLength = changedTable.rows.length;
-               if (changedTable.rows[1].cells[tr_length-1].classList.contains("crud_buttons")){
-
-               for (var y = 1; y < changedTableLength; y++){
-                   changedTable.rows[y].deleteCell(tr_length-1);
-                //    changedTable.rows[y].deleteCell(tr_length-2);
-               }
-            }
-            changedTable.deleteRow(0);
-            changedTable.setAttribute("id", reqIdWitht);
-            divTable.append(changedTable);
-            modal.style.display = "none";
-                }
-
-
-
-}
-
-//Create The Dropdown Form to fill in custom field values
-            function createDropDownForm (defaulSl){
-               defaulSl.setAttribute("name", "list");
-                defaulSl.setAttribute("size", 1);
-                let reqId = defaulSl.getAttribute('id');
-                defaulSl.setAttribute("id", "sl".concat(reqId));
-                defaulSl.addEventListener('change', function() {
-                    this.setAttribute("selected", true);
-                        });
-                submitChangesBtn  = document.getElementById("submitChanges");
-                changedDropDown  = document.getElementById("newModalDropdown");
-
-                if (changedDropDown != undefined){
-                changedDropDown.parentNode.replaceChild(defaulSl, changedDropDown);
-                }
-                else{
-                    element = document.getElementById("changeDropdownForm");
-                    element.append(defaulSl);
-                }
-
-
-
-
-
-
-
-
-        const addDropdownItemBtn = document.querySelector('#addDropdownItemBtn');
-        const removeDropdownItemBtn = document.querySelector('#removeDropdownItemBtn');
-
-        const inputItem = document.querySelector('#name');
-
-
-            addDropdownItemBtn.onclick = (e) => {
-            e.preventDefault();
-            let newDropdown = document.querySelector("#sl".concat(reqId));
-            // validate the option
-            if (inputItem.value == '') {
-                alert('Please enter the name.');
-                return;
-            }
-            // create a new option
-            const option = new Option(inputItem.value, inputItem.value);
-            // add it to the list
-            newDropdown.add(option, undefined);
-
-            // reset the value of the input
-            inputItem.value = '';
-            inputItem.focus();
-        };
-
-        // remove selected option
-        removeDropdownItemBtn.onclick = (e) => {
-            e.preventDefault();
-            let newDropdown = document.querySelector("#sl".concat(reqId));
-            // save the selected option
-            let selected = [];
-
-            for (let i = 0; i < newDropdown.options.length; i++) {
-                selected[i] = newDropdown.options[i].selected;
-            }
-
-            // remove all selected option
-            let index = newDropdown.options.length;
-            while (index--) {
-                if (selected[index]) {
-                    newDropdown.remove(index);
-                }
-            }
-        };
-
-
-
-
-
-
-                var modal = document.getElementById("myModal");
-                // Get the button that opens the modal
-                var btn = document.getElementById("myBtn");
-
-                // Get the <span> element that closes the modal
-                var span = document.getElementsByClassName("close")[0];
-
-                modal.style.display = "block";
-
-
-
-
-
-               submitChangesBtn.onclick = (e) =>{
-                    e.preventDefault();
-
-                changedDropDown  = document.getElementById("sl".concat(reqId));
-
-                divDropDown  = document.getElementById("dropDownDiv".concat(reqId));
-            //   if (document.getElementById(reqId)!= "undefined" || document.getElementById(reqId) != null){
-            if (document.getElementById(reqId)){
-                defaultSelectField = document.getElementById(reqId);
-                console.log("default selected Normals times");
-
-                // console.log(defaultSelectField.parentNode);
-                // divDropDown.removeChild(defaultSelectField);
-                defaultSelectField.parentNode.removeChild(defaultSelectField);
-               }
-                changedDropDown.setAttribute("id", reqId);
-                divDropDown.append(changedDropDown);
-                modal.style.display = "none";
-                }
-
-                span.onclick = function(e) {
-                      e.preventDefault();
-                    changedDropDown  = document.getElementById("sl".concat(reqId));
-
-                divDropDown  = document.getElementById("dropDownDiv".concat(reqId));
-            //   if (document.getElementById(reqId)!= "undefined" || document.getElementById(reqId)!= null){
-                if (document.getElementById(reqId)){
-                   console.log("deafult Selectf Field in spna click");
-                defaultSelectField = document.getElementById(reqId);
-                console.log(defaultSelectField);
-                // divDropDown.removeChild(defaultSelectField);
-                defaultSelectField.parentNode.removeChild(defaultSelectField);
-               }
-                changedDropDown.setAttribute("id", reqId);
-                divDropDown.append(changedDropDown);
-                modal.style.display = "none";
-                }
-            }
-
-            //Handle Edit when Clicked
-            function  getEditBtn(){
-                const editBtn = document.createElement('span');
-                editBtn.style.textAlign = 'center';
-                editBtn.style.fontSize = '0.8em';
-                editBtn.style.margin = '5px';
-                editBtn.className = 'closeBtn';
-                editBtn.innerHTML = '<i class="fas fa-edit" style="color: #000;"></i>';
-                editBtn.classList.add("float-right", "col-md-4");
-                editBtn.onmouseover = (event) => {
-                    event.target.style.cursor = 'pointer';
-                    event.target.style.color = '#f00';
-                };
-
-                editBtn.onmouseout = (event) => {
-                    event.target.style.color = '#000';
-                };
-
-                editBtn.onclick = (eventclk) => {
-                    eventclk.preventDefault();
-
-                    var big_elemet = eventclk.target.parentNode.parentNode.children
-                    var newSelect = "";
-                    var newSelectId= " ";
-                    for(var i=0; i<big_elemet.length; i++){
-                        childd = big_elemet[i];
-                        if (childd.tagName == 'ADDRESS'){
-                        console.log("i is address ".concat(i.toString()));
-                        console.log("child = ".concat(childd.toString()));
-                        newSelect=childd;
-
-                    }else{
-                        console.log("i is NOT address ".concat(i.toString()));
-                        console.log("child = ".concat(childd.toString()));
-
-                    }
-                    }
-                    // if (newSelect != "undefined" && newSelect != null){
-                    if(newSelect){
-                    createDropDownForm(newSelect.children[0]);
-
-                    }
-                    else{
-                        console.log("Undefined NewSelect");
-                        newSelectId = newSelect.getAttribute('id');
-                        var getDigit = newSelectId.match(/(\d+)/);
-                        console.log("newDigit = ".concat(getDigit.toString()));
-
-                        let myNewSelect = document.createElement("select");
-                        myNewSelect.setAttribute("id", getDigit.toString());
-                        createDropDownForm(myNewSelect);
-                    }
-                };
-                return editBtn;
-            }
-
-        //Handle Edit when Clicked
-         function  getEditTableBtn(){
-                 const editBtn = document.createElement('span');
-                editBtn.style.textAlign = 'center';
-                editBtn.style.fontSize = '0.8em';
-                editBtn.style.margin = '5px';
-                editBtn.className = 'closeBtn';
-                editBtn.setAttribute("id", "tableEditor");
-                editBtn.innerHTML = '<i class="fas fa-table" style="color: #000;"></i>';
-                editBtn.classList.add("float-right", "col-md-4");
-                editBtn.onmouseover = (event) => {
-                    event.target.style.cursor = 'pointer';
-                    event.target.style.color = '#f00';
-                };
-
-                editBtn.onmouseout = (event) => {
-                    event.target.style.color = '#000';
-                };
-
-                editBtn.onclick = (eventclk) => {
-                    eventclk.preventDefault();
-
-                    var big_elemet = eventclk.target.parentNode.parentNode.children
-                    console.log("big sjsjsj");
-                    console.log(big_elemet);
-                    var newTable = "";
-                    var newTableId = " ";
-                    for(var i=0; i<big_elemet.length; i++){
-                        childd = big_elemet[i];
-                        if (childd.tagName == 'ADDRESS'){
-                            console.log("i for table is address ".concat(i.toString()));
-                        console.log("table child = ".concat(childd.toString()));
-                        newTable=childd;
-                    }else{
-                        console.log("i for tableis NOT address ".concat(i.toString()));
-                        console.log(" table child = ".concat(childd.toString()));
-                    }
-                    }
-                    // if (newTable != undefined){
-                    if (newTable){
-                        console.log("Table ".concat(newTable.children[0]).toString());
-                        console.log("Passed Table Id ".concat(newTable.children[0].getAttribute("id").toString()));
-                    createTableForm(newTable.children[0]);
-                    // console.log("Passed Table Id ".concat(newTable.children[0].getAttribute("id").toString()));
-
-                    }
-                    else{
-                        console.log("Undefined NewTable");
-                        newTableId = childd.getAttribute('id');
-                        var getDigit = newTableId.match(/(\d+)/);
-                        console.log("newDigit = ".concat(getDigit[0].toString()));
-
-                        let myNewTable = document.createElement("table");
-                        myNewTable.setAttribute("id", "t".concat(getDigit[0].toString()));
-                        createTableForm(myNewTable);
-
-                    }
-
-                };
-                return editBtn;
-            }
-
-        // Date field
-        function getDateField(value){
-            let dd = undefined;
-            if( value ){
-                dd = value
-            } else {
-                const d = new Date();
-                dd = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
-                console.log(dd)
-            }
-
-
-            const dateField = document.createElement('input');
-            dateField.type = 'date';
-            dateField.value = dd;
-
-            dateField.style.width = '100%';
-            dateField.style.height = '80%';
-            dateField.style.fontSize = '1em';
-            dateField.style.border = 'none';
-            dateField.style.resize = 'none';
-            dateField.style.backgroundColor = '#0000';
-            dateField.style.borderRadius = '0px';
-            dateField.style.outline = '0px';
-            dateField.style.overflow = 'overlay';
-
-            return dateField;
-        }
-
-        function getImageField() {
-            const imgField = document.createElement('input');
-            imgField.type = 'file';
-
-            imgField.style.margin = '20%';
-            imgField.style.cursor = 'pointer';
-            imgField.style.border = 'none';
-            imgField.style.resize = 'none';
-            imgField.style.fontSize = 'xx-small';
-            imgField.style.backgroundColor = '#0000';
-            imgField.style.borderRadius = '0px';
-            imgField.style.outline = '0px';
-            imgField.style.overflow = 'overlay';
-            imgField.setAttribute('accept', 'image/*');
-            imgField.innerText = 'Choose image';
-
-            imgField.onchange = (ev) => {
-                const image = document.createElement('img');
-                image.src = URL.createObjectURL(ev.target.files[0]);
-                image.style.width = '100%';
-                image.style.height = '95%';
-                image.style.marginTop = '4%';
-                image.style.cursor = 'grab';
-                image.setAttribute('draggable', false);
-                image.setAttribute('contenteditable', true);
-                //ev.target.style.display = 'none';
-                const cont = ev.target.parentNode
-                cont.replaceChild( image, ev.target);
-            }
-            return imgField;
-        }
-
-        function renderImageField() {
-            const image = document.createElement('img');
-            image.style.width = '100%';
-            image.style.height = '95%';
-            image.style.marginTop = '4%';
-            image.style.cursor = 'grab';
-            image.setAttribute('draggable', false);
-            image.setAttribute('contenteditable', true);
-            return image;
-        }
-
-
-        function getSignField() {
-            const signF = document.createElement('a');
-            signF.style.width = '100%';
-            signF.style.height = '90%';
-            signF.style.display = 'flex';
-            signF.style.cursor = 'pointer';
-            signF.style.justifyContent = 'center';
-            signF.style.alignItems = 'center';
-            signF.innerHTML = 'Signature...<i class="fa fa-pencil"></i>';
-
-            signF.addEventListener('click', addCanEditor, false)
-
-            function addCanEditor(ev) {
-                let signField ;
-                if(ev.target.dataset.img === 'isign'){
-                    signField = ev.target
-                } else {
-                    signField = ev.target
-                }
-
-                const containerDIV = document.createElement('div');
-                containerDIV.style.width = '100%';
-                containerDIV.style.height = '100%';
-                containerDIV.style.top = '0';
-                containerDIV.style.position = 'absolute';
-                containerDIV.style.backgroundColor = '#22222277';
-                containerDIV.style.display = 'flex';
-                containerDIV.style.justifyContent = 'center';
-                containerDIV.style.alignItems = 'center';
-                containerDIV.style.zIndex = 100;
-                containerDIV.setAttribute('data-name', 'containerDIV');
-
-                const svgEditor = document.createElement('div');
-                //svgEditor.style.height = '50vh';
-                svgEditor.style.width = '50vw';
-                svgEditor.style.backgroundColor = '#fffc';
-                svgEditor.style.borderRadius = '3%';
-                svgEditor.style.display = 'flex';
-                svgEditor.style.flexDirection = 'column';
-
-                const canvas = document.createElement('canvas');
-                const width = window.innerWidth / 2;
-                const height = window.innerHeight / 3 ;
-                console.log(screen.innerWidth, screen.innerHeight)
-                canvas.setAttribute('width', ((window.innerWidth / 2) - (window.innerWidth / 20) ) + 'px');
-                canvas.setAttribute('height', height + 'px');
-                canvas.style.border = '1px solid black';
-                canvas.style.backgroundColor = '#fff';
-                canvas.style.margin = '5%';
-                canvas.setAttribute('draggable', false);
-
-                const ctx = canvas.getContext('2d');
-                let drawing = false;
-                const pointArry = [];
-                let startp = {
-                    x: 0,
-                    y: 0
-                };
-
-                canvas.onmousedown = (ev) => {
-                    drawing = true;
-                    startp.x = ev.pageX - (width / 2) - (window.innerWidth / 40);
-                    startp.y = ev.pageY - (height / 2) - (window.innerHeight / 8);
-
-                    const p = {
-                            x: ev.pageX - (width / 2) - (window.innerWidth / 40),
-                            y: ev.pageY - (height / 2) - (window.innerHeight / 8)
-                        }
-                    pointArry.push(p)
-                }
-                canvas.onmouseup = (ev) => {
-                    drawing = false
-                    while(pointArry.length){
-                        pointArry.pop()
-                    }
-
-                }
-                canvas.onmousemove = (ev) => {
-                    if( drawing ){
-                        const p = {
-                            x: ev.pageX - (width / 2) - (window.innerWidth / 40),
-                            y: ev.pageY - (height / 2) - (window.innerHeight / 8)
-                        }
-                        pointArry.push(p);
-                    }
-                    ctx.lineJoin = 'round';
-                    ctx.lineCap = 'round';
-                    ctx.lineWidth = 4;
-                    ctx.beginPath();
-
-                    //console.log(event);
-                    ctx.moveTo(startp.x, startp.y);
-                    //ctx.lineTo(190, 100);
-                    for(let i = 0; i < pointArry.length ; ++i){
-                        ctx.lineTo(pointArry[i].x,pointArry[i].y)
-                    }
-
-                    ctx.stroke();
-                    //ctx.fillStyle = 'green';
-                    //ctx.fillRect(10, 10, 150, 100);
-                }
-
-                const menuCanvas = document.createElement('div');
-                menuCanvas.style.display = 'flex';
-                menuCanvas.style.justifyContent = 'center';
-                menuCanvas.style.marginBottom = '5%';
-
-                const clearBtn = document.createElement('button');
-                clearBtn.innerHTML = 'Clear';
-                clearBtn.className = 'btn btn-outline-danger';
-
-                clearBtn.onclick = (ev) => {
-                    ctx.clearRect(0, 0, width, height);
-                }
-
-                const acceptBtn = document.createElement('button');
-                acceptBtn.innerHTML = 'Accept';
-                acceptBtn.className = 'btn btn-outline-success';
-                acceptBtn.style.marginLeft = '5%';
-
-                acceptBtn.onclick = (evnt) => {
-                    const canImg = new Image();
-                    canImg.src = canvas.toDataURL();
-                    canImg.style.width = '90%';
-                    canImg.style.height = '90%';
-                    canImg.style.cursor = 'pointer';
-                    canImg.setAttribute('data-img', 'isign');
-
-                    canImg.addEventListener('click', addCanEditor, false);
-
-                    /*for ( child of signField.children ) {
-                        signField.removeChild(child);
-                    }
-                    signField.innerHTML = '';*/
-
-                    const container = signField.parentElement
-                    container.removeChild(signField);
-
-                    container.append(canImg);
-
-                    containerDIV.remove();
-                }
-
-                menuCanvas.append(clearBtn);
-                menuCanvas.append(acceptBtn);
-
-                svgEditor.append(canvas);
-                svgEditor.append(menuCanvas);
-                containerDIV.append(svgEditor);
-
-                containerDIV.onclick = (ev) => {
-                    if(ev.target.dataset.name === 'containerDIV'){
-                        ev.target.remove()
-                    }
-                }
-
-                const pageCont = document.getElementsByClassName('doc-container');
-                pageCont[0].append(containerDIV);
-            }
-
-            return signF
-
-        }
-
-
-
-
-        function getDeleteBtn(){
-            const closeBtn = document.createElement('span');
-            closeBtn.style.textAlign = 'center';
-            closeBtn.style.fontSize = '0.8em';
-            closeBtn.style.margin = '5px';
-            closeBtn.className = 'closeBtn';
-            closeBtn.innerHTML = '<i class="fas fa-trash" style="color: #000;"></i>';
-
-            closeBtn.onmouseover = (event) => {
-                event.target.style.cursor = 'pointer';
-                event.target.style.color = '#f00';
-            };
-
-            closeBtn.onmouseout = (event) => {
-                event.target.style.color = '#000';
-            };
-
-            closeBtn.onclick = (eventclk) => {
-                eventclk.preventDefault();
-                if(eventclk.target.parentNode.parentNode.parentNode.id != 'pdf-file'){
-                    eventclk.target.parentNode.parentNode.parentNode.remove();
-                }
-
-            };
-            return closeBtn;
-        }
-
-        //select user on fields 'select-option' field
-        function getSelectOptionsField(){
-            const select = document.createElement('select');
-            select.className = "form-select form-select-sm auth-user";
-
-            const userList = document.getElementById('user-list')
-
-            for(let item of userList.children){
-                const opt = document.createElement('option');
-                opt.innerHTML = item.innerHTML;
-                opt.setAttribute("value", item.innerHTML)
-                select.append(opt);
-
-            }
-
-            return select;
-        }
-
-        //Draggin element over page
-        const dragElementOverPage = ( event ) => {
-            //holderDIV.setAttribute('data-idD', );
-            let holder;
-            if(!resizing){
-                let initX = event.screenX;
-                let initY = event.screenY;
-
-                // if(event.target.className === 'holderDIV'){
-                //     holder = event.target;
-                // }
-                /* Ensure That target has changed */
-                var counterCheck = true;
-                var tempTarget =  event.target;
-                var hitTarget = "";
-                while(counterCheck){
-
-                    // if(tempTarget.className === 'holderDIV'){
-                        if(tempTarget.classList.contains("holderDIV")){
-                        hitTarget = tempTarget;
-                        counterCheck = false;
-                    }
-                    tempTarget = tempTarget.parentNode;
-                    console.log("temp Target");
-                    console.log(tempTarget);
-                    console.log("hitTarget");
-                    console.log(hitTarget);
-
-                }
-
-                holder = hitTarget;
-                const holderPos = (function () {
-                    const holderPos = {
-                        top : parseInt(holder.style.top.slice(0, -2)),
-                        left : parseInt(holder.style.left.slice(0, -2))
-                    }
-                    return Object.seal(holderPos);
-                })();
-
-                window.addEventListener('mousemove', moveObject);
-                function moveObject(ev) {
-                    ev.preventDefault();
-                    const diffX = ev.screenX - initX;
-                    const diffY = ev.screenY - initY;
-                    holder.style.top = ( holderPos.top + diffY ) + 'px';
-                    holder.style.left = ( holderPos.left + diffX ) + 'px';
-
-                }
-
-                window.addEventListener('mouseup', stopMove);
-                function stopMove(ev){
-                    window.removeEventListener('mousemove', moveObject);
-                    window.removeEventListener('mouseup', stopMove);
-
-                }
-            }
-        }
-
-        //Function to run when Input is focused
-        const focusInEvent = (eventh) => {
-            eventh.preventDefault();
-            eventh.target.style.outline = '0px';
-            if (eventh.target.parentNode.className != 'holder-menu'){
-                eventh.target.parentNode.style.border = '1px solid rgb(255 191 0)';
-                eventh.target.parentNode.style.zIndex = '5';
-                for(child of eventh.target.parentNode.children){
-                    if(child.className === 'resizeBtn' || child.className === 'holder-menu'){
-                        child.style.display = 'block';
-                    }
-                }
-            }
-        };
-
-        // not in circuit
-        function deFocusElement (eventh) {
-            eventh.target.parentNode.style.border = '1px dotted rgb(255 191 0)';
-            eventh.target.parentNode.style.zIndex = '2';
-            let hM;
-            for(child of eventh.target.parentNode.children){
-                if(child.className === 'resizeBtn'){
-                    child.style.display = 'none';
-                }
-
-                if(child.className === 'holder-menu'){
-                    hM = child;
-                }
-            }
-
-            if( hM ){
-                setTimeout(function() {
-                    hM.style.display = 'none';
-                }, 200);
-            }
-        };
-
-        function getHolderMenu(){
-            //putting functional menu on holder
-            const holderMenu = document.createElement('div');
-
-            holderMenu.style.display = 'flex';
-            holderMenu.style.alignItems = 'center';
-            holderMenu.style.justifyContent = 'space-around';
-            holderMenu.style.height = '35px';
-            holderMenu.style.width = '180px';
-            holderMenu.style.borderRadius = '0%';
-            holderMenu.style.position = 'absolute';
-            holderMenu.style.right = '0px';
-            holderMenu.style.top = '-40px';
-
-
-            holderMenu.style.backgroundColor = 'rgb(129 129 129 / 50%)';
-
-            holderMenu.className = 'holder-menu';
-
-            holderMenu.append(getSelectOptionsField());
-            holderMenu.append(getDeleteBtn());
-
-
-            // holderMenu.append(getEditBtn());
-            //holderMenu.style.transform = 'translateX(-50%)';
-
-            return holderMenu
-        }
-
-
-        //Input field holder
-        function getHolderDIV(measure){
-            //creating holder for every input field over the page
-            const holderDIV = document.createElement('div');
-            holderDIV.style.border = '1px dashed rgb(255 191 0)';
-            holderDIV.style.position = 'absolute';
-            holderDIV.style.overflow = 'visible';
-            holderDIV.style.display = 'flex';
-            holderDIV.style.cursor = 'move';
-            holderDIV.className = 'holderDIV';
-            holderDIV.setAttribute('data-idD', 'INPUT_HOLDER');
-
-            holderDIV.style.width = measure.width;
-            holderDIV.style.height = measure.height;
-            holderDIV.style.left = measure.left;
-            holderDIV.style.top = measure.top;
-
-            //Putting resize button on holder
-            const resizerTL = getResizer('top', 'left');
-            holderDIV.append(resizerTL);
-            const resizerTR = getResizer('top', 'right');
-            holderDIV.append(resizerTR);
-            const resizerBL = getResizer('bottom', 'left');
-            holderDIV.append(resizerBL);
-            const resizerBR = getResizer('bottom', 'right');
-            holderDIV.append(resizerBR);
-
-            const holderMenu = getHolderMenu();
-
-            holderDIV.append(holderMenu);
-
-            holderDIV.onfocusin = focusInEvent;
-
-            holderDIV.onmousedown = holderDIV.addEventListener('mousedown', (event) => {
-                dragElementOverPage(event)
-            }, false);
-            return holderDIV
-        }
-
-
-
-
-
-
-        const pdfFile = document.getElementById('pdf-file');
-
-        pdfFile.ondragover = (event) => {
-            event.preventDefault();
-            if (event.target.id === 'pdf-file'){
-                event.target.style.border = '1px dashed green'
-            }
-        }
-
-        pdfFile.ondrop = (event) => {
-            event.preventDefault();
-            if (event.target.id === 'pdf-file'){
-                event.target.style.border = '0px dashed green'
-            }
-
-            const typeOfOperation = event.dataTransfer.getData("text/plain");
-            const measure = {
-                width: '300px',
-                height: '50px',
-                left: event.offsetX + 'px',
-                top: event.offsetY + 'px',
-            }
-
-            const holderDIV = getHolderDIV(measure);
-
-            let inputField = document.createElement('div') ;
-            inputField.setAttribute('draggable', false);
-            let editButtonField = undefined;
-
-            switch ( typeOfOperation ) {
-                case 'TEXT_BUTTON':
-                    inputField = getTextField();
-                    break;
-
-                case 'IMG_BUTTON':
-                    inputField = getImageField();
-                    holderDIV.style.height = '150px';
-                    break;
-
-                case 'DATE':
-                    holderDIV.style.width = '150px';
-                    holderDIV.style.height = '40px';
-                    inputField = getDateField(undefined);
-                    break;
-
-                case 'SIGN':
-                    holderDIV.style.width = '200px';
-                    holderDIV.style.height = '100px';
-                    inputField = getSignField();
-                    break;
-
-                case 'TABLE':
-                    inputField = undefined;
-                    // holderDIV.setAttribute("class", "tableInput");
-                    holderDIV.classList.add("tableInput");
-                    // holderDIV.append(getEditBtn());
-
-
-                    var tableElements = document.querySelectorAll('.tableDiv');
-                    // console.log(dropDownElements[0])
-                    var needed_length = tableElements.length
-                    for (i = 0; i <needed_length ; i++) {
-                        // tableElements[i].setAttribute("id", (i+1).toString() );
-                        console.log("tableElements[i] count ".concat(i));
-                        console.log("tableElements[] before change ".concat(tableElements[i].getAttribute("id")));
-                        console.log("tableElements[i].parent before change".concat(tableElements[i].children[0].getAttribute("id")));
-                        tableElements[i].removeAttribute("id");
-                        tableElements[i].setAttribute("id", "tableDiv".concat((i+1).toString()))
-                        tableElements[i].children[0].removeAttribute("id");
-                        tableElements[i].children[0].setAttribute("id", "t".concat((i+1).toString()))
-                        var getDigit = "hdhdhd288888829292".match(/(\d+)/);
-                        console.log(getDigit[0]);
-                        console.log("newDigit = ".concat(getDigit.toString()));
-
-                        console.log("tableElements[i] atfter change".concat(tableElements[i].getAttribute("id")));
-                        console.log("tableElements[i].parent after change ".concat(tableElements[i].children[0].getAttribute("id")));
-                    }
-                    // alert(dropDown_length);
-                    // textFHolder.setAttribute("id", )
-                    inputField = getTableField(needed_length+1);
-                    editButtonField = getEditTableBtn();
-                    break;
-
-                case 'DROPDOWN':
-                    // holderDIV.setAttribute("class", "dropDown");
-                    holderDIV.classList.add("dropDown");
-                    // holderDIV.append(getEditBtn());
-
-
-                    var dropDownElements = document.querySelectorAll('.dropDownDiv');
-                    // console.log(dropDownElements[0])
-                    var needed_length = dropDownElements.length
-                    for (i = 0; i <needed_length ; i++) {
-                        // dropDownElements[i].setAttribute("id", (i+1).toString() );
-
-                        console.log("dropDownElements[i] count ".concat(i));
-                        console.log("dropDownElements[i] before change ".concat(dropDownElements[i].getAttribute("id")));
-                        console.log("dropDownElements[i].parent before change".concat(dropDownElements[i].children[0].getAttribute("id")));
-                        dropDownElements[i].removeAttribute("id");
-                        dropDownElements[i].setAttribute("id", "dropDownDiv".concat((i+1).toString()))
-                        dropDownElements[i].children[0].removeAttribute("id");
-                        dropDownElements[i].children[0].setAttribute("id", (i+1).toString())
-                        console.log("dropDownElements[i] atfter change".concat(dropDownElements[i].getAttribute("id")));
-                        console.log("dropDownElements[i].parent after change ".concat(dropDownElements[i].children[0].getAttribute("id")));
-
-                    }
-                    // alert(dropDown_length);
-                    // textFHolder.setAttribute("id", )
-                    inputField = getDropDownField(needed_length+1);
-                    editButtonField = getEditBtn();
-                    break;
-
-                default:
-                    inputField = undefined;
-            }
-
-            inputField.onpointerover = (event) => {
-                holderDIV.removeEventListener('mousedown', dragElementOverPage);
-            }
-
-            inputField.onpointerleave = (event) => {
-                holderDIV.addEventListener('mousedown', dragElementOverPage);
-            }
-
-            holderDIV.append(inputField);
-            if (editButtonField != undefined){
-                holderDIV.classList.add("clearfix");
-                holderDIV.append(editButtonField);
-            }
-
-            event.target.append(holderDIV);
-            inputField.focus();
-
-        };
-
-
-        // Saving file
-        const saveFile = document.getElementById('save-btn');
-
-        saveFile.onclick = saveDocument;
-
-        let contentFile = [];
-
-        function saveDocument(){
-            //const file = document.getElementsByClassName('doc-content');
-            const pdfFile = document.getElementById('pdf-file');
-            contentFile = [];
-
-            for( child of pdfFile.children ){
-                const sel = child.getElementsByClassName('auth-user');
-                const authUser = sel[0].value;
-
-                const txt = child.getElementsByTagName("textarea");
-                let elem = {}
-                if( txt.length ){
-
-                    elem = {
-                        width: child.style.width,
-                        height: child.style.height,
-                        top: child.style.top,
-                        left: child.style.left,
-                        type:'TEXT_INPUT',
-                        data: txt[0].value,
-                        authorized_user: authUser
-                    }
-                }
-
-                const img = child.getElementsByTagName("img");
-                if( img.length ){
-                    const canvas = document.createElement('canvas');
-                    canvas.setAttribute('width', child.style.width);
-                    canvas.setAttribute('height', child.style.height);
-
-                    //document.images[i].parentNode.insertBefore(canvas,document.images[i]);
-
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img[0], 0, 0, parseInt(child.style.width.slice(0, -2)), parseInt(child.style.height.slice(0, -2)));
-
-                    console.log(canvas.toDataURL())
-                    console.log(img[0].src)
-
-                    elem = {
-                        width: child.style.width,
-                        height: child.style.height,
-                        top: child.style.top,
-                        left: child.style.left,
-                        type:'IMG_INPUT',
-                        data: canvas.toDataURL(),
-                        authorized_user: authUser
-                    }
-                }
-
-                const date = child.getElementsByTagName("input");
-                if( date.length ){
-                    elem = {
-                        width: child.style.width,
-                        height: child.style.height,
-                        top: child.style.top,
-                        left: child.style.left,
-                        type:'DATE_INPUT',
-                        data: date[0].value,
-                        authorized_user: authUser
-                    }
-                }
-
-                contentFile.push(elem);
-            }
-
-            //console.log(contentFile)
-
-            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            const requestURL = '/editor/api/save-file/';
-            const saveFileRequest = new Request(requestURL, {headers: {'X-CSRFToken': csrftoken}} );
-
-            const file_id = document.getElementById('file_id');
-            const file_name = document.getElementById('file_name');
-
-            let fileID = undefined;
-
-            if( file_id ) {
-                fileID = file_id.innerHTML
-            } else {
-                fileID = ''
-            }
-
-            body = {
-                file_id: fileID,
-                file_name: file_name.innerHTML,
-                content: contentFile
-            }
-
-            fetch(saveFileRequest, {
-                method: 'POST',
-                mode: 'same-origin',
-                body: JSON.stringify(body)
-            }).then(async function(response) {
-                const fileObject = await response.json();
-
-                file_id.innerHTML = fileObject.file.file_id
-
-                const f_name = document.getElementById('file_name');
-                f_name.innerHTML = fileObject.file.name
-                console.log(fileObject)
-            })
-
-
-        }
-
-        //rendering file after getting file data
-        function renderFile(data){
-            const content = JSON.parse(data);
-            const pdfFile = document.getElementById('pdf-file');
-            const currUser = document.getElementById('current-user')
-            console.log(pdfFile.children)
-
-            if( pdfFile.children.length ){
-                const noOfItems = pdfFile.children.length
-                for(let i = 0; i < noOfItems ; i++){
-                    pdfFile.removeChild(pdfFile.children[0]);
-                }
-            }
-
-            for( let item of content ){
-                const holder = getHolderDIV(item);
-                let inputField = undefined;
-
-                if( item.type === "TEXT_INPUT" ){
-                    inputField = getTextField();
-                    inputField.value = item.data;
-
-                }
-
-                if( item.type === "DATE_INPUT" ){
-                    inputField = getDateField();
-                    inputField.value = item.data;
-                }
-
-                if( item.type === "IMG_INPUT" ){
-                    inputField = renderImageField();
-                    inputField.src = item.data;
-                }
-
-                if ( item.authorized_user != currUser.innerHTML ){
-                    inputField.setAttribute('disabled', true);
-                }
-
-                holder.append(inputField)
-                pdfFile.append(holder);
-            }
-
-        }
-
-        // To get previous files list
-        const viewFiles = document.getElementById("view-files");
-        viewFiles.onclick = (ev) =>{
-            //const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            const requestURL = '/editor/api/file-list/';
-            const getFileListRequest = new Request(requestURL)//, {headers: {'X-CSRFToken': csrftoken}} );
-
-
-            fetch(getFileListRequest, {
-                method: 'GET',
-            }).then(async function(response) {
-                const responseObject = await response.json();
-                const f_name = document.getElementById('file_name');
-                f_name.style.display = 'flex';
-                f_name.style.flexDirection = 'column';
-
-                for(child of f_name.children){
-                    f_name.children.removeChild(child)
-                }
-
-                for (let file of responseObject.file){
-                    const ele = document.createElement('h6');
-                    ele.className = "btn btn-sm btn-outline-info"
-                    ele.innerHTML = file.name
-                    ele.setAttribute("data-id", file.file_id)
-
-
-                    ele.onclick = (ev) => {
-                        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-                        const requestURL = '/editor/api/get-file/';
-                        const getFileRequest = new Request(requestURL, {headers: {'X-CSRFToken': csrftoken}} );
-
-                        console.log("Clicked - ", ev.target.innerHTML, ev.target.dataset.id)
-
-                        fetch(getFileRequest, {
-                            method: 'POST',
-                            body: JSON.stringify({
-                                id: ev.target.dataset.id
-                            })
-                        }).then(async function(response) {
-                            const responseFileObject = await response.json();
-
-                            const file_id = document.getElementById('file_id');
-                            file_id.innerHTML = ev.target.dataset.id;
-
-                            const file_nameDIV = document.getElementById('file_name');
-                            file_nameDIV.innerHTML = ev.target.innerHTML
-
-                            renderFile(responseFileObject.file)
-
-                        }).catch(error => {
-                            console.error(error, "Error loading file");
-                        });
-                    }
-
-                    f_name.append(ele)
-
-                }
-                //End of for loop
-
-            }).catch(error => {
-                console.error(error, "Error fetching files");
-              });
-
-        }
-
-
-
-        /*
-        const showPDF = document.getElementById('show-btn');
-
-        showPDF.onclick = () => {
-
-            const file = document.getElementsByClassName('doc-content');
-
-            for( child of file[0].children ){
-                const txt = child.getElementsByTagName("textarea");
-                const elem = {
-                    width: child.style.width,
-                    height: child.style.height,
-                    top: child.style.top,
-                    left: child.style.left,
-                    text: txt[0].value
-                }
-                fileContent.push(elem);
-            }
-
-            console.log(fileContent)
-
-
-            cPdf();
-            async function cPdf() {
-                const pdfDoc = await PDFLib.PDFDocument.create();
-                const page = pdfDoc.addPage();
-
-                const { width, height } = page.getSize()
-
-                const fontSize = 30;
-
-
-                page.drawText(textArray[0], {
-                    x: 50,
-                    y: height - 4 * fontSize,
-                    size: fontSize,
-                    color: PDFLib.rgb(0.7, 0.5, 0.5)
-                })
-
-
-                page.drawText('Created by RT', {
-                    x: width - 150,
-                    y: 10,
-                    size: 20,
-                    color: PDFLib.rgb(0.7, 0.5, 0.5)
-                });
-                const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
-                const pdfViewer = document.getElementById('pdf')
-                pdfViewer.src = pdfDataUri;
-                pdfViewer.style.display = 'block';
-
-            }*/
-
-
-
-
-
-    </script>
-
-
+<!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js">-->
+<!--</script>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"></script>-->
+<!--<script src="main_tab.js"></script>-->
 </div>
+<script src="{% static 'js/editor/editor_main.js' %}"></script>
 {% endblock %}
+
