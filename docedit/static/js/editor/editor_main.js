@@ -1,3 +1,12 @@
+            //  import {  toogleTxtFormBlock, initDoc, formatDoc, validateMode, setDocMode, printDoc } from './text_format.js';
+    //   const toogleTxtFormBlock = requirejs(['text_format.js']);
+        let resizing = false;
+        let contentFile = [];
+        let saveFileButton = document.createElement('button');
+
+        const isTemplate = JSON.parse(document.getElementById('template').textContent);
+        const isVerify = JSON.parse(document.getElementById('verify').textContent);
+
 
         window.onload = (event) => {
             const fileData = JSON.parse(document.getElementById('file-data').textContent);
@@ -6,63 +15,248 @@
         }
 
 
+        if (isTemplate) {
+            const txtBtn = document.getElementById("txt-btn");
+            const imgBtn = document.getElementById("img-btn");
+            const tableBtn = document.getElementById("table-btn");
+            const dateBtn = document.getElementById("date-btn");
+            const signatureBtn = document.getElementById("signature-btn");
+            const dropDownBtn = document.getElementById("dropdown-btn");
+            const txtP = document.getElementById("edP-btn");
 
-        let resizing = false;
-        let contentFile = [];
-
-        const txtBtn = document.getElementById("txt-btn");
-        const imgBtn = document.getElementById("img-btn");
-        const tableBtn = document.getElementById("table-btn");
-        const dateBtn = document.getElementById("date-btn");
-        const signatureBtn = document.getElementById("signature-btn");
-        const dropDownBtn = document.getElementById("dropdown-btn");
-        const txtP = document.getElementById("edP-btn");
-
-        txtBtn.ondragstart = (event) => {
-            event.dataTransfer.setData("text/plain", "TEXT_BUTTON");
-        }
-
-        imgBtn.ondragstart = (event) => {
-            event.dataTransfer.setData("text/plain", "IMG_BUTTON");
-        }
-
-        tableBtn.ondragstart = (event) => {
-            event.dataTransfer.setData("text/plain", "TABLE");
-        }
-
-        dateBtn.ondragstart = (event) => {
-            event.dataTransfer.setData("text/plain", "DATE");
-        }
-
-        signatureBtn.ondragstart = (event) => {
-            event.dataTransfer.setData("text/plain", "SIGN");
-        }
-        dropDownBtn.ondragstart = (event) => {
-                event.dataTransfer.setData("text/plain", "DROPDOWN");
-            }
-        txtP.ondragstart = (event) => {
-                event.dataTransfer.setData("text/plain", "EDIT_P");
+            txtBtn.ondragstart = (event) => {
+                event.dataTransfer.setData("text/plain", "TEXT_BUTTON");
             }
 
-        var modalTxtForm = document.getElementById("modalTxtForm");
-        modalTxtForm.style.display = "none";
+            imgBtn.ondragstart = (event) => {
+                event.dataTransfer.setData("text/plain", "IMG_BUTTON");
+            }
 
-        const isTemplate = JSON.parse(document.getElementById('template').textContent);
-        const isVerify = JSON.parse(document.getElementById('verify').textContent);
+            tableBtn.ondragstart = (event) => {
+                event.dataTransfer.setData("text/plain", "TABLE");
+            }
 
-        let saveFile = document.createElement('button');
+            dateBtn.ondragstart = (event) => {
+                event.dataTransfer.setData("text/plain", "DATE");
+            }
+
+            signatureBtn.ondragstart = (event) => {
+                event.dataTransfer.setData("text/plain", "SIGN");
+            }
+            dropDownBtn.ondragstart = (event) => {
+                    event.dataTransfer.setData("text/plain", "DROPDOWN");
+                }
+            txtP.ondragstart = (event) => {
+                    event.dataTransfer.setData("text/plain", "EDIT_P");
+            }
+
+        }
+let modalTxtForm = document.getElementById("modalTxtForm");
+ let toolBoxTools = document.getElementById("toolbox-tools");
+            toolBoxTools.style.display = "none";
+// New Fomart Code
+
+$(document).ready(function() {
+
+// Add drag and resize option to panel
+$("#toolbox-tools").draggable({
+    handle: ".panel-heading",
+    stop: function(evt, el) {
+        // Save size and position in cookie
+        /*
+        $.cookie($(evt.target).attr("id"), JSON.stringify({
+            "el": $(evt.target).attr("id"),
+            "left": el.position.left,
+            "top": el.position.top,
+            "width": $(evt.target).width(),
+            "height": $(evt.target).height()
+        }));
+        */
+    }
+}).resizable({
+    handles: "e, w, s, se",
+    stop: function(evt, el) {
+        // Save size and position in cookie
+        /*
+        $.cookie($(evt.target).attr("id"), JSON.stringify({
+            "el": $(evt.target).attr("id"),
+            "left": el.position.left,
+            "top": el.position.top,
+            "width": el.size.width,
+            "height": el.size.height
+        }));
+        */
+    }
+});
+
+
+// Expand and collaps the toolbar
+$("#toggle-toolbox-tools").on("click", function() {
+    var panel = $("#toolbox-tools");
+
+    if ($(panel).data("org-height") == undefined) {
+        $(panel).data("org-height", $(panel).css("height"));
+        $(panel).css("height","41px");
+    } else {
+        $(panel).css("height", $(panel).data("org-height"));
+        $(panel).removeData("org-height");
+    }
+
+    $(this).toggleClass('fa-chevron-down').toggleClass('fa-chevron-right');
+});
+
+
+// Make toolbar groups sortable
+$( "#sortable" ).sortable({
+    stop: function (event, ui) {
+        var ids = [];
+        $.each($(".draggable-group"), function(idx, grp) {
+            ids.push($(grp).attr("id"));
+        });
+
+        // Save order of groups in cookie
+        //$.cookie("group_order", ids.join());
+    }
+});
+$( "#sortable" ).disableSelection();
+
+
+// Make Tools panel group minimizable
+$.each($(".draggable-group"), function(idx, grp) {
+    var tb = $(grp).find(".toggle-button-group");
+
+    $(tb).on("click", function() {
+        $(grp).toggleClass("minimized");
+        $(this).toggleClass("fa-caret-down").toggleClass("fa-caret-up");
+
+        // Save draggable groups to cookie (frue = Minimized, false = Not Minimized)
+        var ids = [];
+        $.each($(".draggable-group"), function(iidx, igrp) {
+            var itb = $(igrp).find(".toggle-button-group");
+            var min = $(igrp).hasClass("minimized");
+
+            ids.push($(igrp).attr("id") + "=" + min);
+        });
+
+        $.cookie("group_order", ids.join());
+    });
+});
+
+
+
+// Close thr panel
+$(".close-panel").on("click", function() {
+    $(this).parent().parent().hide();
+});
+
+
+// Add Tooltips
+$('button').tooltip();
+$('.toggle-button-group').tooltip();
+
+});
+
+
+
+
+
+// End of New Fomat COde
+
+/* Font and text styling javascript*/
+
+var oDoc, sDefTxt;
+
+function initDoc() {
+  oDoc = document.getElementById("textBox");
+  sDefTxt = oDoc.innerHTML;
+  if (document.compForm.switchMode.checked) { setDocMode(true); }
+}
+
+function formatDoc(sCmd, sValue) {
+  if (validateMode()) { document.execCommand(sCmd, false, sValue); oDoc.focus(); }
+}
+
+function validateMode() {
+  if (!document.compForm.switchMode.checked) { return true ; }
+  alert("Uncheck \"Show HTML\".");
+  oDoc.focus();
+  return false;
+}
+
+function setDocMode(bToSource) {
+  var oContent;
+  if (bToSource) {
+    oContent = document.createTextNode(oDoc.innerHTML);
+    oDoc.innerHTML = "";
+    var oPre = document.createElement("pre");
+    oDoc.contentEditable = false;
+    oPre.id = "sourceText";
+    oPre.contentEditable = true;
+    oPre.appendChild(oContent);
+    oDoc.appendChild(oPre);
+    document.execCommand("defaultParagraphSeparator", false, "div");
+  } else {
+    if (document.all) {
+      oDoc.innerHTML = oDoc.innerText;
+    } else {
+      oContent = document.createRange();
+      oContent.selectNodeContents(oDoc.firstChild);
+      oDoc.innerHTML = oContent.toString();
+    }
+    oDoc.contentEditable = true;
+  }
+  oDoc.focus();
+}
+
+function printDoc() {
+  if (!validateMode()) { return; }
+  var oPrntWin = window.open("","_blank","width=450,height=470,left=400,top=100,menubar=yes,toolbar=no,location=no,scrollbars=yes");
+  oPrntWin.document.open();
+  oPrntWin.document.write("<!doctype html><html><head><title>Print<\/title><\/head><body onload=\"print();\">" + oDoc.innerHTML + "<\/body><\/html>");
+  oPrntWin.document.close();
+}
+
+
+
+// const toogleTxtForm =  ()=>{
+//                 if (modalTxtForm.style.display === "none") {
+//                     initDoc();
+//                     modalTxtForm.style.display = "block";
+//                         } else {
+//                             modalTxtForm.style.display = "none";
+//                         }
+//             }
+
+
+const toogleTxtFormBlock =  ()=>{
+    if (toolBoxTools.style.display === "none") {
+        initDoc();
+        toolBoxTools.style.display = "block";
+            }
+}
+
+
+
+/*end of Font and text styling javascript*/
+
+
+
+
+
+
+
 
         if (isTemplate){
-            saveFile = document.getElementById('save-template-btn');
-        } else {
-            saveFile = document.getElementById('save-btn');
+            saveFileButton = document.getElementById('save-template-btn');
+        } else if (!isVerify) {
+            saveFileButton = document.getElementById('save-btn');
             //Adding document in workflow
             wfButton = document.getElementById("addToWorkFlowButton");
             wfButton.addEventListener("click", addWorkflow, false);
 
         }
 
-        saveFile.onclick = (event) => {
+        saveFileButton.onclick = (event) => {
             const data = saveDocument();
             sendSaveDocumentRequest(data);
             console.log("File saved");
@@ -225,77 +419,12 @@
         }
 
 
-        /* Font and text styling javascript*/
 
-        var oDoc, sDefTxt;
-
-        function initDoc() {
-          oDoc = document.getElementById("textBox");
-          sDefTxt = oDoc.innerHTML;
-          if (document.compForm.switchMode.checked) { setDocMode(true); }
-        }
-
-        function formatDoc(sCmd, sValue) {
-          if (validateMode()) { document.execCommand(sCmd, false, sValue); oDoc.focus(); }
-        }
-
-        function validateMode() {
-          if (!document.compForm.switchMode.checked) { return true ; }
-          alert("Uncheck \"Show HTML\".");
-          oDoc.focus();
-          return false;
-        }
-
-        function setDocMode(bToSource) {
-          var oContent;
-          if (bToSource) {
-            oContent = document.createTextNode(oDoc.innerHTML);
-            oDoc.innerHTML = "";
-            var oPre = document.createElement("pre");
-            oDoc.contentEditable = false;
-            oPre.id = "sourceText";
-            oPre.contentEditable = true;
-            oPre.appendChild(oContent);
-            oDoc.appendChild(oPre);
-            document.execCommand("defaultParagraphSeparator", false, "div");
-          } else {
-            if (document.all) {
-              oDoc.innerHTML = oDoc.innerText;
-            } else {
-              oContent = document.createRange();
-              oContent.selectNodeContents(oDoc.firstChild);
-              oDoc.innerHTML = oContent.toString();
-            }
-            oDoc.contentEditable = true;
-          }
-          oDoc.focus();
-        }
-
-        function printDoc() {
-          if (!validateMode()) { return; }
-          var oPrntWin = window.open("","_blank","width=450,height=470,left=400,top=100,menubar=yes,toolbar=no,location=no,scrollbars=yes");
-          oPrntWin.document.open();
-          oPrntWin.document.write("<!doctype html><html><head><title>Print<\/title><\/head><body onload=\"print();\">" + oDoc.innerHTML + "<\/body><\/html>");
-          oPrntWin.document.close();
-        }
-
-
-
-        const toogleTxtForm =  ()=>{
-            console.log("in Toggele Txtx  FOrma");
-                        if (modalTxtForm.style.display === "none") {
-                            initDoc();
-                            modalTxtForm.style.display = "block";
-                                } else {
-                                    modalTxtForm.style.display = "none";
-                                }
-                    }
-
-        /*end of Font and text styling javascript*/
     //Get Editable Div Field
     function getParaField(){
             const textP = document.createElement('div');
             textP.setAttribute("contenteditable", true);
+            textP.setAttribute("class", "editPara");
             textP.setAttribute("id", "textBox");
             const textPara = document.createElement('p');
             textPara.innerHTML = "Input Here"
@@ -314,7 +443,12 @@
             textP.style.overflow = 'overlay';
             textP.onclick= (ev)=>{
                 console.log("clicked");
-            toogleTxtForm();
+        //         requirejs(['text_format'], function (text_format) {
+        // //   const headerEl = document.getElementById("header");
+        // //   headerEl.textContent = lodash.upperCase("hello world");
+        toogleTxtFormBlock();
+        // });
+
             }
 
 
@@ -851,7 +985,7 @@ function getDateEditButton(){
                 return editBtn;
 }
          // Second Date field Generator
-         function getDateField2(){
+         function getDateField2(value){
                 let modal =document.getElementById("myModal3");
                 let editDateBtn =getDateEditButton();
                 var divCont = document.createElement('div');
@@ -865,7 +999,11 @@ function getDateEditButton(){
                 dateField.setAttribute("type","text");
                 dateField.classList.add("form-control", "date");
                 dateField.style.width = "100%";
+                if (value != "default"){
+                    dateField.setAttribute("value", value);
+                }
                 divCont.style.height = "100%";
+
                 dateField.setAttribute("placeholder", "Pick A Date");
                 var submitDateFormat = document.getElementById("submitDateFormat");
                 var span = document.getElementsByClassName("close3")[0];
@@ -1074,8 +1212,8 @@ function getDateEditButton(){
                     console.log("accept clicked");
                     const canImg = new Image();
                     canImg.src = canvas.toDataURL();
-                    canImg.style.width = '40%';
-                    canImg.style.height = '40%';
+                    canImg.style.width = '100%';
+                    canImg.style.height = '100%';
                     canImg.style.cursor = 'pointer';
                     canImg.setAttribute('data-img', 'isign');
                     canImg.setAttribute('tabindex', 0);
@@ -1128,16 +1266,16 @@ function getDateEditButton(){
                     }
                 }
 
-                const pageCont = document.getElementsByClassName('doc-container');
-                pageCont[0].append(containerDIV);
+                const pageCont = document.getElementById('editor-container');
+                pageCont.append(containerDIV);
             }
 
 
         function getSignField() {
             const signF = document.createElement('button');
             signF.className = 'btn-secondary signature-btn';
-            signF.style.width = '50%';
-            signF.style.height = '50%';
+            signF.style.width = '100%';
+            signF.style.height = '100%';
             signF.style.display = 'flex';
             signF.style.cursor = 'pointer';
             signF.style.justifyContent = 'center';
@@ -1167,13 +1305,16 @@ function getDateEditButton(){
                 event.target.style.color = '#000';
             };
 
-            closeBtn.onclick = (eventclk) => {
-                eventclk.preventDefault();
-                if(eventclk.target.parentNode.parentNode.parentNode.parentNode.id != 'pdf-file'){
-                    eventclk.target.parentNode.parentNode.parentNode.parentNode.remove();
-                }
+            if (isTemplate) {
+                closeBtn.onclick = (eventclk) => {
+                    eventclk.preventDefault();
+                    if(eventclk.target.parentNode.parentNode.parentNode.parentNode.id != 'pdf-file'){
+                        eventclk.target.parentNode.parentNode.parentNode.parentNode.remove();
+                    }
 
-            };
+                };
+            }
+
             return closeBtn;
         }
 
@@ -1201,6 +1342,10 @@ function getDateEditButton(){
                 }
 
                 select.append(opt);
+            }
+
+            if (!isTemplate) {
+                select.setAttribute('disabled', true)
             }
 
             return select;
@@ -1273,7 +1418,7 @@ function getDateEditButton(){
             console.log("Target focusInvent");
             console.log(eventh.target);
             console.log("Main Character");
-            // console.log(tableCharacter.parentNode);
+            console.log(tableCharacter.parentNode);
             eventh.preventDefault();
             eventh.target.style.outline = '0px';
             if (eventh.target.parentNode.className === 'holderDIV'){// || tableCharacter.parentNode.classList.contains("holderDIV")){
@@ -1290,7 +1435,10 @@ function getDateEditButton(){
                         child.style.display = 'flex';
                     }
                 }
+
+            }
                 if (tableCharacter != "Default"){
+                    console.log("Passed test");
                 for(child of tableCharacter.parentNode.children){
                 console.log(".maincharacter childres");
 
@@ -1304,7 +1452,7 @@ function getDateEditButton(){
                 }
 
                 }
-            }
+            // }
             if (eventh.target.parentNode.parentNode.parentNode.className === 'holderDIV'){
                 console.log(".parentNode.parentNode.parentNode");
                 eventh.target.parentNode.style.border = '1px solid rgb(255 191 0)';
@@ -1367,7 +1515,11 @@ function getDateEditButton(){
             HMContainer.style.backgroundColor = 'rgb(129 129 129 / 50%)';
 
             HMContainer.append(getSelectOptionsField(auth_user));
-            HMContainer.append(getDeleteBtn());
+
+            if (isTemplate) {
+                HMContainer.append(getDeleteBtn());
+            }
+
 
 
             const holderMenu = document.createElement('div');
@@ -1513,7 +1665,12 @@ function getDateEditButton(){
                         testDiv.setAttribute("id", "textBox");
                         testDiv.setAttribute("contenteditable", true);
                         testDiv.onclick = ()=>{
-                            toogleTxtForm();
+                            toogleTxtFormBlock();
+        //                     requirejs(['text_format'], function (text_format) {
+        // //   const headerEl = document.getElementById("header");
+        // //   headerEl.textContent = lodash.upperCase("hello world");
+        // text_format.toogleTxtFormBlock();
+        // });
                         }
                         textPara.innerHTML = "Input Here";
                         testDiv.appendChild(textPara);
@@ -1565,9 +1722,12 @@ function getDateEditButton(){
                     for (let y = 0; y <row_length; y++){
                         for (let x = 0; x<col_len; x++){
                             inputField.children[1].rows[y].cells[x].addEventListener('click', event => {
-                                // console.log("CLicked tables");
+                                console.log("CLicked tables");
+                                 console.log(event.target)
                                 event.target = inputField.parentNode;
                                 // console.log(event.target.parentNode.parentNode.parentNode.parentNode);
+                                console.log("New Target Click Tables");
+                                console.log(event.target)
                                 focusInEvent(event);
 
                             });
@@ -1816,7 +1976,7 @@ function getDateEditButton(){
                 case 'DATE':
                     holderDIV.style.width = '200px';
                     holderDIV.style.height = '150px';
-                     inputField = getDateField2();
+                     inputField = getDateField2("default");
                     break;
 
                 case 'SIGN':
@@ -1874,7 +2034,58 @@ function getDateEditButton(){
         });
 
 
+//Save Drop Down Data
 
+
+    function savingDropdownData(){
+        const drops_add = document.getElementsByClassName("dropDownDiv");
+        let drops_tags =  [];
+        let drops_collected = [];
+        if(drops_add.length){
+                for(add of drops_add){
+                    var new_drop = add.getElementsByTagName("SELECT")[0];
+                    console.log("New DropDwon");
+                    console.log(new_drop);
+                    drops_tags.push(new_drop);
+                    console.log("drops_tags");
+                    console.log(drops_tags);
+                }
+            }
+        if (drops_tags.length){
+        for(drop of drops_tags){
+                    authUserr = drop.parentNode.parentNode.getElementsByClassName("auth-user")[0].value
+                    console.log("authUserr");
+                    console.log(authUserr);
+                    elem = {
+                        width: drop.parentNode.parentNode.style.width,
+                        height: drop.parentNode.parentNode.style.height,
+                        top: drop.parentNode.parentNode.style.top,
+                        left: drop.parentNode.parentNode.style.left,
+                        dropId: drop.getAttribute("id"),
+                        type:'DROPDOWN_INPUT',
+                        data: [],
+                        auth_user: authUserr
+                    }
+                    console.log("Drop Detail");
+                    console.log(drop);
+                    console.log(drop.children.length);
+                    console.log(drop.children);
+                    console.log(drop.children[0]);
+                    console.log("End of Drop Detail");
+                    for(option of drop.children){
+                        elem.data.push(option.value)
+                    }
+                drops_collected.push(elem);
+
+
+        }
+    }
+    console.log("Drop Collected");
+    console.log(drops_collected);
+    // return "Working Progress"
+    return drops_collected;
+    }
+//Save Tables Data
         function savingTableData(){
             console.log("Saving Table Data");
             const tables_add = document.getElementsByClassName("tableDiv");
@@ -1924,11 +2135,14 @@ function getDateEditButton(){
                         for(var g = 0; g<column_length; g++){
                             var idx = "row".concat(t.toString()).concat("column").concat(g.toString());
                             var tempElement  = {}
+                            tempElement["cellWidth"] = window.getComputedStyle(table.rows[t].cells[g], null).getPropertyValue("width");
+                            tempElement["cellHeight"] = window.getComputedStyle(table.rows[t].cells[g], null).getPropertyValue("height");
                             console.log("Text Area table.rows[t].cells[g].children[0].children[0]")
                             console.log(table.rows[t].cells[g].children[0]);
                             console.log("Text Area table.rows[t].cells[g]===============================")
                             console.log(table.rows[t].cells[g]);
                             //SIGNATURE
+                            if (table.rows[t].cells[g].children.length){
                             if (table.rows[t].cells[g].children[0].className == "mySecDivHolder"){
                                 console.log("mySecDiv Holder");
 
@@ -1956,24 +2170,7 @@ function getDateEditButton(){
 
                                      const img2 = table.rows[t].cells[g].children[0].children[1];
                                      console.log(img2.src)
-                // if( img2 ){
-                //     const canvas = document.createElement('canvas');
-                //     canvas.setAttribute('width', child.style.width);
-                //     canvas.setAttribute('height', child.style.height);
-                //     const ctx = canvas.getContext('2d');
-                //     ctx.drawImage(img2[0], 0, 0, parseInt(child.style.width.slice(0, -2)), parseInt(child.style.height.slice(0, -2)));
-                //     elem22 = {
-                //         width: img2.style.width,
-                //         height: img2.style.height,
-                //         top: img2.style.top,
-                //         left: img2.style.left,
-                //         // type:'IMG_INPUT',
-                //         data: canvas.toDataURL()
-                //         // auth_user: authUser
-                //     }
 
-
-                                // }
                                 console.log("elem22");
                                     console.log(img2.src);
                                     tempElement["data"]= img2.src;
@@ -1983,6 +2180,12 @@ function getDateEditButton(){
                                 elem.data[idx]=tempElement;
 
 
+                            }
+                            if(table.rows[t].cells[g].children[0].children[1].tagName =="BUTTON"){
+                                console.log("BUTTON SECNDARYS");
+                                tempElement["data"]= "NOT_SIGNED";
+                                tempElement["type"]= "SIGN";
+                                elem.data[idx]=tempElement;
                             }
 
                             }
@@ -2045,55 +2248,20 @@ function getDateEditButton(){
                             }
 
                         }
+                        }else{
+                            console.log("Table is empty");
+                            tempElement["data"]= "BLANK";
+                            tempElement["type"]= "BLANK_CELL";
+                            tempElement["auth_user"]= "";
+                             elem.data[idx]=tempElement;
+                        }
 
+                            // console.log("table td children[0] children length");
+                            // console.log(table.rows[t].cells[g].children[0].children[0].children.length);
+                            // console.log("table td children children[0].children[0].children");
+                            // console.log(table.rows[t].cells[g].children[0].children[0].children);
+                            // table.rows[t].cells[g].children[0].children[0].children.length
 
-                            console.log("table td children[0] children length");
-                            console.log(table.rows[t].cells[g].children[0].children[0].children.length);
-                            console.log("table td children children[0].children[0].children");
-                            console.log(table.rows[t].cells[g].children[0].children[0].children);
-                            table.rows[t].cells[g].children[0].children[0].children.length
-
-                        //FOR THE SIGNATURE
-                        // if (table.rows[t].cells[g].children.length >1){
-                        // // if (table.rows[t].cells[g].children[0].children[0].children.length >1){
-
-                        //     console.log("table td children  content SIGNATURE");
-                        //     console.log(table.rows[t].cells[g].children);
-                        //     console.log("table td 3children length SIGNATURE");
-                        //     console.log(table.rows[t].cells[g].children[0].children[0].children.length);
-                        //     console.log("table td 3children content SIGNATURE");
-                        //     console.log(table.rows[t].cells[g].children[0].children[0].children);
-                        //     console.log("table td children SIGNATURE");
-                        //     console.log(table.rows[t].cells[g].children[1].children);
-                        //     signElementsLength = table.rows[t].cells[g].children[1].children.length;
-                        //     for (var c = 0; c < signElementsLength; c++){
-
-                        //         if(table.rows[t].cells[g].children[1].children[c].tagName === "DIV"){
-                        //             if(table.rows[t].cells[g].children[1].children[c].className == "holder-menu"){
-                        //                 //Access Children
-                        //               var miniAuthUserSign =  table.rows[t].cells[g].children[1].children[c].children[0].children[0].value
-                        //               console.log("miniAuthUserSign");
-                        //               console.log(miniAuthUserSign);
-                        //               tempElement["auth_user"]= miniAuthUserSign;
-                        //               tempElement["type"]= "SIGN";
-                        //               tempElement["data"]= "l";
-
-
-                        //             }
-
-                        //         }
-                        //         if(table.rows[t].cells[g].children[1].children[c].tagName === "BUTTON"){
-                        //             console.log("got to the button");
-                        //             tempElement["data"]= "";
-                        //         }
-
-                        //     }
-                        //     console.log("TEMP ELEMENT SIGN");
-                        //     console.log(tempElement);
-                        //     elem.data[idx]=tempElement;
-
-                        //     }
-                            // Endof for signature
                         }
 
 
@@ -2106,14 +2274,16 @@ function getDateEditButton(){
                     console.log("Main Tables==========");
                     console.log(tables_collected);
 
-                      return "elem";
+                    //   return "elem";
+                    return tables_collected;
             }
 
 
 
 
         function saveDocument(){
-            var elementTables = savingTableData();
+            const elementTables = savingTableData();
+            const elementDropdowns = savingDropdownData();
 
             const status = 'REQUEST_IN_PROGRESS';
 
@@ -2139,7 +2309,19 @@ function getDateEditButton(){
                         auth_user: authUser
                     }
                 }
-
+                const editP = child.getElementsByClassName("editPara");
+                if( editP.length ){
+                    elem = {
+                        width: child.style.width,
+                        height: child.style.height,
+                        top: child.style.top,
+                        left: child.style.left,
+                        type:'EDIT_P',
+                        data: editP.innerHTML,
+                        auth_user: authUser
+                    }
+                }
+                if(child.getElementsByTagName("TABLE").length <1){
                 const img = child.getElementsByTagName("img");
                 if( img.length ){
                     const canvas = document.createElement('canvas');
@@ -2157,9 +2339,15 @@ function getDateEditButton(){
                         auth_user: authUser
                     }
                 }
+                }
 
-                const date = child.getElementsByTagName("input");
+                // const date = child.querySelectorAll('.date'),
+                const date = child.getElementsByClassName("date");
+                console.log("Date Saving");
                 if( date.length ){
+                    console.log("Date Length Greater than 0");
+                    console.log(date[0].value);
+
                     elem = {
                         width: child.style.width,
                         height: child.style.height,
@@ -2170,7 +2358,7 @@ function getDateEditButton(){
                         auth_user: authUser
                     }
                 }
-
+        if(child.getElementsByTagName("TABLE").length <1){
                 const button = child.getElementsByTagName("button");
                 if( button.length ){
                     if(button[0].classList.contains("signature-btn")){
@@ -2186,18 +2374,327 @@ function getDateEditButton(){
                     }
 
                 }
+}
                 contentFile.push(elem);
+            }
+
+
+
+            if(elementTables.length){
+                for(let h= 0; h< elementTables.length; h++){
+                    contentFile.push(elementTables[h]);
+                }
+            }
+            if(elementDropdowns.length){
+                for(let h= 0; h< elementDropdowns.length; h++){
+                    contentFile.push(elementDropdowns[h]);
+                }
             }
 
             return contentFile;
         }
+//Get rows and columns of table
+
+       function get_rows_cols(data){
+    finalResult = []
+    // console.log(Object.keys(data));
+var myKeys=Object.keys(data);
+var rowsArray = [];
+var colsArray = [];
+ for (let key of myKeys){
+    colIndex = key.search("column")
+sliced = key.slice(colIndex);
+rowsArray.push( key.match(/(\d+)/)[0]);
+// console.log("rows");
+// console.log(key.match(/(\d+)/)[0]);
+// console.log(rowsArray);
+// console.log(sliced);
+colsArray.push(sliced.match(/(\d+)/)[0]);
+// console.log(sliced.match(/(\d+)/)[0]);
+// console.log(colsArray);
+
+
+ }
+    let sR = new Set(rowsArray);
+    let itR = sR.values();
+    newRows = Array.from(itR);
+    let sC = new Set(colsArray);
+    let itC = sC.values();
+    newCols = Array.from(itC);
+    finalResult.push(newRows.length);
+    // console.log("Number of rows = ".concat(newRows.length.toString()))
+    // console.log("Number of columns = ".concat(newCols.length.toString()))
+    finalResult.push(newCols.length);
+    return finalResult
+
+
+
+}
+        //Rendering the table
+               function reRenderTableField(currentUser,id, data){
+                   console.log("Rendering Table");
+    reqId = id.match(/(\d+)/)[0];
+    console.log("getTable id = ".concat(id.toString()));
+      let tableDiv = document.createElement("address");
+      tableDiv.setAttribute("id", "tableDiv".concat(reqId.toString()));
+      tableDiv.setAttribute("class", "tableDiv");
+      tableDiv.style.width = "100%";
+      tableDiv.style.height = "100%";
+      tableDiv.style.top = "inherit";
+      tableDiv.style.left = "inherit";
+      // tableDiv.style.position = "absolute";
+      // tableDiv.style.cursor = 'inherit';
+      let table = document.createElement("table");
+      let thead = document.createElement("thead");
+      let tbody = document.createElement("tbody");
+    //   let row_1 = document.createElement('tr');
+      table.setAttribute("class", "form-table");
+      table.classList.add( "form-table-sm","float-right","table" ,"table-borded",  "table-striped", "table-list");
+
+      //add classes
+    //   table.setAttribute("id", "t".concat(id.toString()));
+      table.setAttribute("id", id);
+
+    table.style.height = "100%";
+      table.style.width = "70%";
+      table.style.top = "inherit";
+      table.style.left = "inherit";
+      table.zIndex = "7";
+
+
+        function reSignature(data){
+            let autUser= data.auth_user;
+            let extracted = data.data;
+            let genSelect = '<select class="form-select form-select-sm auth-user" style="width:inherit;">';
+        genSelect = genSelect + '<option value="' + autUser + '">' + autUser + '</option> </select>';
+        let holderMenuStr = '<div class="holder-menu" style=" height: 30px; width:inherit; display: block; border-radius: 0%; background-color: rgba(129, 129, 129, 0.5);">'
+                             + genSelect+
+                            '</div>';
+        let stringToHTML = function (str) {
+        let parser = new DOMParser();
+        let doc = parser.parseFromString(str, 'text/html');
+        return doc.body;
+    };
+    let reImage = "";
+    if (extracted == "NOT_SIGNED"){
+     reImage = getSignField();
+     reImage.style.width = "inherit";
+     reImage.style.height = "90%";
+     if (currentUser != autUser){
+         reImage.setAttribute("disabled", true);
+     }
+
+    }else{
+        reImage = renderImageField();
+        reImage.src = extracted;
+        reImage.style.width = "40%";
+        reImage.style.height = "40%";
+        reImage.style.cursor = "pointer";
+        reImage.style.outline = "0px";
+        reImage.setAttribute("data-img", "isign");
+        reImage.setAttribute("tabindex", "0");
+        reImage.setAttribute("draggable", false);
+    }
+        // width: 40%; height: 40%; cursor: pointer; outline: 0px;
+        // var myWDiv = '<div class="mySecDivHolder" style="width: 100%;">'.concat(holderMenuStr).concat(bElement).concat( '</div>');
+        var myWDiv = '<div class="mySecDivHolder" style="width: 100%;">'.concat(holderMenuStr).concat( '</div>');
+
+                        // console.log("MyWDIV");
+                        // console.log(myWDiv);
+                        // console.log(stringToHTML(myWDiv));
+
+                         let td = '<td>'+myWDiv+'</td>';
+                        let tr = '<tr>'+td+'</tr>';
+                        let table1 = '<table>'+tr+'</table>'
+                        let intendedTd = stringToHTML(table1);
+                        cellI = intendedTd.children[0].rows[0].cells[0];
+                        cellI.style.width = data.cellWidth;
+                        cellI.style.height = data.cellHeight;
+                        cellI.children[0].append(reImage);
+cellI.addEventListener('click',(event)=>{
+        focusInEvent(event);
+    });
+                        return cellI
+
+        }
+
+
+        function reParaField(data){
+            let autUser= data.auth_user;
+            let extracted = data.data;
+            let genSelect = '<select class="form-select form-select-sm auth-user">';
+        genSelect = genSelect + '<option value="' + autUser + '">' + autUser + '</option> </select>';
+        let holderMenuStr = '<div class="holder-menu" style=" height: 30px display: block; border-radius: 0%; background-color: rgba(129, 129, 129, 0.5);">'
+                             + genSelect+
+                            '</div>';
+        let stringToHTML = function (str) {
+        let parser = new DOMParser();
+        let doc = parser.parseFromString(str, 'text/html');
+        return doc.body;
+    };
+
+    let myWDiv = '<div style= width:inherit;>'+holderMenuStr + '</div>';
+
+    let td = '<td>'+myWDiv+'</td>';
+    let tr = '<tr>'+td+'</tr>';
+    let table1 = '<table>'+tr+'</table>';
+    let testDiv = document.createElement("div");
+    testDiv.setAttribute("id", "textBox");
+     if (currentUser != autUser){
+        //  reImage.setAttribute("disabled", true);
+         testDiv.setAttribute("contenteditable", false);
+     }else{
+         testDiv.setAttribute("contenteditable", true);
+          testDiv.onclick = ()=>{
+        // toogleTxtForm();
+        toogleTxtFormBlock();
+    }
+     }
+
+
+    myP = stringToHTML(extracted).children[0];
+    testDiv.append(myP);
+    let intendedTd = stringToHTML(table1);
+    let cellI = intendedTd.children[0].rows[0].cells[0];
+    cellI.style.width = data.cellWidth;
+    cellI.style.height = data.cellHeight;
+    cellI.addEventListener('click',(event)=>{
+        focusInEvent(event);
+    });
+    cellI.appendChild(testDiv);
+
+        return cellI;
+
+        }
+        function reTextField(data){
+
+            let autUser= data.auth_user;
+            let extracted = data.data;
+            let genSelect = '<select class="form-select form-select-sm auth-user">';
+        genSelect = genSelect + '<option value="' + autUser + '">' + autUser + '</option> </select>';
+        let holderMenuStr = '<div class="holder-menu" style=" height: 30px  display: block; border-radius: 0%; background-color: rgba(129, 129, 129, 0.5);">'
+                             + genSelect+
+                            '</div>';
+    let stringToHTML = function (str) {
+        let parser = new DOMParser();
+        let doc = parser.parseFromString(str, 'text/html');
+        return doc.body;
+    };
+    let textArea = ""
+
+    if (currentUser != autUser){
+        //  reImage.setAttribute("disabled", true);
+        //  testDiv.setAttribute("contenteditable", false);
+          textArea = '<textarea style="width: 100%; height: 80%; disabled margin: 1%;\
+            font-size: 1em; border: none; resize: none; background-color:\
+            rgba(0, 0, 0, 0); border-radius: 0px; outline: 0px; overflow:\
+            overlay;" bold;" >' +extracted +'</textarea>';
+     }else{
+          textArea = '<textarea style="width: 100%; height: 80%; margin: 1%;\
+            font-size: 1em; border: none; resize: none; background-color:\
+            rgba(0, 0, 0, 0); border-radius: 0px; outline: 0px; overflow:\
+            overlay;" bold;" >' +extracted +'</textarea>';
+
+     }
+
+            var myWDiv = '<div>'+holderMenuStr + textArea+ '</div>';
+            var td = '<td>'+myWDiv+'</td>';
+            var tr = '<tr>'+td+'</tr>';
+            var table1 = '<table>'+tr+'</table>'
+            var intendedTable = stringToHTML(table1);
+            var cellI = intendedTable.children[0].rows[0].cells[0];
+            cellI.style.width = data.cellWidth;
+            cellI.style.height = data.cellHeight;
+            cellI.addEventListener('click',(event)=>{
+        focusInEvent(event);
+    });
+
+ return cellI
+}
+    colRowLen = get_rows_cols(data);
+ newColLen = colRowLen[1];
+ newRowLen = colRowLen[0];
+
+ for (var p = 0; p < newRowLen; p++){
+    let row = document.createElement('tr');
+    for (var q = 0; q<newColLen; q++){
+        var idx = "row".concat(p.toString()).concat("column").concat(q.toString());
+        // row.appendChild(reTextField());
+        if (data[idx].type == "SIGN"){
+            row.appendChild(reSignature(data[idx]))
+
+        }
+        if (data[idx].type == "TEXT_INPUT"){
+            row.appendChild(reTextField(data[idx]));
+
+        }
+        if (data[idx].type == "EDITABLE_P"){
+            row.appendChild(reParaField(data[idx]));
+
+        }
+        if (data[idx].type =="BLANK_CELL"){
+            let emptyTd = document.createElement('td');
+            emptyTd.style.width = data[idx].cellWidth;
+            emptyTd.style.height = data[idx].cellHeight;
+            emptyTd.innerHTML = "           ";
+            row.appendChild(emptyTd);
+
+
+        }
+
+    }
+    tbody.appendChild(row);
+ }
+ table.appendChild(tbody);
+ let edBtn = getEditTableBtn();
+//  edBtn.classList.add("float-left");
+
+ tableDiv.append(edBtn);
+tableDiv.append(table);
+// tableDiv.appendChild(editBtn);
+return tableDiv;
+
+
+}
+
+//RerenderDropdowns
+function   reRenderDropDown(id, data){
+    console.log("DropDown");
+        reqId = id.match(/(\d+)/)[0];
+      let dropDownDiv = document.createElement("address");
+      dropDownDiv.setAttribute("id", "dropDownDiv".concat(reqId.toString()));
+      dropDownDiv.setAttribute("class", "dropDownDiv");
+      dropDownDiv.style.width = "200px";
+      let selectField = document.createElement('select');
+      selectField.setAttribute("id", id.toString());
+      selectField.setAttribute("class", "form-select");
+      selectField.classList.add(["form-select-sm"]);
+
+      for(d of data){
+        let tempOptionField = document.createElement('option');
+        tempOptionField.value=d;
+        if(d == '0'){
+        tempOptionField.text = ' ';
+        }
+        else{
+            tempOptionField.text = d;
+        }
+        selectField.add(tempOptionField)
+      }
+
+
+                dropDownDiv.append(selectField)
+                return dropDownDiv;
+
+
+    }
+
 
         //rendering file after getting file data
         function renderFile(data){
             const content = JSON.parse(data);
             const pdfFile = document.getElementById('pdf-file');
             const currUser = document.getElementById('current-user')
-            //console.log(pdfFile.children)
 
             if( pdfFile.children.length ){
                 const noOfItems = pdfFile.children.length
@@ -2205,9 +2702,6 @@ function getDateEditButton(){
                     pdfFile.removeChild(pdfFile.children[0]);
                 }
             }
-
-            console.log(typeof data);
-            console.log(typeof content)
 
             for( let item of content ){
                 const holder = getHolderDIV(item);
@@ -2218,10 +2712,16 @@ function getDateEditButton(){
                     inputField.value = item.data;
 
                 }
+                if( item.type === "EDIT_P" ){
+                    inputField = getParaField();
+                    inputField.innerHTML = item.data;
+
+                }
+
 
                 if( item.type === "DATE_INPUT" ){
-                    inputField = getDateField();
-                    inputField.value = item.data;
+                    inputField = getDateField2(item.data);
+                    // inputField.value = item.data;
                 }
 
                 if( item.type === "IMG_INPUT" ){
@@ -2235,14 +2735,42 @@ function getDateEditButton(){
                     inputField = getSignField();
 
                 }
+                if( item.type === "TABLE_INPUT" ){
+                    // holder.style.width = '200px';
+                    // holder.style.height = '100px';
+                    // inputField = getSignField();
+                    const measure = {
+                        width: item.width,
+                        height: item.height,
+                        left: item.left,
+                        top: item.top,
+                        auth_user: item.auth_user,
+                    }
+                    let reholdingDiv = getHolderDIV(measure);
+                    // reholdingDiv.style.overflow = "auto";
+                    // reTable = reRenderTableField(currUser.innerHTML,item.tableId, item.data)
+                    // reholdingDiv.append(reTable)
+                    // pdfFile.append(reholdingDiv);
+                    inputField = reRenderTableField(currUser.innerHTML,item.tableId, item.data)
+                    // continue;
 
-                console.log("Item - ", item.type, ", User - ", item.auth_user)
-                console.log(item.auth_user != null)
-
-                if ( item.auth_user != "null" && item.auth_user != currUser.innerHTML ){
-                    inputField.setAttribute('disabled', true);
                 }
 
+                if( item.type === "DROPDOWN_INPUT" ){
+                    holder.style.width = item.width;
+                    holder.style.height = item.height;
+                    holder.style.top = item.top;
+                    holder.style.left = item.left;
+                    inputField = reRenderDropDown(item.dropId, item.data);
+                }
+
+
+                if (item.auth_user != "null" && item.auth_user != currUser.innerHTML){
+                    if (!isTemplate) {
+                        inputField.setAttribute('disabled', true);
+                    }
+
+                }
                 holder.append(inputField)
                 pdfFile.append(holder);
             }
