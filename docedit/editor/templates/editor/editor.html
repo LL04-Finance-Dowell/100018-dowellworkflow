@@ -7,17 +7,19 @@ Create Document
 {% block content %}
 
 {% load static %}
+
 {{ document.id|json_script:"documentID" }}
+{{ document.verify|json_script:"verify" }}
+{{ document.file|json_script:"file-data" }}
 {{ document.name|json_script:"documentName" }}
+{{ document.template|json_script:"template" }}
+{{ document.created_by|json_script:"created_by" }}
+{{ request.user.username|json_script:"curr_user" }}
 
 {% if document.auth_user_list %}
     {{ document.auth_user_list|json_script:"auth_user_list" }}
 {% endif %}
-{{ document.file|json_script:"file-data" }}
-{{ document.verify|json_script:"verify" }}
-{{ document.template|json_script:"template" }}
-{{ document.created_by|json_script:"created_by" }}
-{{ request.user.username|json_script:"curr_user" }}
+
 
 
 <div style="display:none">
@@ -33,89 +35,78 @@ Create Document
 
 
 
-<div>
+<div id="editor-container">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-
     <script src="https://unpkg.com/pdf-lib"></script>
 
-    <!--Beginning of Text Formatting Form-->
-     {% include 'editor/text_format.html' %}
+
     <!--End of Text FOrmatting Form-->
      <!--Modal classes-->
     {% include 'editor/modal_classes.html' %}
+    {% include 'editor/text_format.html' %}
 
 
 
 
     <div class = "row">
         <div class="doc-container col-md-9">
+            <!--Beginning of Text Formatting Form-->
             <div class="page">
-                <div id="pdf-file" style = "width:90%;" class="doc-content">
+                <div id="pdf-file" style = "width:100%;" class="doc-content">
 
                 </div>
             </div>
         </div>
 
-
-
-
         <div class="menu-container col-md-3">
-            <!--<div style="display: flex; flex-direction:row; justify-content: space-around;">-->
-            <!--    <small id="file_id" style="display: none"></small>-->
-            <!--    <small id="file_name"></small>-->
-
-            <!--</div>-->
-            {% if request.user.username == document.created_by %}
+            {% if document.template %}
                 <h6>Fields</h6>
                 <div class = "row">
                     <div class = "col-md-12">
-                    <div class="button-container">
-                        <!--<div class= "row">-->
-                        <div id="edP-btn" class="drag-btn" draggable="true"><p class="btn-text">Editable P</p><i class="far fa-align-justify"></i></div>
-                        <div id="txt-btn" class="drag-btn" draggable="true"><p class="btn-text">Text</p><i class="fas fa-align-left"></i></div>
-                        <div id="img-btn" class="drag-btn" draggable="true"><p class="btn-text">Image</p><i class="far fa-image"></i></div>
-                        <div id="table-btn" class="drag-btn" draggable="true"><p class="btn-text">Table</p><i class="fas fa-table"></i></div>
-                        <div id="signature-btn" class="drag-btn" draggable="true"><p class="btn-text">Signature</p><i class="fas fa-signature"></i></div>
-                        <div id="date-btn" class="drag-btn" draggable="true"><p class="btn-text">Date</p><i class="fas fa-calendar-day"></i></div>
-                    <!--</div>-->
+                        <div class="button-container">
+                            <div id="edP-btn" class="drag-btn" draggable="true"><p class="btn-text">Editable P</p><i class="far fa-align-justify"></i></div>
+                            <div id="txt-btn" class="drag-btn" draggable="true"><p class="btn-text">Text</p><i class="fas fa-align-left"></i></div>
+                            <div id="img-btn" class="drag-btn" draggable="true"><p class="btn-text">Image</p><i class="far fa-image"></i></div>
+                            <div id="table-btn" class="drag-btn" draggable="true"><p class="btn-text">Table</p><i class="fas fa-table"></i></div>
+                            <div id="signature-btn" class="drag-btn" draggable="true"><p class="btn-text">Signature</p><i class="fas fa-signature"></i></div>
+                            <div id="date-btn" class="drag-btn" draggable="true"><p class="btn-text">Date</p><i class="fas fa-calendar-day"></i></div>
+
+                        </div>
+                        <div class = "button-container2">
+                            <div id="dropdown-btn" class="drag-btn mb-3"  draggable="true"><p class="btn-text">Dropdown</p><i class="far fa-list-alt"></i></div>
+                        </div>
+                        <!--<div class="button-container">-->
+                            <!--<div class= "row">-->
+                        <!--    <div id="signature-btn" class="drag-btn" draggable="true"><p class="btn-text">Signature</p><i class="fas fa-signature"></i></div>-->
+                        <!--    <div id="date-btn" class="drag-btn" draggable="true"><p class="btn-text">Date</p><i class="fas fa-calendar-day"></i></div>-->
+                        <!--    <div id="dropdown-btn" class="drag-btn" style ="display:none;" draggable="true"><p class="btn-text">Dropdown</p><i class="far fa-list-alt"></i></div>-->
+                        <!--</div>-->
+                        <!--</div>-->
                     </div>
-                    <div class = "button-container2">
-                   <div id="dropdown-btn" class="drag-btn mb-3"  draggable="true"><p class="btn-text">Dropdown</p><i class="far fa-list-alt"></i></div>
+                {% endif %}
+                    <div class = "col-md-12">{% csrf_token %}
+                        {% if document.verify %}
+                            <h3>Sign, Save and submit</h3>
+                            <form method="post">{% csrf_token %}
+                                <input type="hidden" name="id_" value="{{  document.id }}" />
+                                <input type="hidden" name="documentData" id="documentData"/>
+                                <button onclick="signSubmit()" class="btn btn-outline-info">Save Signature</button>
+                                <input style="display: none" type="submit" class="btn btn-outline-success mt-3" id="Signed"/>
+                            </form>
+                        {% elif document.template %}
+                            <button id='save-template-btn' class="btn btn-outline-success mt-3">Save Template</button>
+                        {% else %}
+                            <a style="display:none" class="btn btn-outline-primary mt-3" id="show-btn">Show PDF</a>
+                            <iframe id="pdf" style="display: none; width: 100%; height: 100vh;"></iframe>
+                            <button id="addToWorkFlowButton" class="btn btn-outline-primary mt-3"/ type="submit">Process Document</button>
+                            <button id='save-btn' class="btn btn-outline-success mt-3">Save Document</button>
+                        {% endif %}
                     </div>
-                    <!--<div class="button-container">-->
-                        <!--<div class= "row">-->
-                    <!--    <div id="signature-btn" class="drag-btn" draggable="true"><p class="btn-text">Signature</p><i class="fas fa-signature"></i></div>-->
-                    <!--    <div id="date-btn" class="drag-btn" draggable="true"><p class="btn-text">Date</p><i class="fas fa-calendar-day"></i></div>-->
-                    <!--    <div id="dropdown-btn" class="drag-btn" style ="display:none;" draggable="true"><p class="btn-text">Dropdown</p><i class="far fa-list-alt"></i></div>-->
-                    <!--</div>-->
-                    <!--</div>-->
                 </div>
-            {% endif %}
-                <div class = "col-md-12">{% csrf_token %}
-                    {% if document.verify %}
-                        <h3>Sign, Save and submit</h3>
-                        <form method="post">{% csrf_token %}
-                            <input type="hidden" name="id_" value="{{  document.id }}" />
-                            <input type="hidden" name="documentData" id="documentData"/>
-                            <button onclick="signSubmit()" class="btn btn-outline-info">Save Signature</button>
-                            <input style="display: none" type="submit" class="btn btn-outline-success mt-3" id="Signed"/>
-                        </form>
-                    {% elif document.template %}
-                        <button id='save-template-btn' class="btn btn-outline-success mt-3">Save Template</button>
-                    {% else %}
-                        <a style="display:none" class="btn btn-outline-primary mt-3" id="show-btn">Show PDF</a>
-                        <iframe id="pdf" style="display: none; width: 100%; height: 100vh;"></iframe>
-                        <button id="addToWorkFlowButton" class="btn btn-outline-primary mt-3"/ type="submit">Process Document</button>
-                        <button id='save-btn' class="btn btn-outline-success mt-3">Save Document</button>
-                    {% endif %}
-                </div>
-            </div>
 
         </div>
-
     </div>
-
-    <style>
+<style>
 
 /*Table CSS*/
 table, th, td{
@@ -169,6 +160,17 @@ thead, tbody{
   top: 0px;
   z-index: 10;
     display:none;
+}
+#textBox{
+    cursor: text;
+}
+#toolbox-tools{
+    position: absolute;
+
+  left: 0px;
+  top: 0px;
+  z-index: 10;
+    /* display:none; */
 }
 .compFormArticle {
     /*background-color: #e1e0e9;*/
@@ -288,8 +290,6 @@ thead, tbody{
             margin: 10px auto;
         }
 
-
-
         ::-webkit-resizer {
           display: none;
         }
@@ -354,6 +354,63 @@ thead, tbody{
           background: #555;
         }
 
+
+
+
+/*Styles for the new FOrmat*/
+#toolbox-tools {
+	width: 660px;
+	height: 160px;
+	overflow: hidden;
+}
+
+.group-handle {
+	height: 34px;
+	width: 10px;
+	cursor: move;
+}
+
+.panel-heading {
+    cursor: move;
+}
+
+.draggable-group {
+	float: left;
+}
+
+#sortable {
+	padding: 0px;
+}
+
+#sort-holder {
+	display: none;
+}
+
+#toggle-toolbox-tools {
+    cursor: pointer;
+}
+
+#close-toolbox-tools {
+	cursor: pointer;
+}
+
+.toggle-button-group {
+    cursor: pointer;
+}
+
+.draggable-group {
+    overflow: hidden;
+}
+
+.minimized {
+    width: 12px;
+    height: 36px;
+}
+/*******************************/
+
+
+
+
     </style>
 <!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
 <!--<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js">-->
@@ -361,6 +418,12 @@ thead, tbody{
 <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"></script>-->
 <!--<script src="main_tab.js"></script>-->
 </div>
+
+
+
+
+{% endblock %}
+{% block additionalscript %}
+<script type="module" src="{% static 'js/editor/text_format.js' %}"></script>
 <script src="{% static 'js/editor/editor_main.js' %}"></script>
 {% endblock %}
-
