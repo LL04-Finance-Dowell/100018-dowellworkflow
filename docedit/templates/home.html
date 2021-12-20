@@ -79,10 +79,11 @@
 			<div style="display: flex; flex-direction: column; justify-content: center;">
 				<h1 class="text-center text-white-50 greet-heading">Welcome {{ user.username|title }},</h1>
 				<div id="card-parent">
-                    <a class="card-link1" href="{% url 'editor:editor' %}">
+
+                    <a class="card-link1" href="{% url 'editor:create-document' %}">
     					<div class="card-container">
     					    <div class="inner-card-container">
-    					        <h5 class="card-title">Create Document</h5>
+    					        <h5 class="card-title">Request Document</h5>
         						<p class="card-text text-center">Create documents followed by workflow and approval process.</p>
         						<!--img class="png-images" style="margin-block-end: 15px !important;" src="{% static 'template_images/work-flow2.png' %}"-->
     					    </div>
@@ -90,17 +91,17 @@
     				</a>
 
 
-                    <a class="card-link1" href="{% url 'workflow:documents-in-workflow' %}">
+                    <a class="card-link1" href="{% url 'editor:documents-in-workflow' %}">
     					<div class="card-container">
     					    <div class="inner-card-container">
     					        <h5 class="card-title">Sign Document</h5>
     					        <p class="card-text text-center">Save time with eSignatures and sign documents on few clicks.</p>
-    					        <!--img style="width: 160px !important; height: 85px; margin: 25px;" src="{% static 'template_images/sign.png' %}"-->
+    					        
     					    </div>
-    					</div
+    					</div>
 					</a>
 
-                    <a class="card-link1" href="{% url 'workflow:created-document-list' %} ">
+                    <a class="card-link1" href="{% url 'editor:created-document-list' %} ">
     					<div class="card-container">
     					    <div class="inner-card-container">
     					        <h5 class="card-title">View Documents</h5>
@@ -109,6 +110,20 @@
     					    </div>
     					</div>
                     </a>
+
+                    {% if request.user.is_staff %}
+                        <a class="card-link1" href="{% url 'editor:create-template' %} ">
+        					<div class="card-container">
+        					    <div class="inner-card-container">
+        					        <h5 class="card-title">Template</h5>
+        					        <p class="card-text text-center">Create pre-configured templates.</p>
+        					        <!--img class="card-image-top png-images" src="{% static 'template_images/created.png' %}"-->
+        					    </div>
+        					</div>
+                        </a>
+
+                    {% endif %}
+
 				</div>
 			</div>
 
