@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>{% block title %}DOCEDIT{% endblock title %}</title>
+<meta name="viewport" content="width=device-width,
+initial-scale=1, shrink-to-fit=no">
+
+{% load static %}
+<!-- Bootstrap CSS -->
+<!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+rel="stylesheet">
+<link href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"></script>
+<!--<link href="{% static 'css/light-bootstrap-dashboard.css'  %}" rel='stylesheet' type='text/css'>-->
+<link href="{% static 'css/boot3reclaim.css'  %}" rel='stylesheet' type='text/css'>
+<!--link href="{% static 'css/custom.css'  %}" rel='stylesheet' type='text/css' -->
+<link href="{% static 'css/bootstrap-datepicker.min.css'  %}" rel='stylesheet' type='text/css'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<link href="{% static 'css/navigation.css'  %}" rel='stylesheet' type='text/css' >
+<link href="{% static 'css/custom.css'  %}" rel='stylesheet' type='text/css' >
+{% block chatcss %}{% endblock chatcss %}
+
+
+
+
+<script src="{% static 'js/bootstrap-datepicker.min.js'  %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script src="{% static 'js/main_tab.js' %}"></script>
+<script src="{% static 'js/editor/navigation.js' %}"></script>
+<style>
+.dropdown-btn {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #818181;
+  display: block;
+  border: none;
+  background: none;
+  width:100%;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+}
+.dropdown-btn:hover {
+  color: #f1f1f1;
+}
+.dropdown-container {
+  display: none;
+  background-color: #dee2e6;
+  opacity:90% ;
+  width:100%;
+  /*padding-left: 8px;*/
+  /*margin-left: 0;*/
+  position: relative;
+    top: auto;
+  margin-left: 0.255em;
+  vertical-align: 0.255em;
+  content: "";
+  border-top: 0;
+  border-right: 0.3em solid transparent;
+  border-bottom: 0.3em solid;
+  border-left: 0.3em solid transparent;
+   margin-top: 0;
+  margin-bottom: 0.125rem;
+   /*bottom: 100%;*/
+   text-align: left;
+
+}
+#dropDownOrg{
+
+
+  bottom: 100%;
+
+}
+#dropDownDoc{
+      bottom: 100%;
+     /*bottom: 0%;*/
+}
+/* Optional: Style the caret down icon */
+.fa-caret-up {
+  float: right;
+  padding-right: 2px;
+}
+
+</style>
+</head>
+<body>
+    <nav id="topWrapper" class="navbar navbar-expand navbar-light bg-light">
+            <div class="collapse navbar-collapse" id="navbarsExample02">
+            <!--<a href="#menu-toggle" id="menu-toggle" class="navbar-brand"><span class="navbar-toggler-icon"></span></a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample02" aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>-->
+        <a class="navbar-brand " href="{% url 'home' %}"><img style="border-radius: 3em;" src="https://i1.wp.com/dowellresearch.de/wp-content/uploads/2018/10/true-moments-logo-1-1-442919954-1538479590775.png?w=160&ssl=1"></a>
+
+                <ul class="navbar-nav ml-auto">
+
+                <!-- <ul class="navbar-nav"> -->
+                    <!--<li class="nav-item active"> <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a> </li>-->
+                    <!--<li class="nav-item "> <a class="nav-link" href="#">Link</a> </li>-->
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent" >
+
+
+
+                    </div>
+
+
+                </ul>
+                <form class="form-inline my-2 my-md-0"> </form>
+            </div>
+
+        </nav>
+
+        <div id="wrapper" class="toggled">
+            <div style="display:none">{{org.id}}</div>
+            <!-- Sidebar -->
+            <div id="sidebar-wrapper2">
+                <ul class="sidebar-nav">
+                    <li class="sidebar-brand"> <a href="{% url 'editor:get-dashboard' %}"> <img style="border-radius: 3em;" src="https://i1.wp.com/dowellresearch.de/wp-content/uploads/2018/10/true-moments-logo-1-1-442919954-1538479590775.png?w=160&ssl=1"> </a> </li>
+                    <!--<li> <a href="#">Dashboard</a> </li>-->
+                    <!--<li> <a href="#">Shortcuts</a> </li>-->
+                    <!--<li> <a href="#">Overview</a> </li>-->
+                    <!--<li> <a href="#">Events</a> </li>-->
+                    <!--<li> <a href="#">About</a> </li>-->
+                <li class="nav-link-dash" id="dashb"> <a class="nav-link nav-link-dash-status" href="{% url 'editor:get-dashboard' %}"><i class="fa fa-home"></i>  Dashboard</a> </li>
+                    <!--<li> <a href="#">Shortcuts</a> </li>-->
+                <li class="nav-link-dash" id="dashstatus"> <a class="nav-link nav-link-dash-status" href="{% url 'editor:get-status' %}"> <i class="fa fa-flag"></i> Status</a> </li>
+
+                 {% if request.user in org.staff_members.all %} <li class="nav-link-dash">
+                    <a class="nav-link nav-link-dash-status" href={% url 'organization:create-template' org.id %}><i class="fa fa-table"></i> Create Template</a>
+                </li>{% endif%}
+                {% if request.user in org.staff_members.all %} <li class="nav-link-dash">
+                    <a class="nav-link nav-link-dash-status" href={% url 'organization:workflow-list' org.id %}> <i class="fa fa-share-alt "></i> Manage Workflow</a></li>
+                    {% endif%}
+                </li>
+                <ul style="position:relative; list-style-type: none;" >
+                 <li class="nav-link-dash" style="position:relative;" >
+                    <button class="dropdown-btn">Documents
+    <i class="fa fa-caret-up"></i>
+  </button>
+  <div class="dropdown-container" id ="dropDownDoc" style="position:absolute; z-index:10; overflow:visible;">
+
+    <a class="nav-link nav-link-dash-status" style="width:100%" href="{% url 'editor:documents-in-workflow' %}"><i class="fa fa-id-badge "></i> Sign Document</a>
+    <a class="nav-link nav-link-dash-status" href="{% url 'editor:get-prevdocuments' %}"><i class="fa fa-file-alt"></i> Previous Docs</a>
+     <a class="nav-link nav-link-dash-status" href="{% url 'editor:create-document' %}"><i class="fa fa-file"></i> Request Doc</a>
+     <a class="nav-link nav-link-dash-status" href="{% url 'editor:created-document-list' %}"><i class="fa fa-eye"></i> View Docs</a>
+  </div>
+                </li>
+                </ul>
+                {% if request.user in org.staff_members.all %}
+                <ul style="position:relative; list-style-type: none;">
+                <li style="position:relative;" class="nav-link-dash">
+                    <button class="dropdown-btn">Organization
+    <i class="fa fa-caret-up"></i>
+  </button>
+  <div class="dropdown-container" id ="dropDownOrg" style="position:absolute; z-index:10; overflow:visible;">
+    <a class="nav-link nav-link-dash-status" href="{% url 'organization:org-home' org.id  %}">
+        <i class="fa fa-box"></i> Manage Org.</a>
+<a class="nav-link nav-link-dash-status" href="{% url 'organization:add-members' org.id  %}">
+        <i class="fa fa-tag"></i> Add Members</a>
+<a class="nav-link nav-link-dash-status" href="{% url 'organization:add-staff' org.id  %}">
+        <i class="fa fa-user-plus"></i> Add Staff</a>
+  </div>
+                </li>
+                </ul>
+{% endif%}
+
+
+
+
+
+                  {% if user.is_authenticated %}
+<li id="users-mg">
+           <div class="btn-group  dropup">
+
+  <button type="button" class="btn btn-success ">
+    {{ user.username|title }}
+  </button>
+  <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <span class="sr-only">Toggle Dropup</span>
+  </button>
+<div class="dropdown-menu " style="position:absolute;">
+    <!-- Dropdown menu links -->
+
+                            <a class="dropdown-item" href="{% url 'editor:created-document-list' %}">Created Docs</a>
+                        <a class="dropdown-item" href="{% url 'password_change'%}">Change password</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
+  </div>
+
+
+            </div>
+
+</li>
+        {% endif %}
+
+                </ul>
+
+            </div> <!-- /#sidebar-wrapper -->
+
+            <!-- Page Content -->
+            <main>
+            <!--<div id="page-content-wrapper">-->
+                <!--<div class="container-fluid">-->
+                   {% block content %}
+
+
+
+
+{% endblock content %}
+</main>
+                   <!--</div>-->
+            <!--</div>-->
+            <!-- /#page-content-wrapper -->
+        </div> <!-- /#wrapper -->
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+
+
+
+<script>
+    //* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
+let dropdown = document.getElementsByClassName("dropdown-btn");
+let i;
+
+for (i = 0; i < dropdown.length; i++) {
+  dropdown[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    let dropdownContent = this.nextElementSibling;
+    // if (dropdownContent.style.display === "block") {
+        if (dropdownContent.style.display === "inline-block") {
+
+
+      dropdownContent.style.display = "none";
+    } else {
+      dropdownContent.style.display = "inline-block";
+    }
+  });
+}
+</script>
+
+
+{% block additionalscript %}
+
+
+
+
+{% endblock %}
+</body>
+</html>
