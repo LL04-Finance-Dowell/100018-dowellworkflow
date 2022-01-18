@@ -15,26 +15,26 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from django.contrib.auth.decorators import login_required
-from django.views.generic.base import TemplateView
 
 # for static files
 from django.conf import settings
 from django.conf.urls.static import static
-
-
-
+from django.contrib.auth.decorators import login_required
+from editor.views import DashboardView
 
 urlpatterns = [
-    path('workflow/', include('workflow.urls')),
+    path('', login_required(DashboardView.as_view()), name="home"),
+    #path('', include('pages.urls')), #  home page
     path('admin/', admin.site.urls),
-    path('', login_required(TemplateView.as_view(template_name='home.html')),name='home'),
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('', include('pages.urls')),
-    path('editor/',include('editor.urls'))
-#to add static files
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path('organization/',include('organization.urls')),
+    path('editor/',include('editor.urls')),  #  editor and template routes
+    path('workflow/', include('workflow.urls')),
+    path('chat/', include('chat.urls')),
+    #path('', login_required(TemplateView.as_view(template_name='home.html')),name='home'),
+
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)         # To add static files
 
 
 
