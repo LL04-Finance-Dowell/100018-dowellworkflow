@@ -1,12 +1,12 @@
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_save
+from django.core.mail import send_mail
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from accounts.models import CustomUser
-
 from django.contrib.sites.models import Site
-from django.core.mail import send_mail
+
 
 # Create your models here.
 
@@ -51,6 +51,7 @@ class Document(models.Model):
 	update_time			= models.DateField(null=True)
 	notify_users 		= models.BooleanField(default=True)
 	created_by 			= models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, default=1)
+
 
 
 	def __str__(self):
