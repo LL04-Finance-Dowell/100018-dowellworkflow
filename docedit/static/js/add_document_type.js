@@ -127,10 +127,12 @@ addDocumentType.onclick = function(e){
 
     if( new_entry ){
         requestURL = '/workflow/create-document-type/';
+        const org = document.getElementById('org_id');
         requestBody = {
             title: document.getElementById('documentType-title').value,
             internal: internalWFList,
-            external: externalWFList
+            external: externalWFList,
+            org_id: org.innerHTML
         }
     } else {
         requestURL = '/workflow/wf_api/update-wf/';
