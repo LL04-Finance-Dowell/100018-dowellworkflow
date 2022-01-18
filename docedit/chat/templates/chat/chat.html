@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+{% extends 'base2.html' %}
+{% load static %}
+{% block chatcss %}<link rel="stylesheet" href="{% static 'css/chat.css' %}">
+<script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+{% endblock chatcss %}
+{% block content %}
+<body>
+    <div class="container wrapper">
+    <section class="chat-area">
+        <header>
+            <div class="details">
+                <h2 style="padding-top: 20px; padding-bottom: 10px;">{{room}} - {{username}}</h2>
+            </div>
+        </header>
+        <div class="chat-box" id="display"></div>
+        <div id="form-div">
+            <form id="post-form" class="typing-area">
+                {% csrf_token %}
+                <input type="hidden" name="username" id="username" value="{{username}}"/>
+                <input type="hidden" name="room_id" id="room_id" value="{{room_details.id}}"/>
+                <div class="row">
+                    <div class="col-8">
+                    <textarea placeholder="Type a message..." class="form-control" aria-label="With textarea" type="text" name="message" id="message"></textarea>
+                    </div>
+                    <div class="col-4" ><input type="submit" value="Send"></div>
+                </div>
+            </form>
+        </div>
+    </section>
+    </div>
+
+       <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+
+       <script>
+        $(document).ready(function(){
+
+        setInterval(function(){
+            $.ajax({
+                type: 'GET',
+                url : "/chat/getMessages/{{room}}/",
+                success: function(response){
+                    console.log(response);
+                    $("#display").empty();
+                    for (var key in response.messages)
+                    {
+                        var temp="<div class='container darker'><b>"+response.messages[key].user+"</b><p>"+response.messages[key].value+"</p><span class='time-left'>"+response.messages[key].date+"</span></div>";
+                        $("#display").append(temp);
+                    }
+                },
+                error: function(response){
+                    // alert('An error occurred')
+                }
+            });
+        },1000);
+        })
+        </script>
+
+       <script type="text/javascript">
+           //when you click submit which is in a form with the id post-form implement the function
+           $(document).on('submit','#post-form',function(e){
+           e.preventDefault();  //prevent automatic reloading
+
+           $.ajax({
+             type:'POST', //method
+             url:'/send',
+             data:{
+                 username:$('#username').val(),
+                 room_id:$('#room_id').val(),
+                 message:$('#message').val(),
+               csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+             },
+             success: function(data){
+                // alert(data)
+             }
+           });
+           document.getElementById('message').value = ''
+         });
+       </script>
+{% endblock content %}
+</body>
+</html>
