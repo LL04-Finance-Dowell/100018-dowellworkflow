@@ -1,0 +1,277 @@
+{% extends 'base2.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+Documents{% endblock %}
+
+ {% block content %}
+ <style>
+/*     #wrapper.toggled #sidebar-wrapper {*/
+/*  width: 100px;*/
+/*}*/
+/*.main-cont{*/
+/* width:100%;*/
+/* float: left;*/
+/*}*/
+.page-item.active.page-link {
+    color:#fdec00 !important;
+    background-color: #21633d !important;
+    border-color: #21633d !important;
+
+}
+ </style>
+  <script>
+     let myTableNames = [];
+ </script>
+    <div class="home-content-container">
+    <div class="container"  style=" overflow: auto; background-color: #fff; margin-top:20px; margin-left:20px; margin-right:20px;">
+        {% if message %}
+        <h3> {{ message }} </h3>
+    {% endif%}
+        <div class="row justify-content-center mt-5">
+            <article class="col-md-2">
+          <div class="boxed-md2 boxed-padded" style="border-radius:10px;">
+            <div class="text-center"><span class="h3">Status</span></div>
+
+
+            <ul id="cats" class="nav flex-column " role="tablist">
+
+
+
+                <li class="nav-item">
+                  <a data-toggle="tab" id="all" class="nav-link nav-link-status active" href="#allList" role="tab"  aria-controls="allList" aria-selected="true" >
+
+
+                    <span class="textside">All Docs</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+
+                      <a data-toggle="tab" id="complete" class="nav-link nav-link-status" href="#completeList" role="tab"  aria-controls="completeList" aria-selected="false" >
+
+                    <span class="textside">Complete Docs</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a data-toggle="tab" id="internalIcomplete" class="nav-link nav-link-status" href="#internalIcompleteList" role="tab"  aria-controls="internalIcompleteList" aria-selected="false" >
+
+                    <span class="textside">Processing Docs</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a data-toggle="tab" id="notInWorkFlow" class="nav-link nav-link-status" href="#notInWorkFlowList" role="tab"  aria-controls="notInWorkFlowList" aria-selected="false" >
+
+                    <span class="textside">Saved Docs</span>
+                  </a>
+                </li>
+
+
+              </ul>
+
+          </div>
+        </article>
+            <article class="col-md-10">
+          <div class="boxed-md3 boxed-padded">
+            <div class="text-center"><span class="h3">Files</span></div>
+            <div class="tab-content" id="myCats">
+
+                <div class="tab-pane fade show active" id="allList"  role="tabpanel" aria-labelledby="all" >
+                <!-- <div class="collapse"  id="category1"> -->
+
+                    <table id="allDocumentList" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Document Type</th>
+                                <th>Step In Signing</th>
+                                <th>Created By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for document in all_files %}
+                            <tr>
+                                <td>{{document.document_name}}</td>
+                                <td>{{document.document_type}}</td>
+                                <td>{{document.internal_wf_step}}</td>
+                                <td>{{document.created_by}}</td>
+
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Name</th>
+                                <th>Document Type</th>
+                                <th>Step In Signing</th>
+                                <th>Created By</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+  				</div>
+                  <div class="tab-pane fade" id="completeList" role="tabpanel" aria-labelledby="complete">
+                    <table id="completeDocumentList" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Document Type</th>
+                                <th>Step In Signing</th>
+                                <th>Created By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for document in completely_complete %}
+                            <tr>
+                                <td>{{document.document_name}}</td>
+                                <td>{{document.document_type}}</td>
+                                <td>{{document.internal_wf_step}}</td>
+                                <td>{{document.created_by}}</td>
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Name</th>
+                                <th>Document Type</th>
+                                <th>Step In Signing</th>
+                                <th>Created By</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+  				</div>
+
+                  <div class="tab-pane fade" id="internalIcompleteList" role="tabpanel" aria-labelledby="internalIcomplete">
+                    <table id="internalIcompleteDocumentList" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Document Type</th>
+                                <th>Step In Signing</th>
+                                <th>Created By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for document in incomplete_internal %}
+                            <tr>
+                                <td>{{document.document_name}}</td>
+                                <td>{{document.document_type}}</td>
+                                <td>{{document.internal_wf_step}}</td>
+                                <td>{{document.created_by}}</td>
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Name</th>
+                                <th>Document Type</th>
+                                <th>Step In Signing</th>
+                                <th>Created By</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+  				</div>
+
+                  <div class="tab-pane fade" id="notInWorkFlowList" role="tabpanel" aria-labelledby="notInWorkFlow">
+                    <table id="notInWorkFlowDocumentList" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Document Type</th>
+                                <th>Step In Signing</th>
+                                <th>Created By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for document in not_in_any_workflow %}
+                            <tr>
+                                <td>{{document.document_name}}</td>
+
+                                <td>{{document.document_type}}</td>
+                                <td>{{document.internal_wf_step}}</td>
+                                <td>{{document.created_by}}</td>
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Name</th>
+                                <th>Document Type</th>
+                                <th>Step In Signing</th>
+                                <th>Created By</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+  				</div>
+
+
+                  </div>
+
+          </div>
+        </article>
+        </div>
+        </div>
+    </div>
+  	<div class="header">
+
+  	</div>
+  	<div class="content">
+  		<div class="container">
+  			<div class="row">
+  				<div class="col-md-4">
+
+
+  				</div>
+  				<div class="col-md-8">
+
+
+  				</div>
+  			</div>
+  		</div>
+  	</div>
+      {% endblock content %}
+
+    {% block additionalscript %}
+<!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/b4aae4cb0e.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/leafo/sticky-kit/v1.1.2/jquery.sticky-kit.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.2.0/js/dataTables.fixedHeader.min.js"></script>
+    <script type="text/javascript">
+    	$(".sidebar").stick_in_parent();
+        $(document).ready(function() {
+
+
+
+    let dynamicDt = [];
+
+    let allDocumentListTable = $('#allDocumentList').DataTable( {
+        fixedHeader: true
+    } );
+    let completeDocumentListTable = $('#completeDocumentList').DataTable( {
+        fixedHeader: true
+    } );
+    let internalIcompleteDocumentListTable = $('#internalIcompleteDocumentList').DataTable( {
+        fixedHeader: true
+    } );
+    let notInWorkFlowDocumentListTable = $('#notInWorkFlowDocumentList').DataTable( {
+        fixedHeader: true
+    } );
+
+    for (let i = 0; i< myTableNames.length; i++){
+        let tempDt = $('#template'+myTableNames[i].toString() +'DocumentList').DataTable( {
+        fixedHeader: true
+    } );
+    dynamicDt.push(tempDt);
+    }
+} );
+    </script>
+
+{% endblock %}

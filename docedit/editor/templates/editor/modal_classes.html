@@ -5,16 +5,21 @@
             <div class="modal-content">
               <span class="close">&times;</span>
               <form id ="changeDropdownForm">
+
                 <label for="name">Item:</label>
+
                 <input type="text" id="name" placeholder="Enter Item" autocomplete="off">
 
                 <button id="addDropdownItemBtn">Add</button>
 
                 <label for="list">Item List:</label>
+            <div class="col-md-4">
                 <div class = "dropDownDivModal">
+
                 <select class ="form-select form-select-sm" id="newModalDropdown" name="list" size = 1 >
                     <option value = "0">0</option>
                 </select>
+                </div>
                 </div>
                 <button id="removeDropdownItemBtn">Remove Selected Item</button>
                 <button id="submitChanges">Submit</button>

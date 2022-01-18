@@ -1,6 +1,26 @@
+<!-- New Code -->
+
+
+<!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">-->
+<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>-->
+<!--<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>-->
+<!------ Include the above in your HEAD tag ---------->
+
+<!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">-->
+<!--<link href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">-->
+
+<!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css" />-->
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>-->
+
+
+
+
+
+
+
 <div id = "modalTxtForm" class="container">
         <div class="row justify-content-center mt-5 panel-body">
-            <article class="col-md-8">
+            <article class="col-md-8 ">
           <div class="boxed-md boxed-padded compFormArticle">
             <div class="text-center"><span class="h3">Text</span>
 
@@ -81,3 +101,123 @@
         </article>
         </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="panel panel-primary draggable-panel toolbar-panel ui-draggable ui-resizable" id="toolbox-tools">
+    <div class="panel-heading lang-panel-header-tools">Tools <i class="fa fa-times float-right close-panel" id="close-toolbox-tools"></i><i class="fa float-right fa-chevron-down mr-2" id="toggle-toolbox-tools"></i></div>
+
+    <ul id="sortable" class="ui-sortable">
+        <li class = "btn-group draggable-group ui-state-default">
+            <select onchange="formatDoc('formatblock',this[this.selectedIndex].value);this.selectedIndex=0;">
+                <option selected>- formatting -</option>
+                <option value="h1">Title 1 &lt;h1&gt;</option>
+                <option value="h2">Title 2 &lt;h2&gt;</option>
+                <option value="h3">Title 3 &lt;h3&gt;</option>
+                <option value="h4">Title 4 &lt;h4&gt;</option>
+                <option value="h5">Title 5 &lt;h5&gt;</option>
+                <option value="h6">Subtitle &lt;h6&gt;</option>
+                <option value="p">Paragraph &lt;p&gt;</option>
+                <option value="pre">Preformatted &lt;pre&gt;</option>
+                </select>
+        </li>
+<li class= "btn-group draggable-group ui-state-default">
+    <select onchange="formatDoc('fontname',this[this.selectedIndex].value);this.selectedIndex=0;">
+        <option class="heading" selected>- font -</option>
+        <option>Arial</option>
+        <option>Arial Black</option>
+        <option>Courier New</option>
+        <option>Times New Roman</option>
+        </select>
+</li>
+
+
+        <li class = "btn-group draggable-group ui-state-default">
+            <select onchange="formatDoc('fontsize',this[this.selectedIndex].value);this.selectedIndex=0;">
+                <option class="heading" selected>- size -</option>
+                <option value="1">Very small</option>
+                <option value="2">A bit small</option>
+                <option value="3">Normal</option>
+                <option value="4">Medium-large</option>
+                <option value="5">Big</option>
+                <option value="6">Very big</option>
+                <option value="7">Maximum</option>
+                </select>
+        </li>
+        <li class = "btn-group draggable-group ui-state-default">
+            <select onchange="formatDoc('forecolor',this[this.selectedIndex].value);this.selectedIndex=0;">
+                <option class="heading" selected>- color -</option>
+                <option value="red">Red</option>
+                <option value="blue">Blue</option>
+                <option value="green">Green</option>
+                <option value="black">Black</option>
+                </select>
+
+        </li>
+        <li class = "btn-group draggable-group ui-state-default">
+
+            <select onchange="formatDoc('backcolor',this[this.selectedIndex].value);this.selectedIndex=0;">
+                <option class="heading" selected>- background -</option>
+                <option value="red">Red</option>
+                <option value="green">Green</option>
+                <option value="black">Black</option>
+                </select>
+        </li>
+        <li class="btn-group draggable-group ui-state-default" id="group-file">
+            <div class="btn-warning pull-left group-handle"><i class="fa fa-caret-down fa-1 toggle-button-group" data-toggle="tooltip" data-placement="bottom" title="Expand / Colapse"></i></div>
+            <button class="btn btn-success btn-md" id="btn_empty" data-toggle="tooltip" onclick="if(validateMode()&&confirm('Are you sure?')){oDoc.innerHTML=sDefTxt};" data-placement="bottom" title="Clean "><i class="fa fa-brush "></i></button>
+            <button class="btn btn-success btn-md" id="btn_print" data-toggle="tooltip" onclick="printDoc();" data-placement="bottom" title="Print (Ctrl + P)"><i class="fa fa-print "></i></button>
+            <button class="btn btn-success btn-md" id="btn_undo" data-toggle="tooltip" onclick="formatDoc('undo');" data-placement="bottom" title="Undo (Ctrl + Z)"><i class="fa fa-undo "></i></button>
+            <button class="btn btn-success btn-md" id="btn_redo" data-toggle="tooltip" onclick="formatDoc('redo');" data-placement="bottom" title="Redo (Ctrl + Y)"><i class="fa fa-redo "></i></button>
+            <button class="btn btn-success btn-md" id="btn_empty" data-toggle="tooltip"onclick="formatDoc('removeFormat')"   data-placement="bottom" title="Remove Formating "><i class="fa fa-registered "></i></button>
+        </li>
+
+        <li class="btn-group draggable-group ui-state-default" id="group-toggle-lanes">
+            <div class="btn-warning pull-left group-handle"><i class="fa fa-caret-down fa-1 toggle-button-group" data-toggle="tooltip" data-placement="bottom" title="Expand / Colapse"></i></div>
+
+            <button class="btn btn-success btn-md" id="btn_bold" onclick="formatDoc('bold');" data-toggle="tooltip" data-placement="bottom" title="Bold Text"><i class="fa fa-bold"></i></button>
+            <button class="btn btn-success btn-md" id="btn_italic" onclick="formatDoc('italic');" data-toggle="tooltip" data-placement="bottom" title="Italic Text"><i class="fa fa-italic"></i></button>
+            <button class="btn btn-success btn-md" id="btn_underline" onclick="formatDoc('underline');" data-toggle="tooltip" data-placement="bottom" title="Underline Text"><i class="fa fa-underline "></i></button>
+            <!-- <button class="btn btn-primary btn-md" id="btn_4_lanes" data-toggle="tooltip" data-placement="bottom" title="Set 4 lanes displayed of the selected parts (4)"><i class="fa fa-align-justify "></i></button> -->
+        </li>
+
+
+        <li class="btn-group draggable-group ui-state-default" id="group-part-sequence">
+            <div class="btn-warning pull-left group-handle"><i class="fa fa-caret-down fa-1 toggle-button-group" data-toggle="tooltip" data-placement="bottom" title="Expand / Colapse"></i></div>
+            <button class="btn btn-success btn-md" id="btn_align_left"  onclick="formatDoc('justifyleft');"  data-toggle="tooltip" data-placement="bottom" title="Align Left"><i class="fa fa-align-left"></i><i class="fa fa-sort-numeric-asc"></i></button>
+            <button class="btn btn-success btn-md" id="btn_center"  onclick="formatDoc('justifycenter');"  data-toggle="tooltip" data-placement="bottom" title="Align Center"><i class="fa fa-align-center"></i><i class="fa fa-sort-numeric-asc"></i></button>
+            <button class="btn btn-success btn-md" id="btn_align_right"  onclick="formatDoc('justifyright');"  data-toggle="tooltip" data-placement="bottom" title="Align Right"><i class="fa fa-align-right"></i><i class="fa fa-sort-numeric-asc"></i></button>
+            <button class="btn btn-success btn-md" id="btn_numbered_list"  onclick="formatDoc('insertorderedlist');"  data-toggle="tooltip" data-placement="bottom" title="Numbered List"><i class="fa fa-list-ol "></i></button>
+            <button class="btn btn-success btn-md" id="btn_dotted_list"   onclick="formatDoc('insertunorderedlist');"   data-toggle="tooltip" data-placement="bottom" title="Dotted List "><i class="fa fa-list "></i></button>
+        </li>
+
+
+        <li class="btn-group draggable-group ui-state-default" id="group-part-select">
+            <div class="btn-warning pull-left group-handle"><i class="fa fa-caret-down fa-1 toggle-button-group" data-toggle="tooltip" data-placement="bottom" title="Expand / Colapse"></i></div>
+
+            <button class="btn btn-success btn-md" id="btn_quote_left" data-toggle="tooltip"  onclick="formatDoc('formatblock','blockquote');"  data-placement="bottom" title="Quote"><i class="fa fa-quote-left"></i></button>
+            <button class="btn btn-success btn-md" id="btn_part_select_next" data-toggle="tooltip"  onclick="formatDoc('outdent');"  data-placement="bottom" title="Delete Indetation"><i class="fa fa-align-left"></i><i class="fa fa-caret-left"></i></button>
+            <button class="btn btn-success btn-md" id="btn_addpart" data-toggle="tooltip"  onclick="formatDoc('indent');"  data-placement="bottom" title="Add Indentation"><i class="fa fa-caret-right"></i><i class="fa fa-align-right"></i></button>
+            <button class="btn btn-success btn-md" id="btn_copy" data-toggle="tooltip"  onclick="var sLnk=prompt('Write the URL here','http:\/\/');if(sLnk&&sLnk!=''&&sLnk!='http://'){formatDoc('createlink',sLnk)}"  data-placement="bottom" title="Hyperlink"><i class="fa fa-link"></i></button>
+            <button class="btn btn-success btn-md" id="btn_paste" data-toggle="tooltip"  onclick="formatDoc('cut');"  data-placement="bottom" title="Cut"><i class="fa fa-cut"></i></button>
+            <button class="btn btn-success btn-md" id="btn_clone" data-toggle="tooltip"  onclick="formatDoc('copy');"  data-placement="bottom" title="Copy"><i class="fa fa-copy "></i></button>
+            <button class="btn btn-success btn-md" id="btn_delpart" data-toggle="tooltip"  onclick="formatDoc('paste');"  data-placement="bottom" title="Paste"><i class="fa fa-paste "></i></button>
+
+        </li>
+
+    </ul>
+</div>
+
+
+<!-- End of New Code -->
+
+
+

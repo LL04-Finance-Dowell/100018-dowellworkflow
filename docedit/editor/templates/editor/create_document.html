@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base2.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
 {% block title %}
@@ -112,7 +112,7 @@ Add Document{% endblock %}
 <div class="home-content-container">
     <div class="container"  style="max-width: 80%; height: 80%; background-color: #fff; margin-top:20px;">
 	<!--<div class="container" style="max-width: 640px; background-color: #24353288;">-->
-<!--<div class="container" style="max-width: 640px; background-color: #88a421;">-->
+    <!--<div class="container" style="max-width: 640px; background-color: #88a421;">-->
 
 	{% if message %}
 	    <h3> {{ message }} </h3>
@@ -122,34 +122,16 @@ Add Document{% endblock %}
 
 
 	<div class="row justify-content-center mt-5">
-		<article class="col-md-6">
-      <div class="boxed-md boxed-padded">
-        <div class="text-center"><span class="h3">Your previous documents</span></div>
-        <!--<div class = "row">-->
-        <!--<div class = "col-md-4"></div>-->
-         <div class="dropdown">
-  <button onclick="myFunction()" class="dropbtn">Previous Documents</button>
-  <div id="myDropdown" class="dropdown-content">
-    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
-      {% for file in files %}
-              <a href="{% url 'editor:editor' file.id %}">{{ file.document_name }}</a>
-            {% endfor %}
-    <!--<a href="#about">About</a>-->
-    <!--<a href="#base">Base</a>-->
-    <!--<a href="#blog">Blog</a>-->
-    <!--<a href="#contact">Contact</a>-->
-    <!--<a href="#custom">Custom</a>-->
-    <!--<a href="#support">Support</a>-->
-    <!--<a href="#tools">Tools</a>-->
-  </div>
-  </div>
-  <!--</div>-->
 
-      </div>
-    </article>
-    	<article class="col-md-6">
+    	<article class="col-md-12">
+    	    {% if form.errors %}
+    	     <div class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong>Error!</strong> Kindly check your submission and try again.
+  </div>
+            {% endif %}
       <div class="boxed-md boxed-padded">
-        <div class="text-center"><span class="h3">Create Document</span></div>
+        <div class="text-center"><span class="h3">Request Document</span></div>
         	<form method="post" enctype="multipart/form-data">{% csrf_token %}
 		    {{ form|crispy }}
 		    <input type="submit" class="btn btn-outline-success " value="Go to Editor">
@@ -164,31 +146,4 @@ Add Document{% endblock %}
 
 	</div>
 </div>
-{% endblock %}
-{% block additionalscript %}
-<script>
-    /* When the user clicks on the button,
-toggle between hiding and showing the dropdown content */
-function myFunction() {
-  document.getElementById("myDropdown").classList.toggle("show");
-}
-
-function filterFunction() {
-  var input, filter, ul, li, a, i;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  div = document.getElementById("myDropdown");
-  a = div.getElementsByTagName("a");
-  for (i = 0; i < a.length; i++) {
-    txtValue = a[i].textContent || a[i].innerText;
-    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-      a[i].style.display = "";
-    } else {
-      a[i].style.display = "none";
-    }
-  }
-}
-</script>
-
-
 {% endblock %}

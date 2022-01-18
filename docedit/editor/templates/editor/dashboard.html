@@ -1,0 +1,336 @@
+{% extends 'base2.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+Dashboard{% endblock %}
+
+ {% block content %}
+ <style>
+
+.panel {
+  box-shadow: 0 2px 0 rgba(0,0,0,0.05);
+  border-radius: 0;
+  border: 0;
+  margin-bottom: 24px;
+}
+
+.panel-dark.panel-colorful {
+  background-color: #3b4146;
+  border-color: #3b4146;
+  color: #fff;
+}
+
+.panel-danger.panel-colorful {
+  background-color: #ddd95f;
+  border-color: #ddd95f;
+  color: #fff;
+}
+
+.panel-primary.panel-colorful {
+  background-color: #a2dd5f;
+  border-color: #a2dd5f;
+  color: #fff;
+}
+.panel-primary-add.panel-colorful {
+  background-color: #5fa2dd;
+  border-color: #5fa2dd;
+  color: #fff;
+}
+
+.panel-info.panel-colorful {
+  background-color: #dd9a5f;
+  border-color: #dd9a5f;
+  color: #fff;
+}
+.colorp1.panel-colorful {
+  background-color: #51dcf7;
+  border-color: #51dcf7;
+  color: #fff;
+}
+.colorp2.panel-colorful {
+  background-color: #f76c51;
+  border-color: #f76c51;
+  color: #fff;
+}
+.colorp3.panel-colorful {
+  background-color: #6c51f7;
+  border-color: #6c51f7;
+  color: #fff;
+}
+.colorp4.panel-colorful {
+  background-color: #51f76c;
+  border-color: #51f76c;
+  color: #fff;
+}
+
+.panel-body {
+  padding: 25px 20px;
+}
+
+.panel hr {
+  border-color: rgba(0,0,0,0.1);
+}
+
+.mar-btm {
+  margin-bottom: 15px;
+}
+
+h2, .h2 {
+  font-size: 28px;
+}
+
+.small, small {
+  font-size: 85%;
+}
+
+.text-sm {
+  font-size: .9em;
+}
+
+.text-thin {
+  font-weight: 300;
+}
+
+.text-semibold {
+  font-weight: 600;
+}
+#allDash:hover{
+    text-decoration: none;
+
+}
+.panel:hover{
+    transform: scale(1.1, 1.1);
+    transition: transform 1s;
+}
+</style>
+
+   <div class="container bootstrap snippets bootdey">
+    <div class="nav flex-row nav-pills nav-pills-secondary" role="tablist" aria-orientation="horizontal">
+        <a class="nav-link nav-pill-dash active"  id="oneWeekBtn"  data-toggle="pill" href="#oneWeekPage" role="tab" aria-controls="oneWeekPage" aria-selected="true" >1 Week</a>
+        <a class="nav-link nav-pill-dash"  id="oneMonthBtn" data-toggle="pill" href="#oneMonthPage" role="tab" aria-controls="oneMonthPage" aria-selected="false" >1 Month</a>
+        <a class="nav-link nav-pill-dash"  id ="oneYearBtn" data-toggle="pill" href="#oneYearPage" role="tab" aria-controls="oneYearPage" aria-selected="false" >1 Year</a>
+      </div>
+<div class="tab-content " id="myTimes">
+    <div class="tab-pane fade show active" id="oneWeekPage" role="tabpanel"  aria-labelledby="oneWeekBtn"  >
+        <div class="row">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <a  id = "allDash" href="https://100018.pythonanywhere.com/editor/get-status/#all" >
+                <div class="panel panel-dark panel-colorful">
+                    <div class="panel-body text-center">
+                        <p class="text-uppercase mar-btm text-sm">All </p>
+                        <i class="fa fa-file-alt fa-5x"></i>
+                        <hr>
+                        <p class="h2 text-thin"> {{one_week.all_files| length}} Files</p>
+                        <!--<small><span class="text-semibold"></span> </small>-->
+                    </div>
+                </div>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+
+             <a  id = "allDash" href="https://100018.pythonanywhere.com/editor/get-status/#complete" >
+
+                <div class="panel panel-danger panel-colorful">
+                    <div class="panel-body text-center">
+                        <p class="text-uppercase mar-btm text-sm">Complete </p>
+                        <i class="fa fa-file fa-5x"></i>
+                        <hr>
+                        <p class="h2 text-thin">
+                            {{one_week.completely_complete| length}} Files
+</p>
+                        <!--<small><span class="text-semibold"><i class="fa fa-unlock-alt fa-fw"></i> 0</span> Sent to Users</small>-->
+                    </div>
+                </div>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+             <a  id = "allDash" href="https://100018.pythonanywhere.com/editor/get-status/#internalIcomplete" >
+
+                <div class="panel panel-primary panel-colorful">
+                    <div class="panel-body text-center">
+                        <p class="text-uppercase mar-btm text-sm">Processing</p>
+                        <i class="fa fa-hourglass fa-5x"></i>
+                        <hr>
+                        <p class="h2 text-thin">{{one_week.incomplete_internal| length}} Files</p>
+                        <!--<small><span class="text-semibold"> All<i class="fa fa-shopping-cart fa-fw"></i> </span> Yet to be done</small>-->
+                    </div>
+                </div>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                             <a  id = "allDash" href="https://100018.pythonanywhere.com/editor/get-status/#notInWorkFlow" >
+
+                <div class="panel panel-primary-add panel-colorful">
+                    <div class="panel-body text-center">
+                        <p class="text-uppercase mar-btm text-sm">Saved Documents</p>
+                        <i class="fa fa-folder fa-5x"></i>
+                        <hr>
+                        <p class="h2 text-thin">{{one_week.not_in_any_workflow| length}} Files</p>
+                        <!--<small><span class="text-semibold"> All<i class="fa fa-shopping-cart fa-fw"></i> </span> Yet to be done</small>-->
+                    </div>
+                </div>
+                </a>
+            </div>
+            </div>
+
+        </div>
+        <div class="tab-pane fade" id="oneMonthPage" role="tabpanel"  aria-labelledby="oneMonthBtn" >
+            <div class="row">
+
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <a  id = "allDash" href="https://100018.pythonanywhere.com/editor/get-status/#all" >
+                    <div class="panel panel-dark panel-colorful">
+                        <div class="panel-body text-center">
+                            <p class="text-uppercase mar-btm text-sm">All </p>
+                            <i class="fa fa-file-alt fa-5x"></i>
+                            <hr>
+                            <p class="h2 text-thin"> {{one_month.all_files| length}} Files</p>
+                            <!--<small><span class="text-semibold"></span> </small>-->
+                        </div>
+                    </div>
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+
+                 <a  id = "allDash" href="https://100018.pythonanywhere.com/editor/get-status/#complete" >
+
+                    <div class="panel panel-danger panel-colorful">
+                        <div class="panel-body text-center">
+                            <p class="text-uppercase mar-btm text-sm">Complete </p>
+                            <i class="fa fa-file fa-5x"></i>
+                            <hr>
+                            <p class="h2 text-thin">
+                                {{one_month.completely_complete| length}} Files
+    </p>
+                            <!--<small><span class="text-semibold"><i class="fa fa-unlock-alt fa-fw"></i> 0</span> Sent to Users</small>-->
+                        </div>
+                    </div>
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                 <a  id = "allDash" href="https://100018.pythonanywhere.com/editor/get-status/#internalIcomplete" >
+
+                    <div class="panel panel-primary panel-colorful">
+                        <div class="panel-body text-center">
+                            <p class="text-uppercase mar-btm text-sm">Internal Incomplete</p>
+                            <i class="fa fa-hourglass fa-5x"></i>
+                            <hr>
+                            <p class="h2 text-thin">{{one_month.incomplete_internal| length}} Files</p>
+                            <!--<small><span class="text-semibold"> All<i class="fa fa-shopping-cart fa-fw"></i> </span> Yet to be done</small>-->
+                        </div>
+                    </div>
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                                 <a  id = "allDash" href="https://100018.pythonanywhere.com/editor/get-status/#notInWorkFlow" >
+
+                    <div class="panel panel-primary-add panel-colorful">
+                        <div class="panel-body text-center">
+                            <p class="text-uppercase mar-btm text-sm">Not in any WorkFlow</p>
+                            <i class="fa fa-folder fa-5x"></i>
+                            <hr>
+                            <p class="h2 text-thin">{{one_month.not_in_any_workflow| length}} Files</p>
+                            <!--<small><span class="text-semibold"> All<i class="fa fa-shopping-cart fa-fw"></i> </span> Yet to be done</small>-->
+                        </div>
+                    </div>
+                    </a>
+                </div>
+                </div>
+
+            </div>
+            <div class="tab-pane fade" id="oneYearPage" role="tabpanel"  aria-labelledby="oneYearBtn" >
+                <div class="row">
+
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <a  id = "allDash" href="https://100018.pythonanywhere.com/editor/get-status/#all" >
+                        <div class="panel panel-dark panel-colorful">
+                            <div class="panel-body text-center">
+                                <p class="text-uppercase mar-btm text-sm">All </p>
+                                <i class="fa fa-file-alt fa-5x"></i>
+                                <hr>
+                                <p class="h2 text-thin"> {{one_year.all_files| length}} Files</p>
+                                <!--<small><span class="text-semibold"></span> </small>-->
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+
+                     <a  id = "allDash" href="https://100018.pythonanywhere.com/editor/get-status/#complete" >
+
+                        <div class="panel panel-danger panel-colorful">
+                            <div class="panel-body text-center">
+                                <p class="text-uppercase mar-btm text-sm">Complete </p>
+                                <i class="fa fa-file fa-5x"></i>
+                                <hr>
+                                <p class="h2 text-thin">
+                                    {{one_year.completely_complete| length}} Files
+        </p>
+                                <!--<small><span class="text-semibold"><i class="fa fa-unlock-alt fa-fw"></i> 0</span> Sent to Users</small>-->
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                     <a  id = "allDash" href="https://100018.pythonanywhere.com/editor/get-status/#internalIcomplete" >
+
+                        <div class="panel panel-primary panel-colorful">
+                            <div class="panel-body text-center">
+                                <p class="text-uppercase mar-btm text-sm">Internal Incomplete</p>
+                                <i class="fa fa-hourglass fa-5x"></i>
+                                <hr>
+                                <p class="h2 text-thin">{{one_year.incomplete_internal| length}} Files</p>
+                                <!--<small><span class="text-semibold"> All<i class="fa fa-shopping-cart fa-fw"></i> </span> Yet to be done</small>-->
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                                     <a  id = "allDash" href="https://100018.pythonanywhere.com/editor/get-status/#notInWorkFlow" >
+
+                        <div class="panel panel-primary-add panel-colorful">
+                            <div class="panel-body text-center">
+                                <p class="text-uppercase mar-btm text-sm">Not in any WorkFlow</p>
+                                <i class="fa fa-folder fa-5x"></i>
+                                <hr>
+                                <p class="h2 text-thin">{{one_year.not_in_any_workflow| length}} Files</p>
+                                <!--<small><span class="text-semibold"> All<i class="fa fa-shopping-cart fa-fw"></i> </span> Yet to be done</small>-->
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                    </div>
+
+                </div>
+</div>
+    </div>
+      {% endblock content %}
+
+    {% block additionalscript %}
+<!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/b4aae4cb0e.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/leafo/sticky-kit/v1.1.2/jquery.sticky-kit.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.2.0/js/dataTables.fixedHeader.min.js"></script>
+    <script type="text/javascript">
+
+    	$(".sidebar").stick_in_parent();
+        $(document).ready(function() {
+    let table1 = $('#example1').DataTable( {
+        fixedHeader: true
+    } );
+    let table2 = $('#example2').DataTable( {
+        fixedHeader: true
+    } );
+    let table3 = $('#example3').DataTable( {
+        fixedHeader: true
+    } );
+} );
+    </script>
+
+{% endblock %}
