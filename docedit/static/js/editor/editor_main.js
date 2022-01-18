@@ -269,6 +269,17 @@ const toogleTxtFormBlock =  ()=>{
             const saveFileRequest = new Request(requestURL, {headers: {'X-CSRFToken': csrftoken}} );
             const documentID = JSON.parse(document.getElementById('documentID').textContent);
             const documentName = JSON.parse(document.getElementById('documentName').textContent);
+            let alertBox = document.getElementById('showAlert');
+            let alertSuc = document.createElement('div');
+            alertSuc.setAttribute('class', 'alert');
+            alertSuc.classList.add("alert-success", 'alert-dismissible');
+            // let butCl = document.createElement('button');
+            // butCl.setAttribute('class', 'close');
+            // butCl.setAttribute('type', 'button');
+            // butCl.setAttribute('data-dismiss', 'alert');
+            // let t = document.createTextNode('&times;');
+            // butCl.appendChild(t);
+
 
             const body = {
                 file_id: documentID,
@@ -287,8 +298,13 @@ const toogleTxtFormBlock =  ()=>{
                 console.log(fileObject)
                 documentID.textContent = fileObject.file.file_id
                 documentName.textContent = fileObject.file.name;
+                let alertSuccessMessage = '<button type="button" class="close" data-dismiss="alert">&times;</button><strong>Success! </strong>'+ fileObject.file.name + ' file saved succesfully.';
+            // alertSuc.append(butCl);
+                alertSuc.innerHTML =alertSuccessMessage;
 
-                alert(fileObject.file.name +' - file saved.')
+                alertBox.append(alertSuc);
+
+                // alert(fileObject.file.name +' - file saved.')
             })
         }
 
@@ -477,7 +493,6 @@ const toogleTxtFormBlock =  ()=>{
 
             //Create Dropdown with id passed
             function getDropDownField(id){
-                //display automatic empty drop down
                 console.log("id = ".concat(id.toString()));
                 let dropDownDiv = document.createElement("address");
                 dropDownDiv.setAttribute("id", "dropDownDiv".concat(id.toString()));
@@ -487,7 +502,10 @@ const toogleTxtFormBlock =  ()=>{
                 let selectField = document.createElement('select');
 
                 selectField.setAttribute("id", id.toString());
-                selectField.setAttribute("class", "form-select form-select-sm");
+                // selectField.setAttribute("class", "selectDropDown");
+                // selectField.setAttribute("class", "form-select");
+                selectField.setAttribute("class", "custom-select");
+                // selectField.classList.add( "selectpicker");
 
 
 
@@ -498,6 +516,40 @@ const toogleTxtFormBlock =  ()=>{
                 selectField.add(defaultOptionField)
 
                 dropDownDiv.append(selectField)
+                return dropDownDiv;
+
+            }
+
+
+
+            //Create Dropdown2 with id passed
+            function getDropDownField2(id){
+                //display automatic empty drop down
+                console.log("id = ".concat(id.toString()));
+                let dropDownDiv = document.createElement("address");
+                dropDownDiv.setAttribute("id", "dropDownDiv".concat(id.toString()));
+                dropDownDiv.setAttribute("class", "dropDownDiv");
+                dropDownDiv.style.width = "200px";
+                let divField = document.createElement('div');
+                divField.setAttribute("class", "dropdown");
+                divField.setAttribute("id", id.toString());
+                let buttField = document.createElement('button');
+                buttField.setAttribute("class", "btn");
+                buttField.classList.add( "btn-secondary", "dropdown-toggle");
+                buttField.setAttribute("data-toggle", "dropdown");
+                buttField.setAttribute("type", "button");
+                let spanField = document.createElement('span');
+                spanField.setAttribute('class', 'caret');
+                buttField.append(spanField);
+                let ulField = document.createElement('ul');
+                ulField.setAttribute("class", "dropdown-menu");
+                let liField = document.createElement('li');
+                liField.value="0"
+                liField.text = " "
+                ulField.appendChild(liField);
+                divField.append(buttField);
+                divField.append(ulField);
+                dropDownDiv.append(divField)
                 return dropDownDiv;
 
             }
@@ -781,6 +833,10 @@ function createTableForm(defaulTb){
                 }
             }
 
+
+
+
+
             //Handle Edit when Clicked
             function  getEditBtn(){
                 const editBtn = document.createElement('span');
@@ -1040,7 +1096,13 @@ function getDateEditButton(){
                         }
 
                         );
+ $('.date').click(function(){
+//   $("p:first").addClass("intro");
+$(".table-condensed").addClass("table-success");
+// $(".table-condensed").css('border-radius', '30px');
+// $(".table-condensed").css('border-radius', '30px');
 
+});
                         }
 
                 return divCont;
