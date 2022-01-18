@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     'crispy_forms',
     'editor',
     'workflow',
+    'organization',
     'jquery',
+    'chat',
 
 ]
 
