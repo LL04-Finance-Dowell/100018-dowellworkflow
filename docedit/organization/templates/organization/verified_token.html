@@ -1,0 +1,35 @@
+{% extends 'base2.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}
+User status{% endblock %}
+
+
+
+{% block content %}
+{% if message %}
+    <h3> {{ message }} </h3>
+{% endif%}
+
+<div class="home-content-container">
+
+    <div class="container"  style="max-width: 80%; overflow: auto; background-color: #fff; margin-top:20px;">{% csrf_token %}
+
+    	<div class="row justify-content-center mt-5">
+    		<article class="col-md-12">
+                {{status}}
+            </article>
+    	</div>
+
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
