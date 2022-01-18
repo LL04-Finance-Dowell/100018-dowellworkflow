@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth.decorators import login_required
 from . import views
-from .views import DocumentCreateView, Editor, TemplateEditor, CreateTemplate, DocumentCreatedListView, DocumentWorkFlowAddView, DocumentExecutionListView, DocumentVerificationView
+from .views import DocumentCreateView, Editor, TemplateEditor, CreateTemplate, DocumentCreatedListView, DocumentWorkFlowAddView, DocumentExecutionListView, DocumentVerificationView, DashboardView, StatusView
 
 
 app_name = 'editor'
@@ -24,6 +24,16 @@ urlpatterns = [
     path('add-document/', login_required(DocumentWorkFlowAddView.as_view()), name="add-document"),
     path('created-document-list/', login_required(DocumentCreatedListView.as_view()), name='created-document-list'),
     path('documents-in-workflow/', login_required(DocumentExecutionListView.as_view()), name="documents-in-workflow"),
-    path('verify-document/<int:id>', login_required(DocumentVerificationView.as_view()), name="verify-document")
+    path('verify-document/<int:id>', login_required(DocumentVerificationView.as_view()), name="verify-document"),
+
+    # dashboard related routes
+    path('get-dashboard/', login_required(DashboardView.as_view()), name="get-dashboard"),
+    # path('get-status/', login_required(views.get_status), name="get-status"),
+    path('get-status/', login_required(StatusView.as_view()), name="get-status"),
+
+    #get previous documents
+    path('get-prevdocuments/', login_required(views.previous_documents), name="get-prevdocuments"),
+    path('get-templates/', login_required(views.previous_templates), name="get-templates"),
+
 
 ]

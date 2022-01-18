@@ -1,15 +1,18 @@
 import os
 import json
 import random
+from datetime import datetime, timedelta
 from django.views.generic.list import ListView
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.conf import settings
 from .models import EditorFile, Template
+from workflow.models import DocumentType
 from django.contrib import messages
 from django.views import View
-from .forms import CreateDocumentForm, CreateTemplateForm
+from .forms import RequestDocumentForm, CreateTemplateForm
+from organization.models import Organization
 
 def get_name():
     chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0987654321'
@@ -19,8 +22,6 @@ def get_name():
         string += chars[random.randrange(0, len(chars) - 1 , 1)]
 
     return string
-
-
 
 
 
@@ -64,7 +65,7 @@ class Editor(View):
 
 
 class DocumentCreateView(View):
-    form = CreateDocumentForm()
+    form = RequestDocumentForm()
     model = EditorFile
     def get(self, request):
         context = {
@@ -75,16 +76,13 @@ class DocumentCreateView(View):
         return render(request, 'editor/create_document.html', context=context)
 
     def post(self, request):
-        form = CreateDocumentForm(request.POST)
+        form = RequestDocumentForm(request.POST)
         doc = None
         path = None
         data = ''
         if form.is_valid() :
-            form.instance.created_by = request.user
             path = os.path.join(settings.MEDIA_ROOT, get_name() + '.json')
-            form.instance.file = path
-
-            template = Template.objects.filter(document_type = form.instance.document_type)[0]
+            template = form.cleaned_data['template']
 
             if template :
                 temp_path = template.file.path
@@ -94,16 +92,18 @@ class DocumentCreateView(View):
 
             with open(path, 'w') as f:
                 f.write(data)
-            doc = form.save()
+
+            doc = EditorFile(document_name=form.cleaned_data['document_name'], document_type=template.document_type, file=path, created_by = request.user)
+            doc.save()
             for usr in get_userlist(doc.document_type):
                 doc.auth_user_list.add(usr)
             doc.save()
-
             return redirect('editor:editor', id=doc.id)
 
         else:
             messages.error(request, 'Unable to create document.')
             return redirect('editor:create-document')
+
 
 
 #   route only used by templates
@@ -443,3 +443,88 @@ def request_document(request):
 
 
 '''
+
+
+class DashboardView(View):
+    model = EditorFile
+
+    def get(self, request, *args, **kwargs):
+        #   Create time filters
+        one_week_ago = datetime.today() - timedelta(days=7)
+        one_month_ago  = datetime.today()- timedelta(days=30)
+        one_year_ago  = datetime.today()- timedelta(days=365)
+
+        org_list = Organization.objects.all()
+        is_staff = False
+        is_member = False
+
+        for org in org_list :
+            if request.user in org.staff_members.all():
+                is_staff = True
+                break
+            if request.user in org.members.all():
+                is_member = True
+                break
+
+        if is_member or is_staff:
+
+            all_files = self.model.objects.all().filter(created_by=request.user)
+            ##Apply the general filters
+            incomplete_internal = all_files.exclude(internal_wf_step='complete').exclude(internal_wf_step__isnull=True)
+            completely_complete =  all_files.filter(internal_wf_step='complete',external_wf_step='complete')
+            not_in_any_workflow = all_files.filter(internal_wf_step__isnull=True, external_wf_step__isnull=True)
+            ##Create time container
+
+
+            summary = { 'org': org, 'is_staff': is_staff, 'is_member': is_member, "one_week":{}, "one_month":{}, "one_year":{} }
+            ##Apply time filters to get necessary data
+            summary["one_week"]["all_files"]= all_files.filter(created_on__gte=one_week_ago)
+            summary["one_month"]["all_files"]= all_files.filter(created_on__gte=one_month_ago)
+            summary["one_year"]["all_files"]= all_files.filter(created_on__gte=one_year_ago)
+            summary["one_week"]["completely_complete"]= completely_complete.filter(created_on__gte=one_week_ago)
+            summary["one_month"]["completely_complete"]= completely_complete.filter(created_on__gte=one_month_ago)
+            summary["one_year"]["completely_complete"]= completely_complete.filter(created_on__gte=one_year_ago)
+            summary["one_week"]["not_in_any_workflow"]= not_in_any_workflow.filter(created_on__gte=one_week_ago)
+            summary["one_month"]["not_in_any_workflow"]= not_in_any_workflow.filter(created_on__gte=one_month_ago)
+            summary["one_year"]["not_in_any_workflow"]= not_in_any_workflow.filter(created_on__gte=one_year_ago)
+            summary["one_week"]["incomplete_internal"]= incomplete_internal.filter(created_on__gte=one_week_ago)
+            summary["one_month"]["incomplete_internal"]= incomplete_internal.filter(created_on__gte=one_month_ago)
+            summary["one_year"]["incomplete_internal"]= incomplete_internal.filter(created_on__gte=one_year_ago)
+            return render(request, 'editor/dashboard.html', summary)
+        else:
+            return redirect('organization:create-orgniz')
+
+
+
+
+
+class StatusView(View):
+    model = EditorFile
+
+    def get(self, request, *args, **kwargs):
+        ##Get Evry data from Db
+        all_files = self.model.objects.all().filter(created_by=request.user)
+        ##Apply general filters
+        incomplete_internal = all_files.exclude(internal_wf_step='complete').exclude(internal_wf_step__isnull=True)
+        completely_complete =  all_files.filter(internal_wf_step='complete',external_wf_step='complete')
+        not_in_any_workflow = all_files.filter(internal_wf_step__isnull=True, external_wf_step__isnull=True)
+        #Create COntainer
+        summary={}
+        ##Populate container
+        summary["all_files"]= all_files
+        summary["completely_complete"]= completely_complete
+        summary["incomplete_internal"]= incomplete_internal
+        summary["not_in_any_workflow"]= not_in_any_workflow
+        return render(request, 'editor/status.html', summary)
+
+def previous_documents(request):
+    context = {
+            'files': EditorFile.objects.filter(created_by=request.user)
+        }
+    return render(request, 'editor/previous_documents.html', context)
+
+def previous_templates(request):
+    context = {
+                'files': Template.objects.all()
+            }
+    return render(request, 'doc_template/previous_templates.html', context)

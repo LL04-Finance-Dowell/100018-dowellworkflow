@@ -16,4 +16,4 @@ class CreateTemplateForm(ModelForm):
 
 class RequestDocumentForm(forms.Form):
     document_name = forms.CharField(label='Document name', max_length=100)
-    document_type = forms.ModelChoiceField(queryset=DocumentType.objects.all(), to_field_name="title")
+    template = forms.ModelChoiceField(queryset=Template.objects.all(), label="Select Template", to_field_name="template_name")

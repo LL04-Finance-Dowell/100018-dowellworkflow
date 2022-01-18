@@ -17,7 +17,7 @@ def user_directory_path(filename):
 
 class Template(models.Model):
     template_name   = models.CharField(max_length=100, null=False)
-    document_type   = models.OneToOneField(DocumentType, on_delete=models.CASCADE, null=False)
+    document_type   = models.ForeignKey(DocumentType, on_delete=models.CASCADE, null=False)
     auth_user_list  = models.ManyToManyField(CustomUser, related_name='auth_users')
     file            = models.FileField(upload_to=user_directory_path, null=True)
     created_by      = models.ForeignKey(CustomUser, related_name='author', on_delete=models.CASCADE, null=False)
