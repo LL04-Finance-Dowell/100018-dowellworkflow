@@ -1,0 +1,291 @@
+{% extends 'base7.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}
+Add Document{% endblock %}
+
+
+
+
+{% block content %}
+<style type="text/css">
+	/*.home-content-container{*/
+ /*       display:  flex;*/
+ /*       height: 100vh;*/
+ /*       justify-content: center;*/
+        /*background-color: #343a40;*/
+        /*background-color:#fdec00;*/
+        /*background-color: rgba(203, 203, 210, 0.5);*/
+        /*color:  black;*/
+        /*background-image: url("https://www.eitco.de/wp-content/uploads/2020/04/digitale-akte.jpg");*/
+
+
+    /*}*/
+
+
+/*.dropbtn {*/
+/*  background-color: #04AA6D;*/
+/*  color: black;*/
+/*  padding: 16px;*/
+/*  font-size: 16px;*/
+/*  border: none;*/
+/*  cursor: pointer;*/
+/*}*/
+
+/*.dropbtn:hover, .dropbtn:focus {*/
+/*  background-color: #3e8e41;*/
+  /*background-color: #04AA6D;*/
+/*}*/
+
+/*#myInput {*/
+/*  box-sizing: border-box;*/
+/*  background-image: url('searchicon.png');*/
+/*  min-width: 80%;*/
+/*  background-position: 14px 12px;*/
+/*  background-repeat: no-repeat;*/
+/*  font-size: 16px;*/
+/*  padding: 14px 20px 12px 45px;*/
+/*  border: none;*/
+  /*border-bottom: 1px solid #ddd;*/
+/*  border-bottom: 1px solid black;*/
+/*}*/
+
+/*#myInput:focus {outline: 3px solid #ddd;}*/
+
+/*.dropdown {*/
+/*  position: relative;*/
+/*  display: inline-block;*/
+/*}*/
+
+/*.dropdown-content {*/
+/*  display: none;*/
+/*  position: absolute;*/
+/*  background-color: #f6f6f6;*/
+/*  min-width: 70%;*/
+  /*height: 70%;*/
+/*  overflow: auto;*/
+/*  border: 1px solid #ddd;*/
+/*  z-index: 1;*/
+/*}*/
+
+/*.dropdown-content a {*/
+/*  color: black;*/
+/*  padding: 12px 16px;*/
+/*  text-decoration: none;*/
+/*  display: block;*/
+/*}*/
+
+/*.dropdown a:hover {background-color: #ddd;}*/
+
+/*.show {display: block;}*/
+
+
+
+/*.boxed-md.boxed-padded {*/
+/*    padding-bottom: 13px;*/
+/*    padding-left: 20px;*/
+/*    padding-right: 20px;*/
+/*}*/
+/*.boxed-md {*/
+/*    border: 1px solid #ccc;*/
+/*    margin-bottom: 14px;*/
+/*    margin-top: 14px;*/
+/*}*/
+
+/*.boxed-md>.text-center .h3 {*/
+/*    background-color: #fff;*/
+/*    padding-left: 10px;*/
+/*    padding-right: 10px;*/
+/*}*/
+
+/*.h3 {*/
+/*    margin-top: 15px;*/
+/*    margin-bottom:18px;*/
+/*       font-size: 20px;*/
+/*}*/
+/*.boxed-md>.text-center {*/
+/*    margin-top: -12px;*/
+/*    margin-bottom: 12px;*/
+/*}*/
+</style>
+
+<div class="home-content-container">
+    <div class="container"  style="max-width: 80%; overflow: auto; background-color: #fff; margin-top:20px;">
+	<!--<div class="container" style="max-width: 640px; background-color: #24353288;">-->
+    <!--<div class="container" style="max-width: 640px; background-color: #88a421;">-->
+
+	{% if message %}
+	    <h3> {{ message }} </h3>
+	{% endif%}
+
+        <div>
+
+
+	<div class="row justify-content-center mt-5">
+		<article class="col-md-12">
+<button type="button" id ="add-staff-btn" class="btn btn-dark">Add Staff</button>
+      <div class="boxed-md boxed-padded">
+        <div class="text-center"><span class="h3">Your previous documents</span></div>
+        <!--<div class = "row">-->
+        <!--<div class = "col-md-4"></div>-->
+
+
+      </div>
+    </article>
+
+	</div>
+
+
+
+
+
+	</div>
+</div>
+{% endblock %}
+
+
+
+
+
+{% block additionalscript %}
+<script type="text/javascript">
+    function submitEmail(emailId, membership) {
+        const requestURL = window.location.pathname ;
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const saveFileRequest = new Request(requestURL, {headers: {'X-CSRFToken': csrftoken}} );
+
+        const body = {
+            email: emailId,
+            member: membership
+        }
+
+
+        fetch(saveFileRequest, {
+            method: 'POST',
+            mode: 'same-origin',
+            body: JSON.stringify(body)
+        }).then(async function(response) {
+            const resJson = await response.json();
+            alert('An invitation mail sent at '+ emailId + ' .');
+            console.log(resJson)
+
+
+
+            /*
+
+            const modelContainer = document.createElement('div');
+            modelContainer.className = "model-container";
+
+            modelContainer.onclick = (event) => {
+                if(event.target.className === "model-container"){
+                    event.target.remove();
+                }
+            };
+
+            const contentBox = document.createElement('div');
+            contentBox.className = 'card';
+
+            const heading = document.createElement('h5');
+            heading.style.color = "black";
+            heading.innerHTML = 'Select staff members.'
+            const selectMenu = document.createElement('select');
+            selectMenu.clasName = 'form-select';
+            selectMenu.setAttribute('multiple', true);
+            const submitBtn = document.createElement('button');
+            submitBtn.setAttibute
+
+            for (user of resJson.user_list) {
+                const opt = document.createElement('option');
+                opt.innerHTML = user.username;
+                opt.value = user.id
+                selectMenu.append(opt)
+            }
+
+            contentBox.append(heading);
+            contentBox.append(selectMenu);
+            modelContainer.append(contentBox);
+
+            homeContainer.append(modelContainer);
+        */
+        })
+
+    }
+
+    function emailForm(designation, targetDiv) {
+        const homeContainer = document.getElementById('wrapper');//targetDiv;//wrapper//home-content-container
+
+        const modelContainer = document.createElement('div');
+        modelContainer.className = "model-container-docedit";
+        modelContainer.id = "model-container";
+
+        modelContainer.onclick = (event) => {
+            if(event.target.className === "model-container-docedit"){
+                event.target.remove();
+            }
+        };
+
+        const contentBox = document.createElement('div');
+        contentBox.className = 'card email-form';
+
+
+        const heading = document.createElement('h5');
+        heading.style.color = "black";
+        heading.innerHTML = "Enter member's email";
+
+        const emailInput = document.createElement('input');
+        emailInput.setAttribute('type', "email");
+        emailInput.setAttribute('id', 'emailInput');
+
+        const submitBtn = document.createElement('input');
+        submitBtn.setAttribute('type', 'submit');
+        submitBtn.className = "btn btn-success";
+        submitBtn.innerHTML = "Submit";
+        submitBtn.style.width =  '10em';
+        submitBtn.style.margin = 'auto';
+
+        submitBtn.onclick = (event) => {
+            event.preventDefault();
+            const email  = document.getElementById('emailInput');
+            submitEmail(email.value, designation);
+            modelContainer.click();
+        };
+
+        contentBox.append(heading);
+        contentBox.append(emailInput);
+        contentBox.append(submitBtn);
+        modelContainer.append(contentBox);
+
+        homeContainer.append(modelContainer);
+    }
+
+
+    async function addUsersRequest() {
+
+    }
+
+    const staffBtn = document.getElementById("add-staff-btn");
+    staffBtn.onclick = (event) => {
+        event.preventDefault();
+        const targetDiv = event.target.parentNode;
+        emailForm('STAFF', targetDiv);
+        const addStaffRequest = addUsersRequest();
+    }
+
+    const addMemberBtn = document.getElementById('add-member-btn');
+    addMemberBtn.onclick = (event) => {
+        event.preventDefault();
+        const targetDiv = event.target.parentNode;
+        emailForm('MEMBER', targetDiv);
+    }
+
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+

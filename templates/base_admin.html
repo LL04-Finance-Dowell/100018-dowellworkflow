@@ -1,0 +1,360 @@
+              <html lang="en">
+                <head>
+                  <title>Dowell Docedit</title>
+                  <meta charset="utf-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                               {% load static %}
+
+
+
+                  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+                  <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" rel="stylesheet">
+                  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+
+                  <!--<link href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">-->
+                  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"></script>
+                  <!--<link href="{% static 'css/light-bootstrap-dashboard.css'  %}" rel='stylesheet' type='text/css'>-->
+                  <link href="{% static 'css/boot3reclaim.css'  %}" rel='stylesheet' type='text/css'>
+                  <!--link href="{% static 'css/custom.css'  %}" rel='stylesheet' type='text/css' -->
+                  <link href="{% static 'css/bootstrap-datepicker.min.css'  %}" rel='stylesheet' type='text/css'>
+                  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+                  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css" />
+                  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+                  <link href="{% static 'css/navigation.css'  %}" rel='stylesheet' type='text/css'>
+                  <link href="{% static 'css/custom.css'  %}" rel='stylesheet' type='text/css'>
+
+
+                  <!-- <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet"> -->
+                  <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
+                  <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+                  <!-- <link rel="stylesheet" href="css/style.css"> -->
+                  <link href="{% static 'css/style.css'  %}" rel='stylesheet' type='text/css'>
+                  <script src="{% static 'js/bootstrap-datepicker.min.js'  %}"></script>
+                  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+                  <script src="{% static 'js/main_tab.js' %}"></script>
+                  <script src="{% static 'js/editor/navigation.js' %}"></script>
+
+                  {% block addcss %}
+                  {% endblock %}
+                  <style>
+
+                      .page-wrapper .sidebar-wrapper,
+.sidebar-wrapper .sidebar-brand > a,
+.sidebar-wrapper .sidebar-dropdown > a:after,
+.sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu li a:before,
+.sidebar-wrapper ul li a i,
+.page-wrapper .page-content,
+.sidebar-wrapper .sidebar-search input.search-menu,
+.sidebar-wrapper .sidebar-search .input-group-text,
+.sidebar-wrapper .sidebar-menu ul li a,
+#show-sidebar,
+#close-sidebar{
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+/*.sidebar-dropdown .sidebar-submenu li a{*/
+/*.sidebar-dropdown > a:before{*/
+/*    -webkit-transition: all 0.3s ease;*/
+/*  -moz-transition: all 0.3s ease;*/
+/*  -ms-transition: all 0.3s ease;*/
+/*  -o-transition: all 0.3s ease;*/
+/*  transition: all 0.3s ease;*/
+/*}*/
+.sidebar-submenu {
+  display: none;
+}
+ .sidebar-dropdown .sidebar-submenu li a:before {
+  content: "\f35a";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 400;
+  font-style: normal;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin-right: 10px;
+  font-size: 15px;
+}
+
+.sidebar-dropdown > a:after {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "\f105";
+  font-style: normal;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  background: 0 0;
+  position: absolute;
+  right: 15px;
+  top: 14px;
+}
+
+ .sidebar-dropdown .sidebar-submenu ul {
+    list-style-type: none;
+  padding: 5px 0;
+}
+
+ .sidebar-dropdown .sidebar-submenu li {
+  padding-left: 25px;
+  font-size: 13px;
+}
+
+
+.sidebar-footer {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  display: flex;
+  color:#fff;
+  height: 50px;
+}
+
+.sidebar-footer > a {
+  padding-top:10px;
+  flex-grow: 1;
+  text-align: center;
+  height: 45px;
+  line-height: 30px;
+  position: relative;
+  font-size:18px;
+    color:#fff;
+
+}
+
+.sidebar-footer > a .notification {
+  position: absolute;
+  top: 0;
+}
+.wrapper {
+    /*height:130%;*/
+/*    overflow:auto;*/
+/*}*/
+/*#sidebar{*/
+ height:100%;
+}
+#sidebar{
+    /*max-height: calc(100% - 30px);*/
+  /*height: calc(100% - 30px);*/
+  /*overflow-y: auto;*/
+  /*position: relative;*/
+height:100%;
+
+}
+/*----------------sidebar-content----------------*/
+
+.sidebar-content {
+  max-height: calc(100% - 50px);
+  height: calc(100% - 50px);
+  overflow-y: auto;
+  position: relative;
+  /*top:inherit;*/
+
+}
+
+.sidebar-content.desktop {
+  overflow-y: hidden;
+}
+#content{
+    height:100%;
+}
+
+                  </style>
+                </head>
+                <body>
+
+                  <div class="wrapper d-flex align-items-stretch">
+                    <nav id="sidebar">
+                      <div class="custom-menu">
+                        <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                           <i class="fa fa-bars"></i>
+                          <span class="sr-only">Toggle Menu</span>
+                        </button>
+                      </div>
+                    <div class="sidebar-content">
+                      <div class="sidebar-header">
+                        <a  href="#"><img class="my-3" style="width:80%; height:100px;"
+                          src="{% static 'images/doc_logo1.png'  %}"></a>
+                  </div>
+                      <h1><a href="index.html" class="logo">Dowell Docedit</a></h1>
+
+                      <ul class="list-unstyled components mb-5" >
+                 {% if is_admin %}
+                <li>
+
+                  <a href="{% url 'admin_v2:dashboard' %}">Admin Dashboard
+                  </a>
+                </li>
+                {% endif %}
+                           {% if is_org_lead %}
+                <li>
+
+                  <a href="{% url 'organizationv2:org-lead-management' org.id  %}">Org. Lead Dashboard
+                  </a>
+                </li>
+                {% endif %}
+
+                 {% if is_project_lead %}
+                <li>
+
+                  <a href="{% url 'organizationv2:proj-lead-management' org.id  %}">Project Lead DashBoard
+                  </a>
+                </li>
+                {% endif %}
+
+                        <li>
+                          <a href="{% url 'editor:get-dashboard' %}"><span class="fa fa-home mr-3"></span> Dashboard</a>
+                        </li>
+
+
+
+                        <li class="sidebar-dropdown">
+                          <a href="#"><span class="fa fa-folder-open mr-3"></span> Documents</a>
+                          <div class="sidebar-submenu">
+              <ul style="list-style-type: none;">
+                <li>
+
+                  <a href="{% url 'editor:documents-in-workflow' %}">Sign Documents
+                  </a>
+                </li>
+                {% if is_member %}
+                <li>
+                  <a href="{% url 'editor:requested-docs' %}">Requested Documents</a>
+                </li>
+                {% endif%}
+                {% if is_member %}
+                <li>
+
+                    <a href="{% url 'editor:get-prevdocuments' %}">Previous Docs</a>
+
+                  </li>
+                  <li>
+                    <a href="{% url 'editor:create-document' %}">Request Docs</a>
+
+                  </li>
+                  <li>
+                    <a href= "{% url 'editor:created-document-list' %}">View Docs</a>
+
+                  </li>
+                  {% endif%}
+
+              </ul>
+            </div>
+                        </li>
+                                  {% if is_member or is_org_lead or is_project_lead or is_admin  %}
+                        <li class="sidebar-dropdown">
+                          <a href="#"><span class="fa fa-building-o mr-3"></span> Manage Company</a>
+                          <div class="sidebar-submenu">
+              <ul>
+                  <li>
+                  <a href="{% url 'organizationv2:create-orgniz' company.id %}">Add Org.</a>
+                </li>
+                <li>
+                  <a href="#">Add Members</a>
+                </li>
+                 </ul>
+                </div>
+                        </li>
+                         {% endif%}
+                      </ul>
+                      </div>
+                    <div class="sidebar-footer">
+      <a href="#">
+        <i class="fa fa-home"></i>
+
+      </a>
+      <a href="#">
+        <i class="fa fa-flag"></i>
+
+      </a>
+      <a href="{% url 'password_change'%}">
+        <i class="fa fa-ellipsis-h"></i>
+      </a>
+      <a href="{% url 'logout' %}">
+        <i class="fa fa-power-off"></i>
+      </a>
+    </div>
+                    </nav>
+
+                      <!-- Page Content  -->
+                    <div id="content" class="p-4 p-md-5 pt-5">
+                      <!--<h2 class="mb-4">Docedit Test Information</h2>-->
+                      <!--<p>Content to Come Here</p>-->
+                       {% block content %}
+                    {% endblock content %}
+
+                    </div>
+                  </div>
+
+                  <!-- <script src="js/"></script>
+                  <script src="js/"></script>
+                  <script src="js/"></script>
+                  <script src="js/"></script>
+                  <script src="{% static 'js/jquery.min.js' %}"></script>
+                  <script src="{% static 'js/popper.js' %}"></script>
+                  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+                  <script src="{% static 'js/main.js' %}"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+                  <script>
+            jQuery(function ($) {
+
+$(".sidebar-dropdown > a").click(function() {
+$(".sidebar-submenu").slideUp(200);
+if (
+$(this)
+  .parent()
+  .hasClass("active")
+) {
+$(".sidebar-dropdown").removeClass("active");
+$(this)
+  .parent()
+  .removeClass("active");
+} else {
+$(".sidebar-dropdown").removeClass("active");
+$(this)
+  .next(".sidebar-submenu")
+  .slideDown(200);
+$(this)
+  .parent()
+  .addClass("active");
+}
+});
+
+if (window.matchMedia('(max-width: 768px)').matches)
+{
+    $("#close-sidebar").css("display","block");
+    // do functionality on screens smaller than 768px
+    $("#close-sidebar").click(function() {
+$(".page-wrapper").removeClass("toggled");
+});
+$("#show-sidebar").click(function() {
+$(".page-wrapper").addClass("toggled");
+});
+}
+
+
+
+
+
+
+});
+        </script>
+        <script src="{% static 'js/main.js' %}"></script>
+                  {% block additionalscript %}
+
+
+
+
+    {% endblock %}
+
+                </body>
+              </html>

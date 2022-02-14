@@ -1,0 +1,37 @@
+{% extends 'base_no_nav.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}
+Request Document{% endblock %}
+
+
+
+
+{% block content %}
+<style type="text/css">
+	/*.home-content-container{*/
+ /*       display:  flex;*/
+ /*       height: 100vh;*/
+ /*       justify-content: center;*/
+        /*background-color: #343a40;*/
+        /*background-color:#fdec00;*/
+        /*background-color: rgba(203, 203, 210, 0.5);*/
+        /*color:  black;*/
+
+    /*}*/
+
+</style>
+
+<div class="home-content-container">
+    <div class="container"  style="max-width: 80%; height: 80%; background-color: #fff; margin-top:20px;">
+    	{% if message %}
+    	    <h3> {{ message }} </h3>
+    	{% endif%}
+    	<form method="post">{% csrf_token %}
+    	    {{ form|crispy }}
+		    <input type="submit" class="btn btn-outline-success " value="Go to Editor">
+    	</form>
+    </div>
+</div>
+
+{% endblock %}

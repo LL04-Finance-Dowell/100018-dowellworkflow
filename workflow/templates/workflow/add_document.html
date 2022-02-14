@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}
+Add Document{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 640px;">
+<h1>Add Document</h1>
+
+{% if message %}
+    <h3> {{ message }} </h3>
+{% endif%}
+
+
+
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+    <div id="form-document"></div>
+    {{ form|crispy }}
+
+
+    <input type="submit" class="btn btn-outline-success " value="Create">
+</form>
+
+              <div class="modal fade" id="addWorkFlowModal" tabindex="-1" role="dialog" aria-labelledby="addWorkFlowModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Document Type Form</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+
+                    <div class="modal-body">
+                       <div class="form-group">
+                          <div class="row">
+                            <label for="documentType-title" class="form-label col-md-5">Document Type Title
+                              <span class="asteriskField">*</span></label>
+                            <input autofocus="true" type="text" class="form-control col-md-6" id="documentType-title"  required>
+                          </div>
+                          <small id="docTypeFieldError" class="text-danger"></small>
+                        </div>
+
+                        {% for wf in workflow %}
+                                <div class="mb-3">
+                                      <div class="form-group text-center">
+                                        <h4 class="text-info">{{ wf|title }} Work Flow</h4>
+                                      </div>
+
+                                        <table class="table table-sm table-hover table-dark">
+                                          <thead>
+                                            <tr>
+                                              <th scope="col" class="text-center"><small>Step No.</small></th>
+                                              <th scope="col" class="text-center"><small>Step Name</small></th>
+                                              <th scope="col" class="text-center"><small>Authority</small></th>
+                                              <th scope="col" class="text-center"></th>
+                                            </tr>
+                                          </thead>
+                                          <tbody id="{{wf}}_table">
+                                            <td colspan="4" class="text-center">
+                                                No Steps.
+                                            </td>
+                                          </tbody>
+                                        </table>
+                                        <div class="form-row" id="step-form">
+                                          <div class="col-md-5 mb-3">
+                                            <label for="{{ wf }}StepName" class="col-form-label-sm">Step Name</label>
+                                            <input type="text" class="form-control form-control-sm" id="{{ wf }}StepName" placeholder="Step Name" required>
+                                          </div>
+                                          <div class="col-md-5 mb-3">
+                                            <label for="authorityID" class="col-form-label-sm">Authority</label>
+                                            <select id="{{ wf }}authorityID" class="form-control form-control-sm">
+                                              <option selected>None</option>
+                                              {% for user in user_list %}
+                                                      <option>{{ user.username }}</option>
+                                              {% empty %}
+                                                  <option>None</option>
+                                              {% endfor %}
+                                            </select>
+                                          </div>
+                                          <div class="col-md-2 mb-3 d-flex justify-content-center align-items-center">
+                                            <a class="btn btn-primary" id="add_{{wf}}_step">Add</a>
+                                          </div>
+                                        </div>
+                                        <small class="text-danger" id="{{wf}}_step_form_error"></small>
+
+                              </div>
+                 {% endfor %}
+
+              <div class="modal-footer">
+                <a class="btn btn-outline-danger" data-dismiss="modal" id="close-modal">Cancel</a>
+                <a class="btn btn-outline-success" id="addDocumentType">Add Document Type</a>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+{% if request.user.is_authenticated %}
+    {{ request.user.is_staff|json_script:"is-staff" }}
+{% endif %}
+<script type="text/javascript">
+    const isStaff = JSON.parse(document.getElementById('is-staff').textContent);
+    const internalWFList = [];
+    const externalWFList = [];
+    var new_entry = true;
+
+    if ( isStaff ) {
+        const add_button = document.createElement('a');
+
+        add_button.innerHTML = "Add New";
+        add_button.className = "btn btn-link";
+        add_button.id = "addDocTypeBtn";
+        add_button.style.float = 'right';
+
+        add_button.setAttribute("data-toggle", "modal");
+        add_button.setAttribute("data-target", "#addWorkFlowModal")
+
+        const form = document.getElementById('div_id_document_type');
+        form.insertBefore(add_button, form.childNodes[2]);
+
+
+    }
+
+
+</script>
+
+<script type="text/javascript" src="{% static 'js/add_document_type.js' %}"></script>
+</div>
+{% endblock %}

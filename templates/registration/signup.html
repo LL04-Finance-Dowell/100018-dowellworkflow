@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Sign Up{% endblock title%}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/log_in-Sign_up.css' %}"/>
+<div id="form-error-box"></div>
+<div id="login-content"></div>
+<div id="log-in-form" style="margin: 0px 10%;  display: flex;   flex-direction: column;   justify-content: space-evenly;    height: inherit;">
+    <img id="dowell-logo"  src="https://i1.wp.com/dowellresearch.de/wp-content/uploads/2018/10/true-moments-logo-1-1-442919954-1538479590775.png?w=382&ssl=1">
+    <strong>Sign Up to DocEdit</strong>
+    <form method="post">
+    {% csrf_token %}
+    <!--{{ form|crispy }}-->
+    <div class="row">
+         <div class="col-12">
+
+          <div class = "form-group">
+              <label class ="requiredField">{{form.username.label}}</label>
+              {{ form.username}}
+
+          </div>
+
+      </div>
+    </div>
+    <div class = "row">
+      <div class="col-12">
+
+          <div class = "form-group">
+              <label class ="requiredField"> {{ form.email.label }}</label>
+              {{ form.email }}
+          </div>
+
+      </div>
+
+
+    </div>
+    <div class = "row">
+     <div class="col-6">
+
+          <div class = "form-group">
+              <label class ="requiredField">{{form.password1.label}}</label>
+              {{ form.password1 }}
+          </div>
+
+      </div>
+      <div class="col-6">
+
+          <div class = "form-group">
+              <label class ="requiredField"> Confirm Pass.</label>
+              {{ form.password2 }}
+          </div>
+
+      </div>
+    </div>
+
+    <button class="btn btn-success container-fluid" type="submit">Sign Up</button>
+    </form>
+    <!--<div style="margin: 0; text-align: center"><a href = "{% url 'password_reset' %}">Already Have an account?</a></div>-->
+    <a href="{% url 'signup' %}" class="btn btn-outline-primary container-fluid" type="submit">Sign In</a>
+</div>
+
+
+<script type="text/javascript">
+	const container = document.getElementById('login-content');
+
+
+	const innerContainer = document.createElement('div');
+	innerContainer.id = 'in-container';
+
+	container.append(innerContainer);
+
+	const loginMsgBlock = document.createElement('div');
+	loginMsgBlock.style.width = '100%';
+	loginMsgBlock.style.height = '50%';
+	loginMsgBlock.style.maxWidth = '640px';
+	loginMsgBlock.id = 'login-msg';
+	loginMsgBlock.style.display = 'flex';
+	loginMsgBlock.style.flexDirection = 'column';
+	loginMsgBlock.style.justifyContent = 'center';
+
+
+	const login_block = document.createElement('div');
+	login_block.id = 'login-block';
+
+
+	const form = document.getElementById('log-in-form');
+
+    const errorBlock = document.getElementsByClassName("alert alert-block alert-danger")[0];
+
+    if (errorBlock != undefined){
+        errorBlock.remove();
+        errorBlock.childNodes[1].className = 'list-unstyled';
+
+        errorBlock.style.position = 'absolute';
+        errorBlock.style.top = '15vh';
+        errorBlock.style.right = '10%';
+        errorBlock.style.left = '10%';
+        errorBlock.style.textAlign = 'center';
+        errorBlock.style.paddingTop = '0.25rem';
+        errorBlock.style.paddingBottom = '0.25rem';
+
+        const body = document.getElementsByTagName("BODY")[0];
+        body.append(errorBlock)
+        console.log(errorBlock)
+    }
+
+
+	const msgHeading = document.createElement('h1');
+	msgHeading.innerHTML = 'Welcome to DocEdit';
+	msgHeading.className = 'fs-1';
+	msgHeading.style.color = '#f8f8ff';
+	msgHeading.style.textAlign = 'center';
+
+    loginMsgBlock.append(msgHeading);
+
+    const img_dowell = document.createElement('img');
+    img_dowell.src = 'https://i1.wp.com/dowellresearch.de/wp-content/uploads/2018/07/stand-2-e1538466293521.png?resize=714%2C320&ssl=1'
+    img_dowell.style.width = '100%';
+
+
+    loginMsgBlock.append(img_dowell);
+    login_block.append(form);
+
+	innerContainer.append(loginMsgBlock);
+	innerContainer.append(login_block);
+
+
+
+
+</script>
+
+
+{% endblock content %}

@@ -1,0 +1,499 @@
+
+
+/*Home COntainer Styles brought in from individual files*/
+
+	.home-content-container{
+        display:  flex;
+        height: 100vh;
+        justify-content: center;
+        /*background-color: #343a40;*/
+        /*background-color:#fdec00;*/
+        /*background-color: rgba(203, 203, 210, 0.5);*/
+        color:  black;
+        /*background-image: url("https://www.eitco.de/wp-content/uploads/2020/04/digitale-akte.jpg");*/
+
+
+    }
+
+
+.dropbtn {
+  background-color: #04AA6D;
+  color: black;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+  background-color: #3e8e41;
+  /*background-color: #04AA6D;*/
+}
+
+#myInput {
+  box-sizing: border-box;
+  background-image: url('searchicon.png');
+  min-width: 80%;
+  background-position: 14px 12px;
+  background-repeat: no-repeat;
+  font-size: 16px;
+  padding: 14px 20px 12px 45px;
+  border: none;
+  /*border-bottom: 1px solid #ddd;*/
+  border-bottom: 1px solid black;
+}
+
+#myInput:focus {outline: 3px solid #ddd;}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f6f6f6;
+  min-width: 70%;
+  /*height: 70%;*/
+  overflow: auto;
+  border: 1px solid #ddd;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown a:hover {background-color: #ddd;}
+
+.show {display: block;}
+
+
+
+.boxed-md.boxed-padded {
+    padding-bottom: 13px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.boxed-md {
+    border: 1px solid #ccc;
+    margin-bottom: 14px;
+    margin-top: 14px;
+}
+
+.boxed-md>.text-center .h3 {
+    background-color: #fff;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.h3 {
+    margin-top: 15px;
+    margin-bottom:18px;
+       font-size: 20px;
+}
+.boxed-md>.text-center {
+    margin-top: -12px;
+    margin-bottom: 12px;
+}
+
+
+/*Email FOrm styles*/
+
+    .model-container-docedit{
+        position: absolute;
+        background-color: #0000006b;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        z-index: 1000;
+        align-items: center;
+    }
+    .email-form{
+        height: 10em;
+        width: 50vw;
+        padding: 1em;
+        text-align: center;
+        justify-content: space-evenly;
+
+    }
+
+/*end of email form styles*/
+
+
+
+
+
+/**Home COntainer Styles brought in from individual files**/
+ul#cats{
+    padding-top:20px;
+    padding-bottom:20px;
+    /*height:24em;*/
+}
+ul#cats>li{
+    width:100%;
+}
+a.nav-link:not(a.nav-pill-dash):hover, .dropdown-item:hover, a.nav-link-status.active, li.nav-link-status.active {
+    width:100%;
+    color:#fdec00;
+    background-color: #21633d;
+    /*border:1px solid red;*/
+    border-radius:20px;
+
+}
+a.nav-pill-dash:hover{
+    color:#fdec00;
+    background-color: #21633d;
+}
+li.nav-link-dash.active>a:not(a.nav-pill-dash.active){
+    width:100%;
+    color:#fdec00;
+    background-color: #21633d;
+ border-radius:30px;
+}
+a.nav-link-status{
+    color:#000;
+}
+.nav-item:hover{
+     color:#fdec00;
+     border-radius:90px;
+}
+.navbar-nav >.nav-item > a:hover{
+    color:#fdec00;
+}
+
+/*Editor Styles*/
+
+
+/*Table CSS*/
+table, th, td{
+    border: 1px solid #ddd;
+    empty-cells: show;
+  /*padding: 8px;*/
+
+}
+table, th, td{
+    border: 1px solid #ddd;
+    empty-cells: show;
+  /*padding: 8px;*/
+
+}
+thead, tbody{
+    width: inherit;
+
+}
+/*Tables */
+.table-condensed,
+.table-condensed tr,
+.table-condensed td { border: 0; }
+.table-condensed{  border-radius: 20px; }
+.table-condensed td { border-radius: 40px; }
+/* Border styles*/
+.boxed-md.boxed-padded {
+    padding-bottom: 13px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.boxed-md {
+    border: 1px solid #ccc;
+    margin-bottom: 14px;
+    margin-top: 14px;
+}
+.boxed-md2 {
+    /*border: 1px solid #ccc;*/
+    border:none;
+    margin-bottom: 14px;
+    margin-top: 14px;
+    background-color:#dee2e6;
+    color: #000;
+}
+.boxed-md3 {
+    /*border: 0 solid #ccc;*/
+    margin-bottom: 14px;
+    margin-top: 14px;
+}
+.boxed-md>.text-center .h3, .boxed-md3>.text-center .h3 {
+    background-color: #fff;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.h3 {
+    margin-top: 15px;
+    margin-bottom:18px;
+       font-size: 20px;
+}
+.boxed-md>.text-center, .boxed-md3>.text-center {
+    margin-top: -12px;
+    margin-bottom: 12px;
+}
+
+#modalTxtForm{
+    position: absolute;
+  left: 0px;
+  top: 0px;
+  z-index: 10;
+    display:none;
+}
+#textBox{
+    cursor: text;
+}
+#toolbox-tools{
+    position: absolute;
+
+  left: 0px;
+  top: 0px;
+  z-index: 10;
+    /* display:none; */
+}
+.compFormArticle {
+    /*background-color: #e1e0e9;*/
+     background-color:#5a6268;
+}
+/*End of border styles*/
+/* MOdal Css */
+    /* The Modal (background) */
+
+.modal, .modal2  {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 10; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content, .model-content2 {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close, .close2 {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus, .close2:hover,
+.close2:focus  {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+/* End Modal Css */
+/*dropdown Styles*/
+
+
+/* <select> styles */
+    select.selectDropDown {
+    /* Reset */
+    appearance: none;
+    border: 0;
+    outline: 0;
+    font: inherit;
+    /* Personalize */
+    width: 20em;
+    height: 3em;
+    padding: 0 4em 0 1em;
+    background: url(https://upload.wikimedia.org/wikipedia/commons/9/9d/Caret_down_font_awesome_whitevariation.svg)
+        no-repeat right 0.8em center / 1.4em,
+        linear-gradient(30deg, #2c3e50 30%, #2c3e50);
+    color: white;
+    border-radius: 0.25em;
+    box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+    cursor: pointer;}
+    /* <option> colors */
+    select.selectDropDown option {
+      color: #fff;
+      background-color: #2c3e50;
+    }
+    /* Remove focus outline */
+    /*body:focus {*/
+    /*  outline: none;*/
+    /*}*/
+    /* Remove IE arrow */
+    select.selectDropDown::-ms-expand {
+      display: none;
+    }
+
+/*end ofdropdown Styles*/
+
+
+
+
+
+        .doc-container{
+            display: block;
+            width: 75vw;
+            height: 89vh;
+            background-color: #e1e0e9;
+            overflow-y: scroll;
+        }
+
+        .page{
+            display:  block;
+            position:  relative;
+            width: 720px;
+            height: 800px;
+            margin: 30px auto;
+            padding: 5%;
+            background-color: #fff;
+            box-shadow: 0px 0px 5px #333;
+        }
+
+        .doc-content{
+            height: 100%;
+        }
+
+        .menu-container{
+            display: block;
+            /*flex-direction: column;*/
+            /*align-items: center;*/
+
+            margin: 10px auto;
+        }
+
+        ::-webkit-resizer {
+          display: none;
+        }
+
+        .button-container{
+            display: grid;
+            grid-template-columns: 48% 48%;
+            grid-gap: 10px;
+            height: 200px;
+            width: 280px;
+            padding: 10px;
+            align-items: center;
+
+        }
+        .button-container2{
+            display: grid;
+            grid-template-columns: 48% 48%;
+            grid-gap: 10px;
+            height: 67px;
+            width: 280px;
+            padding: 10px;
+            align-items: center;
+
+        }
+
+        .drag-btn{
+            border: none;
+            height: 100%;
+            background-color: #c7d5e1;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+
+        .btn-text{
+            margin: 1rem 0;
+
+        }
+
+        .holderDIV:hover {
+            border: 1px dashed rgb(255 191 0);
+        }
+
+
+        /* width */
+        ::-webkit-scrollbar {
+          width: 5px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+          background: #f1f1f1;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+          background: #888;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+          background: #555;
+        }
+
+
+
+
+/*Styles for the new FOrmat*/
+#toolbox-tools {
+	width: 660px;
+	height: 160px;
+	overflow: hidden;
+}
+
+.group-handle {
+	height: 34px;
+	width: 10px;
+	cursor: move;
+}
+
+.panel-heading {
+    cursor: move;
+}
+
+.draggable-group {
+	float: left;
+}
+
+#sortable {
+	padding: 0px;
+}
+
+#sort-holder {
+	display: none;
+}
+
+#toggle-toolbox-tools {
+    cursor: pointer;
+    color:#fdec00;
+}
+
+#close-toolbox-tools {
+	cursor: pointer;
+	color:#fdec00;
+}
+
+.toggle-button-group {
+    cursor: pointer;
+}
+
+.draggable-group {
+    overflow: hidden;
+}
+
+.minimized {
+    width: 12px;
+    height: 36px;
+}
+/*******************************/
+
+
+
+
+
+/*End of Editor styles*/
+

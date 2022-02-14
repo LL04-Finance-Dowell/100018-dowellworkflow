@@ -1,0 +1,121 @@
+{% extends 'base7.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}
+Add Document{% endblock %}
+
+{% block content %}
+<style type="text/css">
+</style>
+
+<div id="company_id" style="display:none">{{company.id}}</div>{% csrf_token %}
+
+<div class="home-content-container">
+    <div class="container"  style="max-width: 80%; overflow: auto; background-color: #fff; margin-top:20px;">
+	<!--<div class="container" style="max-width: 640px; background-color: #24353288;">-->
+    <!--<div class="container" style="max-width: 640px; background-color: #88a421;">-->
+
+	{% if message %}
+	    <h3> {{ message }} </h3>
+	{% endif%}
+
+    <div>
+    	<div class="row justify-content-center mt-5">
+    		<article class="col-md-12">
+                {% for company in companies %}
+                <div class="boxed-md boxed-padded">
+                    <div class="text-center"><span class="h3">{{company.company_name}}</span></div>
+                    <div class="tab-pane fade show active" id="mList"   aria-labelledby="all1" >
+                        <!-- Button trigger modal-->                        
+                        <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#addmemberModel" data-whatever="addmember">ADD MEMBER</button>
+                        <div class="modal fade" id="addmemberModel" tabindex="-1" role="dialog" aria-labelledby="addmemberModelLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addmemberModelLabel">Invite New Member</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="POST" action="{% url 'organizationv2:add-member-submit' company.id %}">
+                                    <div class="form-group">
+                                        {% csrf_token %}
+                                        <label for="recipient-name" class="col-form-label">Recipient's Email:</label>
+                                        <input type="text" class="form-control" name="recipient-name" id="recipient-name">
+                                        <button type="submit" class="btn btn-primary">Send Invitation</button>
+                                    </div>                                
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                                                
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                        
+                        <table id="memberList" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for mem in member_list %}
+                                <tr>
+                                    <td>{{mem}}</td>
+                                    <td>
+                                        <!-- Keep this div in order to work delete button -->
+                                        <div style="display:none">
+                                            <span>{{mem.id}}</span>
+                                            <span>{{company.id}}</span>
+                                        </div>
+                                        <button class="btn btn-outline-danger" onclick="requestMemberDelete(this)">Delete</button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <td colspan="2" class="text-center">
+                                    No members added.
+                                </td>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+      				</div>
+                </div>
+                {% endfor %}
+            </article>
+    	</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block additionalscript %}
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/b4aae4cb0e.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/leafo/sticky-kit/v1.1.2/jquery.sticky-kit.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.2.0/js/dataTables.fixedHeader.min.js"></script>
+<script type="text/javascript">
+	$(".sidebar").stick_in_parent();
+    $(document).ready(function() {
+        let dynamicDt = [];
+        let allDocumentListTable = $('#memberList').DataTable( {
+            fixedHeader: true
+        } );
+    } );
+
+   
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
