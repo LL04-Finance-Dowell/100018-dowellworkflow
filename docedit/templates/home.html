@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock title %}
+{% block content %}
+{% if user.is_authenticated %}
+Hi {{ user.username }}! 
+<p><a href="{% url 'logout' %}">Log Out</a></p>
+{% for doc in object_list %}
+<p>fgfddgd</p>
+<div class="doc-entry">    
+<h4>4kkk<a href="">{{ doc.title }}</a></h4>s   
+</div>
+{% endfor %}
+{% else %}
+<p>You are not logged in</p>
+<a href="{% url 'login' %}">Log In</a> |
+<a href="{% url 'signup' %}">Sign Up</a>
+{% endif %}
+{% endblock content %}
