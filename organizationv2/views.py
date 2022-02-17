@@ -1,5 +1,6 @@
 import os,json
 
+from django.http import HttpResponseRedirect
 from . tokens import generate_token
 from django import forms
 from django.conf import settings
@@ -177,6 +178,37 @@ class Organizationv2Home(View):
             'is_admin': is_admin
         }
         return render(request, 'organizationv2/org_home.html', context)
+
+
+def add_member_to_project(request, id):
+    user=request.user
+    department=Project.objects.filter(project_lead=user)[0]
+    company=department.organization.company
+    company_members=company.members.all()
+    if request.method=="POST":
+        member=CustomUser.objects.get(pk=id)
+        department.members.add(member)
+        department.save()
+        messages.success(request, "Member added successfully to Your Department")
+        return HttpResponseRedirect(request.path_info)
+    context={'company_members':company_members}
+    return render(request, 'organizationv2/add_member_to_project', context)
+    #return redirect(request, 'organizationv2:project-management', org_id=department.organization.id, project_id=department.id)
+
+def add_member_to_organization(request, id):
+    user=request.user
+    organization=Organizationv2.objects.filter(organization_lead=user)[0]
+    company=organization.company
+    company_members=company.members.all()
+    if request.method == "POST":
+        member=CustomUser.objects.get(pk=id)
+        organization.members.add(member)
+        organization.save()
+        messages.success(request, "Member added successfully to Your Organization")
+        return HttpResponseRedirect(request.path_info)
+    context={'company_members':company_members}
+    return render(request, 'organizationv2/add_member_to_project', context)
+    #return redirect(request, 'organizationv2:org-lead-management', org_id=organization.id)
 
 
 

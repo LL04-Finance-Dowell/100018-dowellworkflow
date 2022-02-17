@@ -7,14 +7,12 @@ from django.views.generic.list import ListView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.conf import settings
-from django.db.models import Q
 from .models import EditorFile, Template
 from django.contrib import messages
 from django.views import View
 from .forms import RequestDocumentForm, CreateTemplateForm
-from organizationv2.models import Company, Organizationv2
+from organizationv2.models import Organizationv2, Project, Company
 from django.views.decorators.clickjacking import xframe_options_exempt
-
 
 
 def get_name():
@@ -571,70 +569,34 @@ class DashboardView(View):
         one_year_ago  = datetime.today()- timedelta(days=365)
 
         org_list = Organizationv2.objects.all()
-        is_staff = False
-        is_member = False
 
-        for org in org_list :
-            if request.user in org.staff_members.all():
-                is_staff = True
-                break
-            if request.user in org.members.all():
-                is_member = True
-                break
-
-        if is_member or is_staff:
-
-            # all_files = self.model.objects.all().filter(created_by=request.user)
-            all_files = self.model.objects.filter(auth_user_list=request.user)
-            ##Apply the general filters
-            incomplete_internal = all_files.exclude(internal_wf_step='complete').exclude(internal_wf_step__isnull=True)
-            completely_complete =  all_files.filter(internal_wf_step='complete',external_wf_step='complete')
-            not_in_any_workflow = all_files.filter(internal_wf_step__isnull=True, external_wf_step__isnull=True)
-            ##Create time container
+        # all_files = self.model.objects.all().filter(created_by=request.user)
+        all_files = self.model.objects.filter(auth_user_list=request.user)
+        ##Apply the general filters
+        incomplete_internal = all_files.exclude(internal_wf_step='complete').exclude(internal_wf_step__isnull=True)
+        completely_complete =  all_files.filter(internal_wf_step='complete',external_wf_step='complete')
+        not_in_any_workflow = all_files.filter(internal_wf_step__isnull=True, external_wf_step__isnull=True)
+        ##Create time container
 
 
-            summary = { 'org': org, 'is_staff': is_staff, 'is_member': is_member, "one_week":{}, "one_month":{}, "one_year":{} }
-            ##Apply time filters to get necessary data
-            summary["one_week"]["all_files"]= all_files.filter(created_on__gte=one_week_ago)
-            summary["one_month"]["all_files"]= all_files.filter(created_on__gte=one_month_ago)
-            summary["one_year"]["all_files"]= all_files.filter(created_on__gte=one_year_ago)
-            summary["one_week"]["completely_complete"]= completely_complete.filter(created_on__gte=one_week_ago)
-            summary["one_month"]["completely_complete"]= completely_complete.filter(created_on__gte=one_month_ago)
-            summary["one_year"]["completely_complete"]= completely_complete.filter(created_on__gte=one_year_ago)
-            summary["one_week"]["not_in_any_workflow"]= not_in_any_workflow.filter(created_on__gte=one_week_ago)
-            summary["one_month"]["not_in_any_workflow"]= not_in_any_workflow.filter(created_on__gte=one_month_ago)
-            summary["one_year"]["not_in_any_workflow"]= not_in_any_workflow.filter(created_on__gte=one_year_ago)
-            summary["one_week"]["incomplete_internal"]= incomplete_internal.filter(created_on__gte=one_week_ago)
-            summary["one_month"]["incomplete_internal"]= incomplete_internal.filter(created_on__gte=one_month_ago)
-            summary["one_year"]["incomplete_internal"]= incomplete_internal.filter(created_on__gte=one_year_ago)
-            return render(request, 'editor/dashboard.html', summary)
-        else:
-            return redirect('organizationv2:create-orgniz')
+        summary = {"one_week":{}, "one_month":{}, "one_year":{} }
+        ##Apply time filters to get necessary data
+        summary["one_week"]["all_files"]= all_files.filter(created_on__gte=one_week_ago)
+        summary["one_month"]["all_files"]= all_files.filter(created_on__gte=one_month_ago)
+        summary["one_year"]["all_files"]= all_files.filter(created_on__gte=one_year_ago)
+        summary["one_week"]["completely_complete"]= completely_complete.filter(created_on__gte=one_week_ago)
+        summary["one_month"]["completely_complete"]= completely_complete.filter(created_on__gte=one_month_ago)
+        summary["one_year"]["completely_complete"]= completely_complete.filter(created_on__gte=one_year_ago)
+        summary["one_week"]["not_in_any_workflow"]= not_in_any_workflow.filter(created_on__gte=one_week_ago)
+        summary["one_month"]["not_in_any_workflow"]= not_in_any_workflow.filter(created_on__gte=one_month_ago)
+        summary["one_year"]["not_in_any_workflow"]= not_in_any_workflow.filter(created_on__gte=one_year_ago)
+        summary["one_week"]["incomplete_internal"]= incomplete_internal.filter(created_on__gte=one_week_ago)
+        summary["one_month"]["incomplete_internal"]= incomplete_internal.filter(created_on__gte=one_month_ago)
+        summary["one_year"]["incomplete_internal"]= incomplete_internal.filter(created_on__gte=one_year_ago)
+        return render(request, 'editor/dashboard.html', summary)
+        #else:
+        # return redirect('organization:create-orgniz')
 
-
-
-def dashboard(request):
-    user=request.user
-    if user.is_superuser:
-        companies=Company.objects.all()
-        context={'companies':companies}
-        return render(request, 'organizationv2/add_members.html', context)
-
-    if user.is_org_leader:
-        organization=OrganizationV2.objects.get(organization_lead=user)
-        context={'organization':organization}
-        return redirect(request, 'organizationv2:org-lead-management', context)
-
-    if user.is_project_leader:
-        department=Project.objects.get(project_lead=user)
-        context={'organization':organization}
-        return redirect(request, 'organizationv2/project-management', context)    
-
-    else:
-        company=Company.objects.get(project_lead=user)
-        project=Project.objects.get()
-        context={'organization':organization}
-        return redirect(request, 'organizationv2/project-management', context) 
 
 
 
@@ -642,18 +604,28 @@ def dashboard(request):
 class StatusView2(View):
     model = EditorFile
 
+
     @xframe_options_exempt
     def get(self, request, *args, **kwargs):
+        user = request.user
         ##Get Evry data from Db
         # all_files = self.model.objects.all().filter(created_by=request.user)
         org_list = Organizationv2.objects.all()
-        is_staff = False
         is_member = False
+        is_admin = False
+        is_project_lead = False
+        is_org_lead = False
+        if user.is_member:
+            is_member= True
+        if user.is_admin:
+            is_admin= True
+        if user.is_project_lead:
+            is_project_lead= True
+        if user.is_org_lead:
+            is_org_lead= True
 
         for org in org_list :
-            if request.user in org.staff_members.all():
-                is_staff = True
-                break
+
             if request.user in org.members.all():
                 is_member = True
                 break
@@ -663,7 +635,7 @@ class StatusView2(View):
         completely_complete =  all_files.filter(internal_wf_step='complete',external_wf_step='complete')
         not_in_any_workflow = all_files.filter(internal_wf_step__isnull=True, external_wf_step__isnull=True)
         #Create COntainer
-        summary={ 'org': org ,'is_staff': is_staff, 'is_member': is_member,}
+        summary={ 'org': org ,"is_member": is_member,"is_admin": is_admin,"is_project_lead": is_project_lead,"is_org_lead": is_org_lead,}
         ##Populate container
         summary["all_files"]= all_files
         summary["completely_complete"]= completely_complete
@@ -671,6 +643,40 @@ class StatusView2(View):
         summary["not_in_any_workflow"]= not_in_any_workflow
         return render(request, 'editor/status.html', summary)
 
+def dashboard(request):
+    user=request.user
+    user_projects=[] #user is member in a project
+    user_companies=[]
+    projects=Project.objects.all()
+    for project in projects:
+        if user in project.members.all():
+            user_projects.append(project)
+    companies=Company.objects.all()
+    for company in companies:
+        if user in company.members.all():
+            user_companies.append(company)
+    if user.is_admin:
+        company=Company.objects.get(admin=user)
+        organizations=Organizationv2.objects.filter(organization_lead=user)
+        departments=Project.objects.filter(project_lead=user)
+        context={'user_companies':user_companies, 'user_projects':user_projects,'company':company, 'organizations':organizations,'departments':departments, 'user':user}
+        return render(request, 'editor/landing_page.html', context)
+
+
+    if user.is_org_leader:
+        organizations=Organizationv2.objects.filter(organization_lead=user)
+        departments=Project.objects.filter(project_lead=user)
+        context={'user_companies':user_companies, 'user_projects':user_projects,'organizations':organizations,'departments':departments, 'user':user}
+        return render(request, 'editor/landing_page.html', context)
+
+    if user.is_project_leader:
+        departments=Project.objects.filter(project_lead=user) #user is project lead
+        context={'departments':departments,'user_companies':user_companies,'user_projects':user_projects, 'user':user}
+        return render(request, 'editor/landing_page.html', context)
+
+    else:
+        context={'user_companies':user_companies, 'user_projects':user_projects, 'user':user}
+        return render(request, 'editor/landing_page.html', context)
 
 
 class RequestedDocuments(View):
@@ -789,16 +795,7 @@ class StatusView(View):
         ##Get Evry data from Db
         # all_files = self.model.objects.all().filter(created_by=request.user)
         org_list = Organizationv2.objects.all()
-        is_staff = False
-        is_member = False
 
-        for org in org_list :
-            if request.user in org.staff_members.all():
-                is_staff = True
-                break
-            if request.user in org.members.all():
-                is_member = True
-                break
         all_files = self.model.objects.filter(auth_user_list=request.user)
 
         all_files = self.model.objects.filter(auth_user_list=request.user)
@@ -807,7 +804,7 @@ class StatusView(View):
         completely_complete =  all_files.filter(internal_wf_step='complete',external_wf_step='complete')
         not_in_any_workflow = all_files.filter(internal_wf_step__isnull=True, external_wf_step__isnull=True)
         #Create COntainer
-        summary={ 'org': org ,'is_staff': is_staff, 'is_member': is_member,}
+        summary = {}
         ##Populate container
         summary["all_files"]= all_files
         summary["completely_complete"]= completely_complete
@@ -816,20 +813,20 @@ class StatusView(View):
         if kwargs["status"] ==  "all_docs":
             summary["req_status"] = all_files
             summary["status_title"] = "All Documents"
-            return render(request, 'editor/status.html', summary)
+
         if kwargs["status"] == "complete_docs" :
             summary["req_status"] = completely_complete
             summary["status_title"] = "Complete Documents"
-            return render(request, 'editor/status.html', summary)
+
         if kwargs["status"] == "incomplete_docs" :
             summary["req_status"] = incomplete_internal
             summary["status_title"] = "Incomplete Documents"
-            return render(request, 'editor/status.html', summary)
+
         if kwargs["status"] == "saved_docs" :
             summary["req_status"] = not_in_any_workflow
             summary["status_title"] = "Saved Documents"
-            return render(request, 'editor/status.html', summary)
+
         if kwargs["status"] == "test_docs" :
             # summary["req_status"] = not_in_any_workflow
             summary["status_title"] = "Test Documents"
-            return render(request, 'editor/status3.html', summary)
+        return render(request, 'editor/status.html', summary)
