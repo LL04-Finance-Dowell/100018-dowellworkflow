@@ -3,7 +3,7 @@ from django.db import models
 
 class CustomUser(AbstractUser):
 	age = models.PositiveIntegerField(null=True, blank=True)
-	is_staff = models.BooleanField(default=False, blank=False)
+	is_admin = models.BooleanField(default=False, blank=False)
 	is_org_leader = models.BooleanField(default=False, blank=False)
 	is_project_leader= models.BooleanField(default=False, blank=False)
 
