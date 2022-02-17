@@ -190,10 +190,8 @@ h2, .h2 {
  <div class="tab-content " id="myTimes">
         <div class="tab-pane fade show active" id="companyList" role="tabpanel"  aria-labelledby="company"  >
             <div class="row">
-                {% if companies %}
-                {% for company in companies %}
-
-                        <div class="col-md-4 col-sm-6 col-xs-12">
+                {% if company %}                
+                    <div class="col-md-4 col-sm-6 col-xs-12">
                             <a  id = "allDash" href="#" >
                                 <div class="panel
                                     {% if forloop.counter|divisibleby:2 %}
@@ -228,11 +226,7 @@ h2, .h2 {
                                     </div>
 
                             </a>
-                        </div-->
-
-
-
-                {% endfor %}
+                        </div-->                
                 {% else %}
 
                 <div class="col-md-8 col-sm-6 col-xs-12">
@@ -420,7 +414,7 @@ h2, .h2 {
 
             {% if forloop.counter|divisibleby:2 %}
                         <div class="col-md-4 col-sm-6 col-xs-12">
-                            <a  id = "allDash" href="#" >
+                            <a  id = "allDash" href="{% url 'organizationv2:proj-lead-management' department.id %}" >
                                 <div class="panel  panel-color-two-member panel-colorful">
                                     <div class="panel-body text-center">
                                         <p class="text-uppercase mar-btm text-sm">{{department.project_name}} | {{department.organization.name}}</p>
@@ -436,7 +430,7 @@ h2, .h2 {
 
                         {% else %}
                         <div class="col-md-4 col-sm-6 col-xs-12">
-                            <a  id = "allDash" href="#" >
+                            <a  id = "allDash" href="{% url 'organizationv2:proj-lead-management' department.id %}" >
                                 <div class="panel  panel-color-one-member panel-colorful">
                                     <div class="panel-body text-center">
                                         <p class="text-uppercase mar-btm text-sm">{{department.project_name}} | {{department.organization.name}}</p>

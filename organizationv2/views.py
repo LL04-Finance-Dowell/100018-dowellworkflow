@@ -248,32 +248,17 @@ def org_lead_view(request, *args, **kwargs):
 
 
 @xframe_options_exempt
-def proj_lead_view(request, *args, **kwargs):
-
-    org = get_object_or_404(Organizationv2, id=kwargs['id'])
-    is_org_lead, is_project_lead, is_member, is_admin = get_user_status(request.user, kwargs['id'])
-
-    # context = {
-    #     'org': org ,
-    #     'is_org_lead': is_org_lead,
-    #     'is_project_lead': is_project_lead,
-    #     'is_member': is_member,
-    #     'is_admin': is_admin
-    # }
-
-    # return render(request, 'organizationv2/dashboard_proj_lead.html', context)
+def proj_lead_view(request, id):
+    project=Project.objects.get(pk=id)       
+    org = Organizationv2.objects.get(pk=project.organization.id)  
     context = {
             'org': org ,
             'is_admin': False,
             'is_org_lead': False,
             'is_project_lead': True,
-            'is_member': False
+            'is_member': False,
+            'proj':project
         }
-
-    # if is_org_lead :
-        # return render(request, 'organizationv2/dashboard_org_lead.html', context)
-    # if is_project_lead :
-        # return render(request, 'organizationv2/dashboard_proj_lead.html', context)
     return render(request, 'organizationv2/dashboard_proj_lead.html', context)
 
 
