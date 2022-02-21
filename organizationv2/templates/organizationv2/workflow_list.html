@@ -3,7 +3,11 @@
 {% load static %}
 {% block title %}
 Documents{% endblock %}
-
+{% block addcss %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" rel="stylesheet" type='text/css' />
+<link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css" rel="stylesheet" type='text/css' />
+    <link href="https://cdn.datatables.net/1.11.4/css/dataTables.bootstrap4.min.css" rel= 'stylesheet' type='text/css' />
+{% endblock %}
 {% block content %}
 <style type="text/css">
     #addWorkFlowModal{
@@ -24,10 +28,10 @@ Documents{% endblock %}
 
     <article class="col-md-12">
 
-        <div class="boxed-md boxed-padded">
+        <div class="boxed-md3 boxed-padded">
             <div class="text-center"><span class="h3">{{org.name}} - Workflows</span></div>
             <div id="org_id" style="display:none">{{ org.id }}</div>
-                <a id="add-new-dt" class="btn btn-dark" data-toggle="modal" data-target="#addWorkFlowModal">Add New</a>
+                <a id="add-new-dt" class="btn btn-dark" style="color:#fff;" data-toggle="modal" data-target="#addWorkFlowModal">Add New</a>
             <div class="tab-pane fade show active" id="docsList"  role="tabpanel" aria-labelledby="all" >
 
             </div>
@@ -199,12 +203,21 @@ Documents{% endblock %}
 
 {% endblock %}
 {% block additionalscript %}
- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+<!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+<!--<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>-->
     <script src="https://use.fontawesome.com/b4aae4cb0e.js"></script>
     <script type="text/javascript" src="https://cdn.rawgit.com/leafo/sticky-kit/v1.1.2/jquery.sticky-kit.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
+    <!--<script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>-->
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+
+    <!--<script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>-->
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap4.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.2.0/js/dataTables.fixedHeader.min.js"></script>
 <script type="text/javascript">
 	$(".sidebar").stick_in_parent();
@@ -215,7 +228,20 @@ Documents{% endblock %}
     let dynamicDt = [];
 
     let allDocumentListTable = $('#flowList').DataTable( {
-        fixedHeader: true
+        // fixedHeader: true
+        responsive: {
+    breakpoints: [
+      {name: 'bigdesktop', width: Infinity},
+      {name: 'meddesktop', width: 1480},
+      {name: 'smalldesktop', width: 1280},
+      {name: 'medium', width: 1188},
+      {name: 'tabletl', width: 1024},
+      {name: 'btwtabllandp', width: 848},
+      {name: 'tabletp', width: 768},
+      {name: 'mobilel', width: 480},
+      {name: 'mobilep', width: 320}
+    ]
+  }
     } );
         } );
 

@@ -178,7 +178,7 @@
                       </div>
                     <div class="sidebar-content">
                       <div class="sidebar-header">
-                         <a  href="#"><img class="my-3" style="width:80%; height:100px;"
+                         <a  href="{% url 'home' %}"><img class="my-3" style="width:80%; height:100px;"
                           src="{% static 'images/doc_logo1.png'  %}"></a>
 
                   </div>
@@ -194,14 +194,14 @@
                   <a data-toggle="tab" id="company" class="nav-link nav-link-status active" href="#companyList" role="tab"  aria-controls="companyList" aria-selected="true" >
 
 
-                    Companies
+                    Company Lead
                   </a>
                 </li>
                 <li class="nav-item">
 
                       <a data-toggle="tab" id="company_users" class="nav-link nav-link-status" href="#company_usersList" role="tab"  aria-controls="company_usersList" aria-selected="false" >
 
-Org                     User Companies
+Member Companies
 </a>
                 </li>
                 <li class="nav-item">
@@ -213,13 +213,13 @@ Org                     User Companies
                 <li class="nav-item">
                   <a data-toggle="tab" id="user_projects" class="nav-link nav-link-status" href="#user_projectsList" role="tab"  aria-controls="user_projectsList" aria-selected="false" >
 
-                  User Departments
+                  Depts Leading
                   </a>
                 </li>
  <li class="nav-item">
                   <a data-toggle="tab" id="departments" class="nav-link nav-link-status" href="#departmentsList" role="tab"  aria-controls="departmentsList" aria-selected="false" >
 
-                    Departments
+                    Depts Members
                   </a>
                 </li>
 
@@ -232,10 +232,10 @@ Org                     User Companies
 
       </a>
 
-      {% comment %} <a href="{% url 'organizationv2:profile' %}">
+      <a href="{% url 'profile' %}">
         <i class="fa fa-user"></i>
 
-      </a> {% endcomment %}
+      </a>
       <a href="{% url 'password_change' %}">
         <i class="fa fa-cog"></i>
       </a>

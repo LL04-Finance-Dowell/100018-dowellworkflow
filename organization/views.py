@@ -16,8 +16,7 @@ from editor.forms import CreateTemplateForm
 from editor.views import get_name, get_userlist
 
 from django.contrib.sites.models import Site
-from django.utils.encoding import force_str
-#from django.middleware.csrf import force_str
+from django.middleware.csrf import _get_new_csrf_token
 
 from django.core.mail import send_mail
 from django.contrib.auth import logout
@@ -190,7 +189,7 @@ def submit_member(request, *args, **kwargs):
     if request.method == 'POST':
         credentials = json.loads(request.body)
         if credentials['email'] != '':
-            token_entry = VerificationToken(org_id=kwargs['id'], user_email=credentials['email'], user_position=credentials['member'], token=force_str())
+            token_entry = VerificationToken(org_id=kwargs['id'], user_email=credentials['email'], user_position=credentials['member'], token=_get_new_csrf_token())
             token_entry.save()
             route = reverse('organization:verify-user', kwargs={'token': token_entry.token})
             link = Site.objects.get_current().domain + route[1:]

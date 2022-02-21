@@ -36,7 +36,7 @@ urlpatterns = [
     # dashboard related routes
     path('get-dashboard/', login_required(DashboardView.as_view()), name="get-dashboard"),
     path('get-dashboard-admin/', login_required(views.dashboard_admin), name="get-dashboard-admin"),
-    path('admin-org-management/<int:id>', login_required(AdminOrgManagement.as_view()), name="admin-org-management"),
+    path('admin-org-management/<int:org_id>', login_required(AdminOrgManagement.as_view()), name="admin-org-management"),
 
     # path('get-status/', login_required(views.get_status), name="get-status"),
     path('get-status/<slug:status>', login_required(StatusView.as_view()), name="get-status"),

@@ -131,72 +131,73 @@ h2, .h2 {
 </style>
 
    <div class="container bootstrap snippets bootdey">
-        <a href="{% url 'organizationv2:add-member-to-project' %}"class="btn btn-dark btn-lg" style ="margin-bottom:10px;">Add Member.</a>
+       <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#addmemberModel" data-whatever="addmember">ADD MEMBER</button>
+        <div class="modal fade" id="addmemberModel" tabindex="-1" role="dialog" aria-labelledby="addmemberModelLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addmemberModelLabel">Add Member to Project</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="memberList" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Add New Member to Project</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in all_members %}
+                        <tr>
+                            <th>{{ forloop.counter }}</th>
+                            <td>{{ member.username|truncatechars:7 }}</td>
+                            <td>
+                                <a method="POST" href="{% url 'organizationv2:add-member-to-project' project.id member.id %}" class="btn btn-outline-success">Add to Project</a>
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+            </div>
+        </div>
+        </div>
 
 <div class="tab-content " id="myTimes">
     <div class="tab-pane fade show active" id="oneWeekPage" role="tabpanel"  aria-labelledby="oneWeekBtn"  >
         <div class="row">
+            {% for member in members %}
             <div class="col-md-3 col-sm-6 col-xs-12">
-                <a  id = "allDash" href="{% url 'admin_v2:admin-org-management' 1 5%}" >
-                <div class="panel panel-color-one panel-colorful">
+                <a  id = "allDash" href="#" >
+                <div class="panel
+                 {% if forloop.counter|divisibleby:2 %}
+                                    panel-color-two
+                                {% else %}
+                                    panel-color-one
+                                {%endif%}
+
+                panel-colorful">
                     <div class="panel-body text-center">
-                        <p class="text-uppercase mar-btm text-sm">Member One </p>
+                        <p class="text-uppercase mar-btm text-sm">{{member.username}}</p>
                         <i class="fa fa-user fa-5x"></i>
                         <hr>
-                        <p class="h2 text-thin"> 5 Files</p>
+                        <p class="h2 text-thin">{{member.email |truncatechars:7 }}</p>
                         <!--<small><span class="text-semibold"></span> </small>-->
                     </div>
                 </div>
                 </a>
             </div>
-            <div class="col-md-3 col-sm-6 col-xs-12">
-
-             <a  id = "allDash" href="{% url 'admin_v2:admin-org-management' 2 5%}" >
-
-                <div class="panel panel-color-two panel-colorful">
-                    <div class="panel-body text-center">
-                        <p class="text-uppercase mar-btm text-sm">Member Two </p>
-                        <i class="fa fa-user-circle fa-5x"></i>
-                        <hr>
-                        <p class="h2 text-thin">
-                            8 Files
-</p>
-                        <!--<small><span class="text-semibold"><i class="fa fa-unlock-alt fa-fw"></i> 0</span> Sent to Users</small>-->
-                    </div>
-                </div>
-                </a>
-            </div>
-            <div class="col-md-3 col-sm-6 col-xs-12">
-             <a  id = "allDash" href="{% url 'admin_v2:admin-org-management' 3  5%}" >
-
-                <div class="panel panel-color-three panel-colorful">
-                    <div class="panel-body text-center">
-                        <p class="text-uppercase mar-btm text-sm">Member Three</p>
-                        <i class="fa fa-user fa-5x"></i>
-                        <hr>
-                        <p class="h2 text-thin">3 Files</p>
-                        <!--<small><span class="text-semibold"> All<i class="fa fa-shopping-cart fa-fw"></i> </span> Yet to be done</small>-->
-                    </div>
-                </div>
-                </a>
-            </div>
-            <div class="col-md-3 col-sm-6 col-xs-12">
-                             <a  id = "allDash" href="{% url 'admin_v2:admin-org-management' 4  5%}" >
-
-                <div class="panel panel-color-four panel-colorful">
-                    <div class="panel-body text-center">
-                        <p class="text-uppercase mar-btm text-sm">Member Four</p>
-                        <i class="fa fa-user-circle fa-5x"></i>
-                        <hr>
-                        <p class="h2 text-thin">7 Files</p>
-                        <!--<small><span class="text-semibold"> All<i class="fa fa-shopping-cart fa-fw"></i> </span> Yet to be done</small>-->
-                    </div>
-                </div>
-                </a>
-            </div>
-            </div>
-
+            {% endfor %}
         </div>
+    </div>
 </div>
     </div>
       {% endblock content %}

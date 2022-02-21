@@ -1,23 +1,22 @@
 import os,json
 
-from django.http import HttpResponseRedirect
-from . tokens import generate_token
 from django import forms
 from django.conf import settings
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
+from django.http import HttpResponseRedirect
 from django.views.decorators.clickjacking import xframe_options_exempt
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_str
+from . tokens import generate_token
+#from django.contrib.sites.shortcuts import get_current_site
 from accounts.models import CustomUser
 from editor.forms import CreateTemplateForm
 from editor.views import get_name, get_userlist
 #from admin_v2.models import Company
 from workflow.models import WorkFlowModel, SigningStep, DocumentType
 from django.contrib.sites.models import Site
-#from django.middleware.csrf import force_str
+from django.middleware.csrf import _get_new_csrf_token
 from django.urls import reverse
 from django.core.mail import send_mail
 from .forms import CreateOrganizationv2Form, CreateProjectForm
@@ -27,12 +26,22 @@ from .models import Organizationv2, Project, VerificationToken, Company
 # Create your views here.
 def get_user_status(user, org_id):
     org = get_object_or_404(Organizationv2, id=org_id)
-    company = org.company_orgs.all()[0]
+    company = None
+    is_admin = None
+    is_org_lead = None
+    is_project_lead = None
+    is_member = None
 
-    is_admin        = True if user == company.admin else False
-    is_org_lead     = True if user == org.organization_lead else False
-    is_project_lead = False
-    is_member       = False
+    try:
+        company = org.company_orgs.all()[0]
+    except:
+        company = None
+
+    if company :
+        is_admin        = True if user == company.admin else False
+        is_org_lead     = True if user == org.organization_lead else False
+        is_project_lead = False
+        is_member       = False
 
     for proj in org.projects.all():
         if user == proj.project_lead:
@@ -42,43 +51,36 @@ def get_user_status(user, org_id):
     return is_org_lead, is_project_lead, is_member, is_admin
 
 
-
-def add_member_view(request, *args, **kwargs):
-    is_org_lead, is_project_lead, is_member, is_admin = get_user_status(request.user, kwargs['org_id'])
-    member_list = []
-    member_type = ''
-    org = get_object_or_404(Organizationv2, id=kwargs['org_id'])
-    if kwargs['member_type'] == 'org_lead':
-        member_type = 'ORG_LEAD'
-        member_list.append(org.organization_lead)
-    if kwargs['member_type'] == 'project_lead':
-        member_type = 'PROJECT_LEAD'
-        member_list.append(org.projects.project_lead)
-    if kwargs['member_type'] == 'member':
-        member_type = 'MEMBER'
-        member_list = org.projects.members.all()
-
-    context = {
-        'org': org,
-        'member_type': member_type,
-        'member_list': member_list,
-        'is_org_lead': is_org_lead,
-        'is_project_lead': is_project_lead,
-        'is_member': is_member,
-        'is_admin': is_admin
-    }
-
-    if is_org_lead or is_project_lead or is_admin:
-        return render(request, 'organizationv2/add_members.html', context)
-
-class MembersView(View):
-    is_template = True
+# this is configured according to v2
+class CreateOrganizationv2(View):
+    @xframe_options_exempt
+    def get(self, request, *args, **kwargs):
+        form = CreateOrganizationv2Form()
+        return render(request, 'organizationv2/create.html', { 'form': form })
 
     @xframe_options_exempt
-    def get(self, request, **kwargs):      
-        company = get_object_or_404(Company, id=kwargs['id'])
-        context = {'company': company}
-        return render(request, 'organizationv2/add_members.html', context)
+    def post(self, request, *args, **kwargs):
+        form = CreateOrganizationv2Form(request.POST)
+        company = get_object_or_404(Company, id=kwargs['company_id'])
+
+        if company is None:
+            messages.error(request, "You need to be a company admin to add organization")
+            return redirect('/')
+        if form.is_valid():
+            selected_org_leader_pk=request.POST.get('organization_lead')
+            selected_org_leader=CustomUser.objects.get(pk=selected_org_leader_pk)
+            selected_org_leader.is_org_leader=True
+            org_leader=selected_org_leader.save()
+            org = form.save()
+            company.organizations.add(org)
+            return redirect('admin_v2:admin-org-management', company_id=company.id, org_id=org.id)
+        else :
+            messages.error(request, 'Invalid input.')
+            return render(request, 'organizationv2/create.html', { 'form': form })
+
+
+
+
 
 def add_member(request, company_id):
     print(company_id)
@@ -91,16 +93,26 @@ def add_member(request, company_id):
                 user_email=email,
                 token=generate_token.make_token(request.user))
             token_entry.save()
-            print(token_entry.token)
             route = reverse('admin_v2:verify-user', kwargs={'token': token_entry.token})
-            link="https://"+request.get_host() + "/"+ route[1:] 
-            print(link)         
-            send_mail('You are invited at DocEdit', 'Go at '+ link + ' to accept invitation. If authenticated login by username: '+ email + 'without @ and anything after, password: "password123Dowell"','', [token_entry.user_email,], fail_silently=False)
-            return JsonResponse({ 'status': 'OK', 'message': 'Email sent at ' + token_entry.user_email, 'link': link})
+            link="https://"+request.get_host()+ "/"+ route[1:]
+            send_mail('You are invited at DocEdit', 'Go at '+ link + ' to accept invitation. If authenticated login by username: '+ email + ' without @ and anything after, password: "password123Dowell"','', [token_entry.user_email,], fail_silently=False)
+            #return JsonResponse({ 'status': 'OK', 'message': 'Email sent at ' + token_entry.user_email, 'link': link})
+            messages.success(request, f"Invitation sent to {email}")
+            return redirect('organizationv2:add-members', id=company.id)
         return JsonResponse({ 'status': 'FAILED', 'message': 'Please provide an email'})
 
     return JsonResponse({'status': 'FAILED', 'message': 'Must be a post request.'})
 
+
+class MembersView(View):
+    is_template = True
+
+    @xframe_options_exempt
+    def get(self, request, **kwargs):
+        company = get_object_or_404(Company, id=kwargs['id'])
+        members=company.members.all()
+        context = {'company': company, 'members':members}
+        return render(request, 'organizationv2/add_members.html', context)
 
 class CreateProjectView(View):
     @xframe_options_exempt
@@ -115,12 +127,14 @@ class CreateProjectView(View):
         if form.is_valid():
             selected_proj_leader_pk=request.POST.get('project_lead')
             selected_proj_leader=CustomUser.objects.get(pk=selected_proj_leader_pk)
-            selected_proj_leader.is_project_leader=True            
-            proj_leader=selected_proj_leader.save()            
+            selected_proj_leader.is_project_leader=True
+            proj_leader=selected_proj_leader.save()
+            form.instance.organization = org
             project = form.save()
             org.projects.add(project)
+            messages.success(request, "Created created and Added to Organization successfully")
 
-            return redirect('organizationv2:project-management', org_id=org.id, project_id=project.id)
+            return redirect('organizationv2:org-lead-management', id=org.id)
         else :
             messages.error(request, 'Invalid input.')
             return render(request, 'organizationv2/create_project.html', { 'form': form })
@@ -128,11 +142,10 @@ class CreateProjectView(View):
 def project_management(request, *args, **kwargs):
     org = get_object_or_404(Organizationv2, id=kwargs['org_id'])
     proj = get_object_or_404(Project, id=kwargs['project_id'])
-    print(org.organization_lead.username)
     is_org_lead, is_project_lead, is_member, is_admin = get_user_status(request.user, org.id)
 
     context = {
-        'proj': proj,
+        'project': proj,
         'org':org,
         'is_org_lead': is_org_lead,
         'is_project_lead': is_project_lead,
@@ -141,34 +154,11 @@ def project_management(request, *args, **kwargs):
     }
     return render(request, 'organizationv2/project_management.html', context)
 
-# this is configured according to v2
-class CreateOrganizationv2(View):
-    @xframe_options_exempt
-    def get(self, request, *args, **kwargs):
-        form = CreateOrganizationv2Form()
-        return render(request, 'organizationv2/create.html', { 'form': form })
-
-    @xframe_options_exempt
-    def post(self, request, *args, **kwargs):
-        form = CreateOrganizationv2Form(request.POST)        
-        company = get_object_or_404(Company, id=kwargs['id'])
-        if form.is_valid():            
-            selected_org_leader_pk=request.POST.get('organization_lead')
-            selected_org_leader=CustomUser.objects.get(pk=selected_org_leader_pk)
-            selected_org_leader.is_org_leader=True            
-            org = form.save()
-            org_leader=selected_org_leader.save()  
-            company.organizations.add(org)
-            return redirect('admin_v2:admin-org-management', company_id=company.id, org_id=org.id)
-        else :
-            messages.error(request, 'Invalid input.')
-            return render(request, 'organizationv2/create.html', { 'form': form })
-
 
 class Organizationv2Home(View):
     @xframe_options_exempt
     def get(self, request, *args, **kwargs):
-        org = get_object_or_404(Organizationv2, id=kwargs['id'])
+        org = get_object_or_404(Organizationv2, id=kwargs['org_id'])
         is_org_lead, is_project_lead, is_member, is_admin = get_user_status(request.user, kwargs['id'])
         context = {
             'org': org,
@@ -180,87 +170,68 @@ class Organizationv2Home(View):
         return render(request, 'organizationv2/org_home.html', context)
 
 
-def add_member_to_project(request, id):
-    user=request.user
-    department=Project.objects.filter(project_lead=user)[0]
-    company=department.organization.company
-    company_members=company.members.all()
-    if request.method=="POST":
-        member=CustomUser.objects.get(pk=id)
+
+def add_member_to_project(request,  *args, **kwargs):
+    department = get_object_or_404(Project, id=kwargs['project_id'])
+    member = get_object_or_404(CustomUser, id=kwargs['member_id'])
+    if member is not None and department is not None:
         department.members.add(member)
         department.save()
         messages.success(request, "Member added successfully to Your Department")
-        return HttpResponseRedirect(request.path_info)
-    context={'company_members':company_members}
-    return render(request, 'organizationv2/add_member_to_project', context)
-    #return redirect(request, 'organizationv2:project-management', org_id=department.organization.id, project_id=department.id)
+        return redirect('organizationv2:proj-lead-management', department.id)
+    else:
+        messages.error(request, "Adding member was unsuccessful")
+        return redirect('organizationv2:proj-lead-management', department.id)
 
-def add_member_to_organization(request, id):
+
+def org_lead_view(request, id):
     user=request.user
-    organization=Organizationv2.objects.filter(organization_lead=user)[0]
-    company=organization.company
-    company_members=company.members.all()
-    if request.method == "POST":
-        member=CustomUser.objects.get(pk=id)
-        organization.members.add(member)
-        organization.save()
-        messages.success(request, "Member added successfully to Your Organization")
-        return HttpResponseRedirect(request.path_info)
-    context={'company_members':company_members}
-    return render(request, 'organizationv2/add_member_to_project', context)
-    #return redirect(request, 'organizationv2:org-lead-management', org_id=organization.id)
+    org = get_object_or_404(Organizationv2, id=id)
+    project = Project.objects.filter(project_lead=user)[0]
+    departments=org.projects.all()
+    members=org.members.all()
+    templates=org.templates.all()
+    workflows=org.workflows.all()
 
-
-
-
-def org_lead_view(request, *args, **kwargs):
-    user=request.user
-    #org = get_object_or_404(Organization_v2, organization_lead=user )
-    org = get_object_or_404(Organizationv2, id=kwargs['org_id'])
-    try:
-        proj = get_object_or_404(Project, project_lead=user)
-        #proj = get_object_or_404(Project, id=kwargs['project_id'])
-    except:
-        proj=None
-    is_org_lead, is_project_lead, is_member, is_admin = get_user_status(request.user, kwargs['id'])
-
-    # context = {
-    #     'org': org ,
-    #     'is_org_lead': is_org_lead,
-    #     'is_project_lead': is_project_lead,
-    #     'is_member': is_member,
-    #     'is_admin': is_admin
-    # }
     context = {
-            'org': org ,
-            'departments': proj ,
-            'is_admin': False,
-            'is_org_lead': True,
-            'is_project_lead': False,
-            'is_member': False
-        }
-
-    # if is_org_lead :
-        # return render(request, 'organizationv2/dashboard_org_lead.html', context)
-    # if is_project_lead :
-        # return render(request, 'organizationv2/dashboard_proj_lead.html', context)
+        'org': org ,
+        'project':project,
+        'members':members,
+        'departments':departments,
+        'templates':templates,
+        'workflows':workflows,
+        'is_admin': False,
+        'is_org_lead': True,
+        'is_project_lead': False,
+        'is_member': False
+    }
     return render(request, 'organizationv2/dashboard_org_lead.html', context)
-
 
 @xframe_options_exempt
 def proj_lead_view(request, id):
-    project=Project.objects.get(pk=id)       
-    org = Organizationv2.objects.get(pk=project.organization.id)  
+    project=Project.objects.get(pk=id)
+    org = Organizationv2.objects.get(pk=project.organization.id)
+    company=org.company
+    org_members=org.members.all()
+    try:
+        company_members=company.members.all()
+        all_members=org_members+company_members
+    except:
+        #company_members=company.members.all()
+        all_members=org_members
+    members=project.members.all()
     context = {
             'org': org ,
+            'all_members':all_members,
+            'members':members,
+            'company':company,
             'is_admin': False,
             'is_org_lead': False,
             'is_project_lead': True,
             'is_member': False,
-            'proj':project
+            'project':project,
         }
     return render(request, 'organizationv2/dashboard_proj_lead.html', context)
-
 
 
 def workflow_management(request, *args, **kwargs):
@@ -273,7 +244,7 @@ def workflow_management(request, *args, **kwargs):
     userlist.add(proj.project_lead)
 
     context = {
-        'object_list': proj.workflows.all(),
+        'object_list': org.workflows.all(),
         'user_list': userlist.all() ,
         'workflow': ['internal', 'external'],
         'org': org,
@@ -332,7 +303,7 @@ def create_document_type(request, *args, **kwargs):
 	        'title': obj.internal_work_flow.title ,
 	        'steps': [{ 'name': step.name, 'authority':step.authority.username} for step in obj.internal_work_flow.steps.all()],
 	        }
-            
+
 	if obj.external_work_flow :
 	    externalWF = {
 	        'title': obj.external_work_flow.title,
@@ -438,7 +409,7 @@ def create_template(request, *args, **kwargs):
                 template.auth_user_list.add(usr)
 
             template.save()
-            proj.templates.add(template)
+            org.templates.add(template)
             return redirect('editor:template-editor', id=template.id)
 
     CreateTemplateForm.base_fields['document_type'] = forms.ModelChoiceField(queryset=org.workflows.all())
@@ -450,7 +421,7 @@ def create_template(request, *args, **kwargs):
         'form': form,
         'org': org,
         'project': proj,
-        'files': proj.templates.all(),
+        'files': org.templates.all(),
         'is_org_lead': is_org_lead,
         'is_project_lead': is_project_lead,
         'is_member': is_member,
@@ -467,7 +438,7 @@ def previous_templates(request, *args, **kwargs):
     context = {
         'org': org ,
         'project': proj,
-        'files': proj.templates.all(),
+        'files': org.templates.all(),
         'is_org_lead': is_org_lead,
         'is_project_lead': is_project_lead,
         'is_member': is_member,
@@ -616,12 +587,26 @@ class StaffView(View):
 
 
 '''
-def member_dummy(request):
+def admin_dummy(request):
     context = {
 
             'is_admin': True,
-            'is_org_lead': True,
-            'is_project_lead': True,
+            'is_org_lead': False,
+            'is_project_lead': False,
+            'is_member': False
+        }
+
+    # if is_org_lead :
+        # return render(request, 'organizationv2/dashboard_org_lead.html', context)
+    # if is_project_lead :
+        # return render(request, 'organizationv2/dashboard_proj_lead.html', context)
+    return render(request, 'dummy/landing_dummy.html', context)
+def member_dummy(request):
+    context = {
+
+            'is_admin': False,
+            'is_org_lead': False,
+            'is_project_lead': False,
             'is_member': True
         }
 
@@ -629,15 +614,15 @@ def member_dummy(request):
         # return render(request, 'organizationv2/dashboard_org_lead.html', context)
     # if is_project_lead :
         # return render(request, 'organizationv2/dashboard_proj_lead.html', context)
-    return render(request, 'dummy/member_dashboard_dummy.html', context)
+    return render(request, 'dummy/landing_dummy.html', context)
 
 def project_dummy(request):
     context = {
 
-            'is_admin': True,
-            'is_org_lead': True,
+            'is_admin': False,
+            'is_org_lead': False,
             'is_project_lead': True,
-            'is_member': True
+            'is_member': False
         }
 
     # if is_org_lead :
@@ -649,10 +634,10 @@ def project_dummy(request):
 def org_dummy(request):
     context = {
 
-            'is_admin': True,
+            'is_admin': False,
             'is_org_lead': True,
-            'is_project_lead': True,
-            'is_member': True
+            'is_project_lead': False,
+            'is_member': False
         }
 
     # if is_org_lead :
@@ -662,3 +647,35 @@ def org_dummy(request):
     return render(request, 'dummy/dashboard_org_lead_dummy.html', context)
 
 
+def add_member_view(request, *args, **kwargs):
+    is_org_lead, is_project_lead, is_member, is_admin = get_user_status(request.user, kwargs['org_id'])
+    member_list = []
+    member_type = ''
+    org = get_object_or_404(Organizationv2, id=kwargs['org_id'])
+    if kwargs['member_type'] == 'org_lead':
+        member_type = 'ORG_LEAD'
+        member_list.append(org.organization_lead)
+    if kwargs['member_type'] == 'project_lead':
+        member_type = 'PROJECT_LEAD'
+        member_list.append(org.projects.project_lead)
+    if kwargs['member_type'] == 'member':
+        member_type = 'MEMBER'
+        member_list = org.projects.members.all()
+
+    context = {
+        'org': org,
+        'member_type': member_type,
+        'member_list': member_list,
+        'is_org_lead': is_org_lead,
+        'is_project_lead': is_project_lead,
+        'is_member': is_member,
+        'is_admin': is_admin
+    }
+
+    if is_org_lead or is_project_lead or is_admin:
+        return render(request, 'organizationv2/add_members.html', context)
+
+
+
+def profile(request):
+    return render(request, 'organizationv2/profile.html')

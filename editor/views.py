@@ -482,85 +482,10 @@ def documentRejectionRequest(request, *args, **kwargs):
 
 
 
-'''
-internal_status, internal_wf_step, external_status, external_wf_step, update_time
-document_name, document_type, file_type, file, auth_user_list, created_by, created_on,
-
-
-def save_file(request):
-    body = json.loads(request.body)
-    fileObj = None
-    path = ''
-
-    if body['file_id'] :
-        try:
-            fileObj = get_object_or_404(EditorFile, id=body['file_id'])
-            path = fileObj.file.path
-        except:
-            return JsonResponse({ 'error': 'File not found'})
-    else:
-        name = get_name()
-        path = os.path.join(settings.MEDIA_ROOT, name + '.json')
-        fileObj = EditorFile(name=name, file=path, created_by=request.user)
-
-    with open(path, 'w') as file:
-        file.write(json.dumps(body['content']))
-
-    if fileObj:
-        fileObj.save()
-
-    file_obj = {
-        'file_id': fileObj.id,
-        'name': fileObj.name,
-        'file': fileObj.file.path,
-        'created_by': fileObj.created_by.id
-    }
-
-
-    return JsonResponse({ 'status': 'OK' , 'file': file_obj})
-
-
-
-def request_document(request):
-    if request.method == 'POST':
-        form = RequestDocumentForm(request.POST)
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            print(form.cleaned_data)
-            path = os.path.join(settings.MEDIA_ROOT, get_name() + '.json')
-
-            template = Template.objects.filter(document_type=form.cleaned_data['document_type'])[0]
-
-            if template :
-                temp_path = template.file.path
-
-                with open(temp_path, 'r') as tempF:
-                    data = tempF.read()
-
-            with open(path, 'w') as f:
-                f.write(data)
-            doc = EditorFile(document_name=form.cleaned_data['document_name'], document_type=template.document_type, file=path, created_by=request.user)
-            doc.save()
-            for usr in get_userlist(doc.document_type):
-                doc.auth_user_list.add(usr)
-            doc.save()
-            print('Document saved...')
-            return redirect('editor:editor', id=doc.id)
-    else:
-        print('Form is invalid')
-        form = RequestDocumentForm();
-
-    return render(request, 'editor/request_document.html', {'form': form})
-
-
-'''
 
 
 class DashboardView(View):
     model = EditorFile
-
 
     def get(self, request, *args, **kwargs):
         #   Create time filters
@@ -604,7 +529,6 @@ class DashboardView(View):
 class StatusView2(View):
     model = EditorFile
 
-
     @xframe_options_exempt
     def get(self, request, *args, **kwargs):
         user = request.user
@@ -625,7 +549,6 @@ class StatusView2(View):
             is_org_lead= True
 
         for org in org_list :
-
             if request.user in org.members.all():
                 is_member = True
                 break
@@ -644,22 +567,37 @@ class StatusView2(View):
         return render(request, 'editor/status.html', summary)
 
 def dashboard(request):
-    user=request.user
-    user_projects=[] #user is member in a project
-    user_companies=[]
+    user = request.user
+    user_projects = [] #  user is a member of project
+    user_companies = []
+    cmpani = []
+
     projects=Project.objects.all()
     for project in projects:
         if user in project.members.all():
             user_projects.append(project)
-    companies=Company.objects.all()
+
+
+    companies = Company.objects.all()
     for company in companies:
+
         if user in company.members.all():
             user_companies.append(company)
-    if user.is_admin:
-        company=Company.objects.get(admin=user)
+
+    print('Printing company by rt company', cmpani)
+
+    if user.is_admin and company is not None:
         organizations=Organizationv2.objects.filter(organization_lead=user)
         departments=Project.objects.filter(project_lead=user)
-        context={'user_companies':user_companies, 'user_projects':user_projects,'company':company, 'organizations':organizations,'departments':departments, 'user':user}
+        context={
+            'user_companies':user_companies,
+            'user_projects':user_projects,
+            'company': Company.objects.filter(admin=request.user),
+            #'company': company,
+            'organizations':organizations,
+            'departments':departments,
+            'user':user
+        }
         return render(request, 'editor/landing_page.html', context)
 
 
@@ -749,40 +687,6 @@ def dashboard_admin(request):
 
     return render(request, 'editor/dashboard_admin.html', context)
 
-class AdminOrgManagement(View):
-    # model = EditorFile
-
-    @xframe_options_exempt
-    def get(self, request, *args, **kwargs):
-        ##Get Evry data from Db
-        # all_files = self.model.objects.all().filter(created_by=request.user)
-
-        org_list = Organizationv2.objects.all()
-        is_staff = False
-        is_member = False
-        org_name = ""
-        if kwargs["id"] == 1:
-            org_name = "One"
-        if kwargs["id"] == 2:
-            org_name = "Two"
-        if kwargs["id"] == 3:
-            org_name = "Three"
-        if kwargs["id"] == 4:
-            org_name= "Four"
-
-
-        for org in org_list :
-            if request.user in org.staff_members.all():
-                is_staff = True
-                break
-            if request.user in org.members.all():
-                is_member = True
-                break
-        context = {
-            'org': org ,'is_staff': is_staff, 'is_member': is_member,
-            'org_name': org_name
-        }
-        return render(request, 'editor/admin_org_management.html', context)
 
 
 
@@ -830,3 +734,100 @@ class StatusView(View):
             # summary["req_status"] = not_in_any_workflow
             summary["status_title"] = "Test Documents"
         return render(request, 'editor/status.html', summary)
+
+
+
+class AdminOrgManagement(View):
+
+    @xframe_options_exempt
+    def get(self, request, *args, **kwargs):
+        company = Company.objects.get(admin=request.user)
+        org = company.org.get(id=kwargs['org_id'])
+
+        context = {
+            'org': org ,
+            'is_admin': True,
+            'is_org_lead': False,
+            'is_project_lead': False,
+            'is_member': False
+        }
+        return render(request, 'editor/admin_org_management.html', context)
+
+
+
+'''
+internal_status, internal_wf_step, external_status, external_wf_step, update_time
+document_name, document_type, file_type, file, auth_user_list, created_by, created_on,
+
+
+def save_file(request):
+    body = json.loads(request.body)
+    fileObj = None
+    path = ''
+
+    if body['file_id'] :
+        try:
+            fileObj = get_object_or_404(EditorFile, id=body['file_id'])
+            path = fileObj.file.path
+        except:
+            return JsonResponse({ 'error': 'File not found'})
+    else:
+        name = get_name()
+        path = os.path.join(settings.MEDIA_ROOT, name + '.json')
+        fileObj = EditorFile(name=name, file=path, created_by=request.user)
+
+    with open(path, 'w') as file:
+        file.write(json.dumps(body['content']))
+
+    if fileObj:
+        fileObj.save()
+
+    file_obj = {
+        'file_id': fileObj.id,
+        'name': fileObj.name,
+        'file': fileObj.file.path,
+        'created_by': fileObj.created_by.id
+    }
+
+
+    return JsonResponse({ 'status': 'OK' , 'file': file_obj})
+
+
+
+def request_document(request):
+    if request.method == 'POST':
+        form = RequestDocumentForm(request.POST)
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            print(form.cleaned_data)
+            path = os.path.join(settings.MEDIA_ROOT, get_name() + '.json')
+
+            template = Template.objects.filter(document_type=form.cleaned_data['document_type'])[0]
+
+            if template :
+                temp_path = template.file.path
+
+                with open(temp_path, 'r') as tempF:
+                    data = tempF.read()
+
+            with open(path, 'w') as f:
+                f.write(data)
+            doc = EditorFile(document_name=form.cleaned_data['document_name'], document_type=template.document_type, file=path, created_by=request.user)
+            doc.save()
+            for usr in get_userlist(doc.document_type):
+                doc.auth_user_list.add(usr)
+            doc.save()
+            print('Document saved...')
+            return redirect('editor:editor', id=doc.id)
+    else:
+        print('Form is invalid')
+        form = RequestDocumentForm();
+
+    return render(request, 'editor/request_document.html', {'form': form})
+
+
+
+
+'''
