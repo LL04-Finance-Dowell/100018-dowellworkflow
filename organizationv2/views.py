@@ -16,7 +16,7 @@ from editor.views import get_name, get_userlist
 #from admin_v2.models import Company
 from workflow.models import WorkFlowModel, SigningStep, DocumentType
 from django.contrib.sites.models import Site
-from django.middleware.csrf import _get_new_csrf_token
+from django.utils.encoding import force_str
 from django.urls import reverse
 from django.core.mail import send_mail
 from .forms import CreateOrganizationv2Form, CreateProjectForm
@@ -72,6 +72,8 @@ class CreateOrganizationv2(View):
             selected_org_leader.is_org_leader=True
             org_leader=selected_org_leader.save()
             org = form.save()
+            org.company=company
+            org.save()
             company.organizations.add(org)
             return redirect('admin_v2:admin-org-management', company_id=company.id, org_id=org.id)
         else :
@@ -211,6 +213,9 @@ def org_lead_view(request, id):
 def proj_lead_view(request, id):
     project=Project.objects.get(pk=id)
     org = Organizationv2.objects.get(pk=project.organization.id)
+    print(org)
+    print(org.company)
+    print(org.projects.all)
     company=org.company
     org_members=org.members.all()
     try:

@@ -16,7 +16,7 @@ from editor.forms import CreateTemplateForm
 from editor.views import get_name, get_userlist
 
 from django.contrib.sites.models import Site
-from django.middleware.csrf import _get_new_csrf_token
+
 
 from django.core.mail import send_mail
 from django.contrib.auth import logout
@@ -184,21 +184,7 @@ class CreateTemplate(View):
             }
             return render(request, 'doc_template/create_template.html', context=context)
 
-@xframe_options_exempt
-def submit_member(request, *args, **kwargs):
-    if request.method == 'POST':
-        credentials = json.loads(request.body)
-        if credentials['email'] != '':
-            token_entry = VerificationToken(org_id=kwargs['id'], user_email=credentials['email'], user_position=credentials['member'], token=_get_new_csrf_token())
-            token_entry.save()
-            route = reverse('organization:verify-user', kwargs={'token': token_entry.token})
-            link = Site.objects.get_current().domain + route[1:]
-            send_mail('You are invited at DocEdit', 'Go at '+ link + ' to accept invitation. If authenticated login by username: '+ credentials['email'] + ', password: "password123Dowell"','', [token_entry.user_email,], fail_silently=False)
-            return JsonResponse({ 'status': 'OK', 'message': 'Email sent at ' + token_entry.user_email, 'link': link})
-        return JsonResponse({ 'status': 'FAILED', 'message': 'Please provide an email'})
-    return JsonResponse({ 'status': 'FAILED', 'message': 'You must provide an email.'})
 
-@xframe_options_exempt
 def remove_staff_member(request, *args, **kwargs):
     if request.method == 'POST':
         credentials = json.loads(request.body)

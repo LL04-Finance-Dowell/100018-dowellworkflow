@@ -11,7 +11,6 @@ from organizationv2.models import VerificationToken
 import json
 from accounts.models import CustomUser
 from django.contrib.sites.models import Site
-from django.middleware.csrf import _get_new_csrf_token
 from django.urls import reverse
 from django.core.mail import send_mail
 
@@ -111,29 +110,6 @@ def admin_org_management_dummy(request, *args, **kwargs):
             'is_member': True
         }
     return render(request, 'admin_v2/admin_org_management_dummy.html', context)
-
-
-
-def add_member(request, *args, **kwargs):
-    if request.method == 'POST':
-        credentials = json.loads(request.body)
-        #print(kwargs)# kwags['company_id'], kwargs['org_id']
-        #print(credentials)#{'email': 'qwe@qwe.com', 'member': 'MEMBER'}
-        if credentials['email'] != '':
-            token_entry = VerificationToken(
-                org_id=kwargs['org_id'],
-                user_email=credentials['email'],
-                user_position=credentials['member'],
-                token=_get_new_csrf_token())
-            token_entry.save()
-            route = reverse('admin_v2:verify-user', kwargs={'token': token_entry.token})
-            link = Site.objects.get_current().domain + route[1:]
-            send_mail('You are invited at DocEdit', 'Go at '+ link + ' to accept invitation. If authenticated login by username: '+ credentials['email'] + ', password: "password123Dowell"','', [token_entry.user_email,], fail_silently=False)
-            return JsonResponse({ 'status': 'OK', 'message': 'Email sent at ' + token_entry.user_email, 'link': link})
-        return JsonResponse({ 'status': 'FAILED', 'message': 'Please provide an email'})
-
-    return JsonResponse({'status': 'FAILED', 'message': 'Must be a post request.'})
-
 
 
 @xframe_options_exempt
