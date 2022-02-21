@@ -166,304 +166,293 @@
 
   </style>
 </head>
-                <body>
+<body>
+  <div class="wrapper d-flex align-items-stretch">
+    <nav id="sidebar">
+      <div class="custom-menu">
+        <button type="button" id="sidebarCollapse" class="btn btn-primary">
+           <i class="fa fa-bars"></i>
+          <span class="sr-only">Toggle Menu</span>
+        </button>
+      </div>
+    <div class="sidebar-content">
+      <div class="sidebar-header">
+         <a  href="#"><img class="my-3" style="width:80%; height:100px;"
+          src="{% static 'images/doc_logo1.png'  %}"></a>
 
-                  <div class="wrapper d-flex align-items-stretch">
-                    <nav id="sidebar">
-                      <div class="custom-menu">
-                        <button type="button" id="sidebarCollapse" class="btn btn-primary">
-                           <i class="fa fa-bars"></i>
-                          <span class="sr-only">Toggle Menu</span>
-                        </button>
-                      </div>
-                    <div class="sidebar-content">
-                      <div class="sidebar-header">
-                         <a  href="#"><img class="my-3" style="width:80%; height:100px;"
-                          src="{% static 'images/doc_logo1.png'  %}"></a>
+    </div>
+      <h1><a href="index.html" class="logo">Dowell Docedit</a></h1>
 
-                  </div>
-                      <h1><a href="index.html" class="logo">Dowell Docedit</a></h1>
+      <ul class="list-unstyled components mb-5" >
+        {% if is_admin %}
+        <li>
+          <a href="#">Admin Dashboard
+          </a>
+        </li>
+        {% endif %}
 
-                      <ul class="list-unstyled components mb-5" >
-                 {% if is_admin %}
-                <li>
+        {% if is_org_lead %}
+        <li class="sidebar-dropdown">
+        <a href="#"> Org. Lead Dashboard</a>
+        <div class="sidebar-submenu">
+        <ul >
+            <li >
+              <a  href ="{% url 'organizationv2:org-dummy' %}">
+                <span class="textside">Org. 1</span>
+              </a>
+            </li>
+        </ul>
+    </div>
+        </li>
+{% endif %}
 
-                  <a href="#">Admin Dashboard
-                  </a>
-                </li>
-                {% endif %}
-                           {% if is_org_lead %}
+ {% if is_project_lead %}
 
-                 <li class="sidebar-dropdown">
-                            <a href="#"> Org. Lead Dashboard</a>
-                            <div class="sidebar-submenu">
-                  <ul >
-                <li >
-                  <a  href ="{% url 'organizationv2:org-dummy' %}">
-                    <span class="textside">Org. 1</span>
-                  </a>
-                </li>
-
-
-              </ul>
-
-
-
-            </div>
-                        </li>
-
-
-
-
-                {% endif %}
-
-                 {% if is_project_lead %}
-
-                  <li class="sidebar-dropdown">
-                            <a href="#"> Dpt. Lead DashBoard</a>
-                            <div class="sidebar-submenu">
-                  <ul >
-                <li >
-                  <a  href ="{% url 'organizationv2:project-dummy' %}">
-                    <span class="textside">Dpt. 1</span>
-                  </a>
-                </li>
+  <li class="sidebar-dropdown">
+            <a href="#"> Dpt. Lead DashBoard</a>
+            <div class="sidebar-submenu">
+  <ul >
+<li >
+  <a  href ="{% url 'organizationv2:project-dummy' %}">
+    <span class="textside">Dpt. 1</span>
+  </a>
+</li>
 
 
-              </ul>
+</ul>
 
 
 
-            </div>
-                        </li>
-                {% endif %}
+</div>
+        </li>
+{% endif %}
 
-                        <li>
-                          <a href="{% url 'organizationv2:member-dummy' %}"><span class="fa fa-home mr-3"></span> Dashboard</a>
-                        </li>
+        <li>
+          <a href="{% url 'organizationv2:member-dummy' %}"><span class="fa fa-home mr-3"></span> Dashboard</a>
+        </li>
 
-                        <li class="sidebar-dropdown">
-                            <a href="#"><span class="fa fa-flag mr-3"></span> Status</a>
-                            <div class="sidebar-submenu">
-                  <ul >
-                <li >
-                  <a  href ="#">
-                    <span class="textside">All Docs</span>
-                  </a>
-                </li>
-                <li >
-                      <a  href ="#">
-                    <span class="textside">Complete Docs</span>
-                  </a>
-                </li>
-                <li >
-                  <a  href ="#">
-                    <span class="textside">Incomplete Docs</span>
-                  </a>
-                </li>
-                <li >
-                  <a  href ="#">
-                    <span class="textside">Saved Docs</span>
-                  </a>
-                </li>
-                <li >
-                  <a  href ="#">
-                    <span class="textside">Test Docs</span>
-                  </a>
-                </li>
-              </ul>
+        <li class="sidebar-dropdown">
+            <a href="#"><span class="fa fa-flag mr-3"></span> Status</a>
+            <div class="sidebar-submenu">
+  <ul >
+<li >
+  <a  href ="#">
+    <span class="textside">All Docs</span>
+  </a>
+</li>
+<li >
+      <a  href ="#">
+    <span class="textside">Complete Docs</span>
+  </a>
+</li>
+<li >
+  <a  href ="#">
+    <span class="textside">Incomplete Docs</span>
+  </a>
+</li>
+<li >
+  <a  href ="#">
+    <span class="textside">Saved Docs</span>
+  </a>
+</li>
+<li >
+  <a  href ="#">
+    <span class="textside">Test Docs</span>
+  </a>
+</li>
+</ul>
 
 
 
-            </div>
-                        </li>
-                {% if is_project_lead or is_org_lead or is_admin %}
-                        <li class="sidebar-dropdown">
-                          <a href="#"><span class="fa fa-table mr-3"></span> Manage Templates</a>
-                          <div class="sidebar-submenu">
-              <ul>
-                <li>
+</div>
+        </li>
+{% if is_project_lead or is_org_lead or is_admin %}
+        <li class="sidebar-dropdown">
+          <a href="#"><span class="fa fa-table mr-3"></span> Manage Templates</a>
+          <div class="sidebar-submenu">
+<ul>
+<li>
 
-                  <a href="#">Create Template
-                  </a>
-                </li>
-                <li>
-                  <a href="#">Previous Templates</a>
-                </li>
-                 </ul>
-                </div>
-                        </li>
-                {% endif %}
-                        <li class="sidebar-dropdown">
-                          <a href="#"><span class="fa fa-folder-open mr-3"></span> Documents</a>
-                          <div class="sidebar-submenu">
-              <ul style="list-style-type: none;">
-                <li>
+  <a href="#">Create Template
+  </a>
+</li>
+<li>
+  <a href="#">Previous Templates</a>
+</li>
+ </ul>
+</div>
+        </li>
+{% endif %}
+        <li class="sidebar-dropdown">
+          <a href="#"><span class="fa fa-folder-open mr-3"></span> Documents</a>
+          <div class="sidebar-submenu">
+<ul style="list-style-type: none;">
+<li>
 
-                  <a href="{% url 'editor:documents-in-workflow' %}">Sign Documents
-                  </a>
-                </li>
-                 <li>
+  <a href="{% url 'editor:documents-in-workflow' %}">Sign Documents
+  </a>
+</li>
+ <li>
 
-                  <a href="{% url 'editor:rejected-documents' %}">Rejected Docs
-                  </a>
-                </li>
-                {% if is_member %}
-                <li>
-                  <a href="{% url 'editor:requested-docs' %}">Requested Documents</a>
-                </li>
-                {% endif%}
-                {% if is_member %}
-                <li>
+  <a href="{% url 'editor:rejected-documents' %}">Rejected Docs
+  </a>
+</li>
+{% if is_member %}
+<li>
+  <a href="{% url 'editor:requested-docs' %}">Requested Documents</a>
+</li>
+{% endif%}
+{% if is_member %}
+<li>
 
-                    <a href="{% url 'editor:get-prevdocuments' %}">Previous Docs</a>
+    <a href="{% url 'editor:get-prevdocuments' %}">Previous Docs</a>
 
-                  </li>
-                  <li>
-                    <a href="{% url 'editor:create-document' %}">Request Docs</a>
+  </li>
+  <li>
+    <a href="{% url 'editor:create-document' %}">Request Docs</a>
 
-                  </li>
-                  <li>
-                    <a href= "{% url 'editor:created-document-list' %}">View Docs</a>
+  </li>
+  <li>
+    <a href= "{% url 'editor:created-document-list' %}">View Docs</a>
 
-                  </li>
-                  {% endif%}
+  </li>
+  {% endif%}
 
-              </ul>
-            </div>
-                        </li>
-                                  {% if  is_org_lead or is_admin  %}
-                        <li class="sidebar-dropdown">
-                          <a href="#"><span class="fa fa-building-o mr-3"></span> Manage Org</a>
-                          <div class="sidebar-submenu">
-              <ul>
+</ul>
+</div>
+        </li>
+                  {% if  is_org_lead or is_admin  %}
+        <li class="sidebar-dropdown">
+          <a href="#"><span class="fa fa-building-o mr-3"></span> Manage Org</a>
+          <div class="sidebar-submenu">
+<ul>
 {% if is_admin  %}
-                <li>
+<li>
 
-                  <a href="#">Add Org. Lead
-                  </a>
-                </li>
+  <a href="#">Add Org. Lead
+  </a>
+</li>
 {% endif%}
 {% if is_admin or is_org_lead %}
-                 <li>
+ <li>
 
-                  <a href="#">Add Project Lead
-                  </a>
-                </li>
+  <a href="#">Add Project Lead
+  </a>
+</li>
 {% endif%}
-                <li>
-                  <a href="#">Add Members</a>
-                </li>
-                <li>
+<li>
+  <a href="#">Add Members</a>
+</li>
+<li>
 
-                  <a href="#">View Org.
-                  </a>
-                </li>
-
-
-
-                  <li>
-                    <a href="#">Manage Workflow</a>
-
-                  </li>
-                 </ul>
-                </div>
-                        </li>
-                         {% endif%}
-
-      {% if  is_project_lead  %}
-                        <li class="sidebar-dropdown">
-                          <a href="#"><span class="fa fa-building-o mr-3"></span> Manage Dept.</a>
-                          <div class="sidebar-submenu">
-              <ul>
-                <li>
-                  <a href="#">Add Members</a>
-                </li>
-                <li>
-
-                  <a href="#">View Dpt.
-                  </a>
-                </li>
+  <a href="#">View Org.
+  </a>
+</li>
 
 
 
-                  <li>
-                    <a href="#">Manage Workflow</a>
+  <li>
+    <a href="#">Manage Workflow</a>
 
-                  </li>
-                 </ul>
-                </div>
-                        </li>
-                         {% endif%}
-                      </ul>
-                      </div>
-                    <div class="sidebar-footer">
-      <a href="#">
-        <i class="fa fa-home"></i>
+  </li>
+ </ul>
+</div>
+        </li>
+         {% endif%}
 
-      </a>
-      <a href="#">
-        <i class="fa fa-flag"></i>
+{% if  is_project_lead  %}
+        <li class="sidebar-dropdown">
+          <a href="#"><span class="fa fa-building-o mr-3"></span> Manage Dept.</a>
+          <div class="sidebar-submenu">
+<ul>
+<li>
+  <a href="#">Add Members</a>
+</li>
+<li>
 
-      </a>
-      <a href="{% url 'password_change'%}">
-        <i class="fa fa-ellipsis-h"></i>
-      </a>
-      <a href="{% url 'logout' %}">
-        <i class="fa fa-power-off"></i>
-      </a>
+  <a href="#">View Dpt.
+  </a>
+</li>
+
+
+
+  <li>
+    <a href="#">Manage Workflow</a>
+
+  </li>
+ </ul>
+</div>
+        </li>
+         {% endif%}
+      </ul>
+      </div>
+    <div class="sidebar-footer">
+<a href="#">
+<i class="fa fa-home"></i>
+
+</a>
+<a href="#">
+<i class="fa fa-flag"></i>
+
+</a>
+<a href="{% url 'password_change'%}">
+<i class="fa fa-ellipsis-h"></i>
+</a>
+<a href="{% url 'logout' %}">
+<i class="fa fa-power-off"></i>
+</a>
+</div>
+    </nav>
+
+      <!-- Page Content  -->
+    <div id="content" class="p-4 p-md-5 pt-5">
+      <!--<h2 class="mb-4">Docedit Test Information</h2>-->
+      <!--<p>Content to Come Here</p>-->
+       {% block content %}
+    {% endblock content %}
+
     </div>
-                    </nav>
+  </div>
 
-                      <!-- Page Content  -->
-                    <div id="content" class="p-4 p-md-5 pt-5">
-                      <!--<h2 class="mb-4">Docedit Test Information</h2>-->
-                      <!--<p>Content to Come Here</p>-->
-                       {% block content %}
-                    {% endblock content %}
-
-                    </div>
-                  </div>
-
-                  <!-- <script src="js/"></script>
-                  <script src="js/"></script>
-                  <script src="js/"></script>
-                  <script src="js/"></script>
-                  <script src="{% static 'js/jquery.min.js' %}"></script>
-                  <script src="{% static 'js/popper.js' %}"></script>
-                  <script src="{% static 'js/bootstrap.min.js' %}"></script>
-                  <script src="{% static 'js/main.js' %}"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-                  <script>
-            jQuery(function ($) {
+  <!-- <script src="js/"></script>
+  <script src="js/"></script>
+  <script src="js/"></script>
+  <script src="js/"></script>
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/popper.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script>
+jQuery(function ($) {
 
 $(".sidebar-dropdown > a").click(function() {
 $(".sidebar-submenu").slideUp(200);
 if (
 $(this)
-  .parent()
-  .hasClass("active")
+.parent()
+.hasClass("active")
 ) {
 $(".sidebar-dropdown").removeClass("active");
 $(this)
-  .parent()
-  .removeClass("active");
+.parent()
+.removeClass("active");
 } else {
 $(".sidebar-dropdown").removeClass("active");
 $(this)
-  .next(".sidebar-submenu")
-  .slideDown(200);
+.next(".sidebar-submenu")
+.slideDown(200);
 $(this)
-  .parent()
-  .addClass("active");
+.parent()
+.addClass("active");
 }
 });
 
 if (window.matchMedia('(max-width: 768px)').matches)
 {
-    $("#close-sidebar").css("display","block");
-    // do functionality on screens smaller than 768px
-    $("#close-sidebar").click(function() {
+$("#close-sidebar").css("display","block");
+// do functionality on screens smaller than 768px
+$("#close-sidebar").click(function() {
 $(".page-wrapper").removeClass("toggled");
 });
 $("#show-sidebar").click(function() {
@@ -477,14 +466,14 @@ $(".page-wrapper").addClass("toggled");
 
 
 });
-        </script>
-        <script src="{% static 'js/main.js' %}"></script>
-                  {% block additionalscript %}
+</script>
+<script src="{% static 'js/main.js' %}"></script>
+  {% block additionalscript %}
 
 
 
 
-    {% endblock %}
+{% endblock %}
 
-                </body>
+</body>
               </html>

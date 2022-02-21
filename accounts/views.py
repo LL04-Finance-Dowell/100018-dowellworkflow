@@ -4,12 +4,11 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from .forms import CustomUserCreationForm
 from django.http import JsonResponse
-
+from django.shortcuts import render
 from .models import CustomUser
 
 
 class SignUpView(CreateView):
-
 	form_class = CustomUserCreationForm
 	success_url = reverse_lazy('login')
 	template_name = 'registration/signup.html'
@@ -29,3 +28,6 @@ def sendUserList(request):
         user_list.append(u)
 
     return JsonResponse({'user_list': user_list })
+
+def user_profile_view(request):
+    return render(request, 'accounts/profile.html', {})

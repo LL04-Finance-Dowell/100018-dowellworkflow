@@ -39,8 +39,8 @@ Dashboard{% endblock %}
 }
 
 .panel-color-one-member{
-    background-color: #c9a736;
-  border-color: #c9a736;
+    background-color: #3658C9;
+  border-color: #3658C9;
   color: #fff;
 }
 .panel-color-two-member{
@@ -190,58 +190,45 @@ h2, .h2 {
  <div class="tab-content " id="myTimes">
         <div class="tab-pane fade show active" id="companyList" role="tabpanel"  aria-labelledby="company"  >
             <div class="row">
-                {% if company %}                
-                    <div class="col-md-4 col-sm-6 col-xs-12">
-                            <a  id = "allDash" href="#" >
-                                <div class="panel
-                                    {% if forloop.counter|divisibleby:2 %}
-                                        panel-color-two-company
-                                    {% else %}
-                                        panel-color-one-company
-                                    {%endif%}
-                                        panel-colorful">
-                                    <div class="panel-body text-center">
-                                        <p class="text-uppercase mar-btm text-sm">{{company.company_name}}</p>
-                                        <i class="fa fa-folder fa-5x"></i>
-                                        <hr>
-                                        <small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>{{company.members.count}} </span>Members</small>
-                                        <small><span class="text-semibold"><i class="fa fa-user fa-fw" style="border-left: 1px solid"></i>{{company.organizations.count}} </span>Organizations</small><br>
-                                                                    <!--<small><span class="text-semibold"></span> </small>-->
-                                    </div>
+
+                {% for comp in company %}
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <a  id = "allDash" href="{% url 'admin_v2:dashboard' %}" >
+                            <div class="panel
+                                {% if forloop.counter|divisibleby:2 %}
+                                    panel-color-two-company
+                                {% else %}
+                                    panel-color-one-company
+                                {%endif%}
+                                    panel-colorful">
+                                <div class="panel-body text-center">
+                                    <p class="text-uppercase mar-btm text-sm">{{comp.company_name}}</p>
+                                    <i class="fa fa-folder fa-5x"></i>
+                                    <hr>
+                                    <small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>{{comp.members.count}} </span>Members</small>
+                                    <small><span class="text-semibold"><i class="fa fa-user fa-fw" style="border-left: 1px solid"></i>{{comp.organizations.count}} </span>Organizations</small><br>
+                                                                <!--<small><span class="text-semibold"></span> </small>-->
                                 </div>
-                            </a>
+                            </div>
+                        </a>
+                    </div>
+                {% empty %}
+                <small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>No such company created.</span>Members</small>
+                {% endfor %}
+
+                <!--div class="col-md-8 col-sm-6 col-xs-12">
+                    <a  id = "allDash" href="#" >
+                        <div class="panel  panel-color-error panel-colorful">
+                            <div class="panel-body text-center">
+                                <p class="text-uppercase mar-btm text-sm">No Company Created</p>
+                                <i class="fa fa-folder fa-5x"></i>
+                                <hr>
+
+                            </div>
                         </div>
+                    </a>
+                </div-->
 
-
-                        <!-- div class="col-md-4 col-sm-6 col-xs-12">
-                            <a  id = "allDash" href="#" >
-                                <div class="panel  panel-color-one-company panel-colorful">
-                                    <div class="panel-body text-center">
-                                        <p class="text-uppercase mar-btm text-sm">{{company.company_name}}</p>
-                                        <i class="fa fa-folder fa-5x"></i>
-                                        <hr>
-                                        <p class="h2 text-thin"> {{company.organizations.count}} Organizations</p>
-                                        <p class="h2 text-thin"> {{company.members.count}} Members</p>
-                                     </div>
-                                    </div>
-
-                            </a>
-                        </div-->                
-                {% else %}
-
-                <div class="col-md-8 col-sm-6 col-xs-12">
-                            <a  id = "allDash" href="#" >
-                                <div class="panel  panel-color-error panel-colorful">
-                                    <div class="panel-body text-center">
-                                        <p class="text-uppercase mar-btm text-sm">No Company Created</p>
-                            <i class="fa fa-folder fa-5x"></i>
-                            <hr>
-
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                {% endif %}
             </div>
         </div>
 
@@ -251,11 +238,16 @@ h2, .h2 {
         <div class="tab-pane fade" id="company_usersList" role="tabpanel"  aria-labelledby="company_users"  >
             <div class="row">
                 {% if user_companies %}
-                {% for company in user_companies %}
-                  {% if forloop.counter|divisibleby:2 %}
-                        <div class="col-md-4 col-sm-6 col-xs-12">
+                    {% for company in user_companies %}
+                        <div class="col-md-3 col-sm-6 col-xs-12">
                             <a  id = "allDash" href="#" >
-                                <div class="panel  panel-color-two-company panel-colorful">
+                                <div class="panel
+                                {% if forloop.counter|divisibleby:2 %}
+                                panel-color-two-company
+                            {% else %}
+                                panel-color-one-company
+                            {%endif%}
+                                panel-colorful">
                                     <div class="panel-body text-center">
                                         <p class="text-uppercase mar-btm text-sm">{{company.company_name}}</p>
                                         <p class="text-uppercase mar-btm text-sm">{{company.admin.username}}</p>
@@ -268,28 +260,7 @@ h2, .h2 {
                                 </div>
                             </a>
                         </div>
-
-                        {% else %}
-                        <div class="col-md-4 col-sm-6 col-xs-12">
-                            <a  id = "allDash" href="#" >
-                                <div class="panel  panel-color-one-company panel-colorful">
-                                    <div class="panel-body text-center">
-                                        <p class="text-uppercase mar-btm text-sm">{{company.company_name}}</p>
-                                        <p class="text-uppercase mar-btm text-sm">{{company.admin.username}}</p>
-                                        <i class="fa fa-folder fa-5x"></i>
-                                        <hr>
-                                        <small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>{{company.members.count}} </span>Members</small>
-                                          <small><span class="text-semibold"><i class="fa fa-user fa-fw" style="border-left: 1px solid"></i> {{company.organizations.count}} </span>Organizations</small><br>
-                                        <!--<small><span class="text-semibold"></span> </small>-->
-                                    </div>
-                                    </div>
-
-                            </a>
-                        </div>
-
-
-                        {%endif%}
-                {% endfor %}
+                    {% endfor %}
                 {% endif %}
             </div>
         </div>
@@ -301,11 +272,15 @@ h2, .h2 {
             <div class="row">
                 {% if organizations %}
                 {% for organization in organizations %}
-
-                 {% if forloop.counter|divisibleby:2 %}
-                        <div class="col-md-4 col-sm-6 col-xs-12">
-                            <a  id = "allDash" href="{% url 'organizationv2:org-home' organization.id %}" >
-                                <div class="panel  panel-color-two-admin panel-colorful">
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <a  id = "allDash" href="{% url 'organizationv2:org-lead-management' id=organization.id %}" >
+                                <div class="panel
+                                {% if forloop.counter|divisibleby:2 %}
+                                 panel-color-two-admin
+                            {% else %}
+                             panel-color-one-admin
+                            {%endif%}
+                                panel-colorful">
                                     <div class="panel-body text-center">
                                         <p class="text-uppercase mar-btm text-sm">{{organization.name}} | {{organization.company.company_name}}</p>
                             <p class="text-uppercase mar-btm text-sm">{{organization.organization_lead.username}}</p>
@@ -322,28 +297,6 @@ h2, .h2 {
                             </a>
                         </div>
 
-                        {% else %}
-                        <div class="col-md-4 col-sm-6 col-xs-12">
-                            <a  id = "allDash" href="{% url 'organizationv2:org-home' organization.id %}" >
-                                <div class="panel  panel-color-one-admin panel-colorful">
-                                    <div class="panel-body text-center">
-                                        <p class="text-uppercase mar-btm text-sm">{{organization.name}} | {{organization.company.company_name}}</p>
-                                        <p class="text-uppercase mar-btm text-sm">{{organization.organization_lead.username}}</p>
-                                        <i class="fa fa-folder fa-5x"></i>
-                                        <hr>
-                                         <small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>{{organization.members.count}} </span>Members</small>
-                                          <small><span class="text-semibold"><i class="fa fa-user fa-fw" style="border-left: 1px solid"></i>{{organization.projects.count}}  </span>Projects</small><br>
-                                         <small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>{{organization.templates.count}}  </span>Templates</small>
-                                        <small><span class="text-semibold"><i class="fa fa-user-o fa-fw" style="border-left: 1px solid"></i>{{organization.workflows.count}}  </span>Workflows</small>
-
-
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-
-
-                        {%endif%}
                 {% endfor %}
                 {% endif %}
             </div>
@@ -355,8 +308,8 @@ h2, .h2 {
         <div class="row">
             {% if user_projects %}
             {% for department in user_projects %}
-                <div class="col-md-4 col-sm-6 col-xs-12">
-                    <a  id = "allDash" href={% url 'organizationv2:project-management' department.organization.id department.id %} >
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <a  id = "allDash" href="{% url 'organizationv2:project-management' department.organization.id department.id %}" >
                         <div class="panel
                             {% if forloop.counter|divisibleby:2 %}
                                 panel-color-two
@@ -377,27 +330,6 @@ h2, .h2 {
                         </div>
                     </a>
                 </div>
-
-
-                        <!-- div class="col-md-4 col-sm-6 col-xs-12">
-                            <a  id = "allDash" href="#" >
-                                <div class="panel   panel-colorful">
-                                    <div class="panel-body text-center">
-                                        <p class="text-uppercase mar-btm text-sm">{{department.project_name}} </p>
-                                        <p class="text-uppercase mar-btm text-sm">{{department.project_lead.username}} </p>
-                                        <i class="fa fa-folder fa-5x"></i>
-                                        <hr>
-
-                 <small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>{{department.members.count}} </span>Members</small>
-                                              <small><span class="text-semibold"><i class="fa fa-user fa-fw" style="border-left: 1px solid"></i>  {{department.organization.name}} </span>Organization</small><br>
-                                        <!--<small><span class="text-semibold"></span> </small>>
-                                    </div>
-                                    </div>
-                            </a>
-                        </div -->
-
-
-
             {% endfor %}
             {% endif %}
         </div>
@@ -411,41 +343,32 @@ h2, .h2 {
             {% if departments %}
             {% for department in departments %}
 
-
-            {% if forloop.counter|divisibleby:2 %}
-                        <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="col-md-3 col-sm-6 col-xs-12">
                             <a  id = "allDash" href="{% url 'organizationv2:proj-lead-management' department.id %}" >
-                                <div class="panel  panel-color-two-member panel-colorful">
+                                <div class="panel
+                                {% if forloop.counter|divisibleby:2 %}
+                                panel-color-two-member
+                            {% else %}
+                             panel-color-one-member
+                            {%endif%}
+                                panel-colorful">
+
                                     <div class="panel-body text-center">
-                                        <p class="text-uppercase mar-btm text-sm">{{department.project_name}} | {{department.organization.name}}</p>
-                                        <p class="text-uppercase mar-btm text-sm">{{department.name}} | {{department.organization.name}}</p>
+<p class="text-uppercase mar-btm text-sm">{{department.organization.name}}</p>
+                                <p class="text-uppercase mar-btm text-sm">{{department.project_name}}   </p>
+
                                         <i class="fa fa-folder fa-5x"></i>
                                         <hr>
-                                        <p class="h2 text-thin"> Project Leader:{{department.project_lead}}</p>
-                                        <p class="h2 text-thin"> {{department.members.count}} Members</p>
+                            <small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>Project Leader:{{department.project_lead}} </span></small><br>
+                            <small><span class="text-semibold"><i class="fa fa-user-o fa-fw"></i>{{department.members.count}}   </span>Members</small>
+
+
                                      </div>
                                 </div>
                             </a>
                         </div>
 
-                        {% else %}
-                        <div class="col-md-4 col-sm-6 col-xs-12">
-                            <a  id = "allDash" href="{% url 'organizationv2:proj-lead-management' department.id %}" >
-                                <div class="panel  panel-color-one-member panel-colorful">
-                                    <div class="panel-body text-center">
-                                        <p class="text-uppercase mar-btm text-sm">{{department.project_name}} | {{department.organization.name}}</p>
-                                        <p class="text-uppercase mar-btm text-sm">{{department.name}} | {{department.organization.name}}</p>
-                                        <i class="fa fa-folder fa-5x"></i>
-                                        <hr>
-                                        <p class="h2 text-thin"> Project Leader:{{department.project_lead}}</p>
-                                        <p class="h2 text-thin"> {{department.members.count}} Members</p>
-                                    </div>
-                                    </div>
-                            </a>
-                        </div>
 
-
-                        {%endif%}
             {% endfor %}
             {% endif %}
         </div>

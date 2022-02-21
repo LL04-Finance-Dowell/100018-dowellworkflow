@@ -16,3 +16,6 @@ def homePageView(request, *args, **kwargs):
     else:
         return redirect('organization:create-orgniz')
 
+@xframe_options_exempt
+def error(request, *args, **kwargs):
+    return render(request, 'pages/error.html', {})

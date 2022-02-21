@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from organizationv2.models import  Company
-#from .models import Company
+
 
 class CreateCompanyForm(ModelForm):
     class Meta:

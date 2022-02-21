@@ -59,11 +59,14 @@ table.dataTable tfoot th {
         {% endif%}
             <div class="row justify-content-center mt-5">
 
-            <article class="col-md-9">
+            <article class="col-md-8">
           <div class="boxed-md3 boxed-padded">
-            <div style="float:right;"><strong>Org. Lead:</strong> {{org.organization_lead.username}}</div>
-            <div style="float:left;"><strong>Project Lead:</strong> {{proj.project_lead.username}}</div>
-            <div class="text-center"><span class="h2">{{ proj.project_name }}</span></div>
+            <div style="float:left;">
+                <div><strong>Org. Lead:</strong> {{org.organization_lead.username}}</div>
+                <div><strong>Dpt. Lead:</strong> {{proj.project_lead.username}}</div>
+                </div>
+            <!--<div style="float:left;"><strong>Project Lead:</strong> {{proj.project_lead.username}}</div>-->
+            <div class="text-center"><span class="h5">{{ proj.project_name }}</span></div>
 
 
                 <div class="tab-pane fade show active" id="membersList" role="tabpanel" aria-labelledby="members">

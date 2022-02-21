@@ -182,7 +182,7 @@ height:100%;
                       </div>
                     <div class="sidebar-content">
                       <div class="sidebar-header">
-                        <a  href="#"><img class="my-3" style="width:80%; height:100px;"
+                        <a  href="{% url 'home' %}"><img class="my-3" style="width:80%; height:100px;"
                           src="{% static 'images/doc_logo1.png'  %}"></a>
                   </div>
                       <h1><a href="index.html" class="logo">Dowell Docedit</a></h1>
@@ -259,7 +259,7 @@ height:100%;
                   <a href="{% url 'organizationv2:create-orgniz' company.id %}">Add Org.</a>
                 </li>
                 <li>
-                  <a href="#">Add Members</a>
+                  <a href="{% url 'organizationv2:add-members' company.id %}">Add Members</a>
                 </li>
                  </ul>
                 </div>
@@ -272,12 +272,13 @@ height:100%;
         <i class="fa fa-home"></i>
 
       </a>
-      <a href="#">
-        <i class="fa fa-flag"></i>
+
+      <a href="{% url 'profile' %}">
+        <i class="fa fa-user"></i>
 
       </a>
-      <a href="{% url 'password_change'%}">
-        <i class="fa fa-ellipsis-h"></i>
+      <a href="{% url 'password_change' %}">
+        <i class="fa fa-cog"></i>
       </a>
       <a href="{% url 'logout' %}">
         <i class="fa fa-power-off"></i>

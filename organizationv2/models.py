@@ -7,15 +7,16 @@ from workflow.models import DocumentType
 #models to be created Here
 class Company(models.Model):
     company_name   = models.CharField(max_length=200, null=False, unique=True)
-    admin  = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="company_admin")
+    admin  = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="company_admin")
     organizations = models.ManyToManyField("Organizationv2", related_name="company_orgs")
     members      = models.ManyToManyField(CustomUser, related_name="company_members")
+
     def __str__(self):
-        return f'{self.id}-{self.company_name} - {self.admin}'
+        return f'{self.company_name} - {self.admin}'
 
 
 class Organizationv2(models.Model):
-    company              = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
+    company              = models.ForeignKey(Company, on_delete=models.SET_NULL,related_name="company_organization", null=True)
     name                 = models.CharField(max_length=100, null=False, unique=True)
     organization_lead    = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, related_name="org_lead", null=True)
     projects             = models.ManyToManyField("Project", related_name="org_projects")
@@ -44,6 +45,7 @@ class Project(models.Model):
 class VerificationToken(models.Model):
     company_id = models.IntegerField(null=False)
     user_email = models.EmailField(null=False)
+    #user_position = models.CharField(max_length=50, null=False)
     token = models.CharField(max_length=64, null=False)
 
     def __str__(self):

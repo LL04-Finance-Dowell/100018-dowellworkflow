@@ -1,4 +1,4 @@
-{% extends 'base_no_nav.html' %}
+{% extends 'base7.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
 {% block title %}
@@ -143,7 +143,7 @@ Create Organization{% endblock %}
 <div class="home-content-container">
 
         <div class="container"  style="max-width: 80%; height: 80%; background-color: #fff; margin-top:20px;">
-
+ajaooaoaj
 
 
 {% if message %}
@@ -159,7 +159,7 @@ Create Organization{% endblock %}
       <div class="boxed-md boxed-padded">
         <div class="text-center"><span class="h3">Create a New Department</span></div>
         	<form method="post" enctype="multipart/form-data">{% csrf_token %}
-		    {{ form|crispy }}
+		    {{form|crispy}}
 		    <input type="submit" class="btn btn-outline-success " value="Create">
 	    </form>
       </div>
@@ -190,9 +190,13 @@ Create Organization{% endblock %}
     <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.2.0/js/dataTables.fixedHeader.min.js"></script>
 
 <script>
-$( "#id_project_lead" ).addClass('selectpicker');
-$('#id_project_lead').attr('multiple',true);
+// alert("dhdhdhh");
+$("#id_project_lead").addClass('selectpicker');
 $("#id_project_lead").attr("data-live-search", "true");
+
+$("#id_members").addClass('selectpicker');
+$('#id_members').attr('multiple',true);
+$("#id_members").attr("data-live-search", "true");
 </script>
     {% endblock %}
 

@@ -132,74 +132,30 @@ h2, .h2 {
 
    <div class="container bootstrap snippets bootdey">
         <a href="{% url 'organizationv2:add-project' org.id %}" class="btn btn-dark btn-lg" style ="margin-bottom:10px;">Add Department.</a>
+        <button class="btn btn-dark btn-lg" style ="margin-bottom:10px;">{{org.name}} : {{org.members.count}} Members</button>
 
-<div class="tab-content " id="myTimes">
+    <div class="tab-content " id="myTimes">
     <div class="tab-pane fade show active" id="oneWeekPage" role="tabpanel"  aria-labelledby="oneWeekBtn"  >
         <div class="row">
+            {% for department in departments%}
             <div class="col-md-3 col-sm-6 col-xs-12">
-                <a  id = "allDash" href="{% url 'admin_v2:admin-org-management' 1 5%}" >
+                <a  id = "allDash" href="{% url 'organizationv2:proj-lead-management' department.id %}" >
                 <div class="panel panel-color-one panel-colorful">
                     <div class="panel-body text-center">
-                        <p class="text-uppercase mar-btm text-sm">Department One </p>
+                        <p class="text-uppercase mar-btm text-sm">{{department.project_name}}</p>
                         <i class="fa fa-folder fa-5x"></i>
                         <hr>
-                        <p class="h2 text-thin"> 5 Members</p>
+                        <p class="h2 text-thin"> {{department.members.count}} Members</p>
                         <!--<small><span class="text-semibold"></span> </small>-->
                     </div>
                 </div>
                 </a>
             </div>
-            <div class="col-md-3 col-sm-6 col-xs-12">
-
-             <a  id = "allDash" href="{% url 'admin_v2:admin-org-management' 2 5%}" >
-
-                <div class="panel panel-color-two panel-colorful">
-                    <div class="panel-body text-center">
-                        <p class="text-uppercase mar-btm text-sm">Department Two </p>
-                        <i class="fa fa-folder-o fa-5x"></i>
-                        <hr>
-                        <p class="h2 text-thin">
-                            8 Members
-</p>
-                        <!--<small><span class="text-semibold"><i class="fa fa-unlock-alt fa-fw"></i> 0</span> Sent to Users</small>-->
-                    </div>
-                </div>
-                </a>
-            </div>
-            <div class="col-md-3 col-sm-6 col-xs-12">
-             <a  id = "allDash" href="{% url 'admin_v2:admin-org-management' 3  5%}" >
-
-                <div class="panel panel-color-three panel-colorful">
-                    <div class="panel-body text-center">
-                        <p class="text-uppercase mar-btm text-sm">Department Three</p>
-                        <i class="fa fa-folder fa-5x"></i>
-                        <hr>
-                        <p class="h2 text-thin">3 Members</p>
-                        <!--<small><span class="text-semibold"> All<i class="fa fa-shopping-cart fa-fw"></i> </span> Yet to be done</small>-->
-                    </div>
-                </div>
-                </a>
-            </div>
-            <div class="col-md-3 col-sm-6 col-xs-12">
-                             <a  id = "allDash" href="{% url 'admin_v2:admin-org-management' 4  5%}" >
-
-                <div class="panel panel-color-four panel-colorful">
-                    <div class="panel-body text-center">
-                        <p class="text-uppercase mar-btm text-sm">Department Four</p>
-                        <i class="fa fa-folder-o fa-5x"></i>
-                        <hr>
-                        <p class="h2 text-thin">7 Members</p>
-                        <!--<small><span class="text-semibold"> All<i class="fa fa-shopping-cart fa-fw"></i> </span> Yet to be done</small>-->
-                    </div>
-                </div>
-                </a>
-            </div>
-            </div>
-
+            {% endfor %}
         </div>
-</div>
     </div>
-      {% endblock content %}
+    </div>
+    {% endblock content %}
 
     {% block additionalscript %}
 <!-- Optional JavaScript -->

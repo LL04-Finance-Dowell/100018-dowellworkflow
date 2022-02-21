@@ -34,7 +34,7 @@ table.dataTable tfoot th {
         <div class="row justify-content-center mt-5">
             <article class="col-md-2">
           <div class="boxed-md2 boxed-padded" style="border-radius:10px;">
-            <div class="text-center"><span class="h3">Organization</span></div>
+            <div class="text-center"><span class="h3">Project Name</span></div>
 
 
             <ul id="cats" class="nav flex-column " role="tablist">
@@ -45,14 +45,14 @@ table.dataTable tfoot th {
                   <a data-toggle="tab" id="staff" class="nav-link nav-link-status active" href="#staffList" role="tab"  aria-controls="staffList" aria-selected="true" >
 
 
-                    <span class="textside">Staff</span>
+                    <span class="textside">Company Members</span>
                   </a>
                 </li>
                 <li class="nav-item">
 
                       <a data-toggle="tab" id="members" class="nav-link nav-link-status" href="#membersList" role="tab"  aria-controls="membersList" aria-selected="false" >
 
-                    <span class="textside">Members</span>
+                    <span class="textside">Org. Members</span>
                   </a>
                 </li>
                 <li class="nav-item">
@@ -84,13 +84,13 @@ table.dataTable tfoot th {
                     <table id="staffDocumentList" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                             <tr>
-                                <th>Staff</th>
+                                <th>Company Members</th>
                                 <th></th>
 
                             </tr>
                         </thead>
                         <tbody>
-                            {% for mem in org.staff_members.all %}
+                            {% for mem in company.members.all %}
                             <tr>
                                 <td>{{ mem }}</td>
                                 <td></td>
@@ -108,7 +108,7 @@ table.dataTable tfoot th {
                     <table id="membersDocumentList" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                             <tr>
-                                <th>Member</th>
+                                <th>Org. Members</th>
                                     <th></th>
                             </tr>
                         </thead>
