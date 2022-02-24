@@ -166,134 +166,129 @@
 
   </style>
 </head>
-                <body>
+    <body>
+  <div class="wrapper d-flex align-items-stretch">
+    <nav id="sidebar">
+      <div class="custom-menu">
+        <button type="button" id="sidebarCollapse" class="btn btn-primary">
+           <i class="fa fa-bars"></i>
+          <span class="sr-only">Toggle Menu</span>
+        </button>
+      </div>
+    <div class="sidebar-content">
+      <div class="sidebar-header">
+         <a  href="{% url 'home' %}"><img class="my-3" style="width:80%; height:100px;"
+          src="{% static 'images/doc_logo1.png'  %}"></a>
 
-                  <div class="wrapper d-flex align-items-stretch">
-                    <nav id="sidebar">
-                      <div class="custom-menu">
-                        <button type="button" id="sidebarCollapse" class="btn btn-primary">
-                           <i class="fa fa-bars"></i>
-                          <span class="sr-only">Toggle Menu</span>
-                        </button>
-                      </div>
-                    <div class="sidebar-content">
-                      <div class="sidebar-header">
-                         <a  href="{% url 'home' %}"><img class="my-3" style="width:80%; height:100px;"
-                          src="{% static 'images/doc_logo1.png'  %}"></a>
+  </div>
+      <h1><a href="index.html" class="logo">Dowell Docedit</a></h1>
 
-                  </div>
-                      <h1><a href="index.html" class="logo">Dowell Docedit</a></h1>
+      <ul class="list-unstyled components mb-5" >
 
-                      <ul class="list-unstyled components mb-5" >
+   <ul id="cats" class="nav" role="tablist">
 
-                   <ul id="cats" class="nav" role="tablist">
+<li class="nav-item">
+  <a data-toggle="tab" id="company" class="nav-link nav-link-status active" href="#companyList" role="tab"  aria-controls="companyList" aria-selected="true" >
+    Company Lead
+  </a>
+</li>
 
-
-
-                <li class="nav-item">
-                  <a data-toggle="tab" id="company" class="nav-link nav-link-status active" href="#companyList" role="tab"  aria-controls="companyList" aria-selected="true" >
-
-
-                    Company Lead
-                  </a>
-                </li>
-                <li class="nav-item">
-
-                      <a data-toggle="tab" id="company_users" class="nav-link nav-link-status" href="#company_usersList" role="tab"  aria-controls="company_usersList" aria-selected="false" >
-
+<li class="nav-item">
+  <a data-toggle="tab" id="company_users" class="nav-link nav-link-status" href="#company_usersList" role="tab"  aria-controls="company_usersList" aria-selected="false" >
 Member Companies
 </a>
-                </li>
-                <li class="nav-item">
-                  <a data-toggle="tab" id="organizations" class="nav-link nav-link-status" href="#organizationsList" role="tab"  aria-controls="internalIcompleteList" aria-selected="false" >
+</li>
 
-                    Organizations
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a data-toggle="tab" id="user_projects" class="nav-link nav-link-status" href="#user_projectsList" role="tab"  aria-controls="user_projectsList" aria-selected="false" >
+<li class="nav-item">
+  <a data-toggle="tab" id="organizations" class="nav-link nav-link-status" href="#organizationsList" role="tab"  aria-controls="internalIcompleteList" aria-selected="false" >
 
-                  Depts Leading
-                  </a>
-                </li>
- <li class="nav-item">
-                  <a data-toggle="tab" id="departments" class="nav-link nav-link-status" href="#departmentsList" role="tab"  aria-controls="departmentsList" aria-selected="false" >
+    Organizations
+  </a>
+</li>
 
-                    Depts Members
-                  </a>
-                </li>
+<li class="nav-item">
+  <a data-toggle="tab" id="user_projects" class="nav-link nav-link-status" href="#user_projectsList" role="tab"  aria-controls="user_projectsList" aria-selected="false" >
+  Depts Leading
+  </a>
+</li>
 
-              </ul>
-                      </ul>
-                      </div>
-                    <div class="sidebar-footer">
-      <a href="#">
-        <i class="fa fa-home"></i>
+<li class="nav-item">
+  <a data-toggle="tab" id="departments" class="nav-link nav-link-status" href="#departmentsList" role="tab"  aria-controls="departmentsList" aria-selected="false" >
+    Depts Members
+  </a>
+</li>
 
-      </a>
+</ul>
+</ul>
+</div>
+<div class="sidebar-footer">
+<a href="{% url 'home' %}">
+<i class="fa fa-home"></i>
 
-      <a href="{% url 'profile' %}">
-        <i class="fa fa-user"></i>
+</a>
 
-      </a>
-      <a href="{% url 'password_change' %}">
-        <i class="fa fa-cog"></i>
-      </a>
-      <a href="{% url 'logout' %}">
-        <i class="fa fa-power-off"></i>
-      </a>
+<a href="{% url 'profile' %}">
+<i class="fa fa-user"></i>
+
+</a>
+<a href="{% url 'password_change' %}">
+<i class="fa fa-cog"></i>
+</a>
+<a href="{% url 'logout' %}">
+<i class="fa fa-power-off"></i>
+</a>
+</div>
+    </nav>
+
+      <!-- Page Content  -->
+    <div id="content" class="p-4 p-md-5 pt-5">
+      <!--<h2 class="mb-4">Docedit Test Information</h2>-->
+      <!--<p>Content to Come Here</p>-->
+       {% block content %}
+    {% endblock content %}
+
     </div>
-                    </nav>
+  </div>
 
-                      <!-- Page Content  -->
-                    <div id="content" class="p-4 p-md-5 pt-5">
-                      <!--<h2 class="mb-4">Docedit Test Information</h2>-->
-                      <!--<p>Content to Come Here</p>-->
-                       {% block content %}
-                    {% endblock content %}
-
-                    </div>
-                  </div>
-
-                  <!-- <script src="js/"></script>
-                  <script src="js/"></script>
-                  <script src="js/"></script>
-                  <script src="js/"></script>
-                  <script src="{% static 'js/jquery.min.js' %}"></script>
-                  <script src="{% static 'js/popper.js' %}"></script>
-                  <script src="{% static 'js/bootstrap.min.js' %}"></script>
-                  <script src="{% static 'js/main.js' %}"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-                  <script>
-            jQuery(function ($) {
+  <!-- <script src="js/"></script>
+  <script src="js/"></script>
+  <script src="js/"></script>
+  <script src="js/"></script>
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/popper.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script>
+jQuery(function ($) {
 
 $(".sidebar-dropdown > a").click(function() {
 $(".sidebar-submenu").slideUp(200);
 if (
 $(this)
-  .parent()
-  .hasClass("active")
+.parent()
+.hasClass("active")
 ) {
 $(".sidebar-dropdown").removeClass("active");
 $(this)
-  .parent()
-  .removeClass("active");
+.parent()
+.removeClass("active");
 } else {
 $(".sidebar-dropdown").removeClass("active");
 $(this)
-  .next(".sidebar-submenu")
-  .slideDown(200);
+.next(".sidebar-submenu")
+.slideDown(200);
 $(this)
-  .parent()
-  .addClass("active");
+.parent()
+.addClass("active");
 }
 });
 
 if (window.matchMedia('(max-width: 768px)').matches)
 {
-    $("#close-sidebar").css("display","block");
-    // do functionality on screens smaller than 768px
-    $("#close-sidebar").click(function() {
+$("#close-sidebar").css("display","block");
+// do functionality on screens smaller than 768px
+$("#close-sidebar").click(function() {
 $(".page-wrapper").removeClass("toggled");
 });
 $("#show-sidebar").click(function() {
@@ -307,14 +302,14 @@ $(".page-wrapper").addClass("toggled");
 
 
 });
-        </script>
-        <script src="{% static 'js/main.js' %}"></script>
-                  {% block additionalscript %}
+</script>
+<script src="{% static 'js/main.js' %}"></script>
+  {% block additionalscript %}
 
 
 
 
-    {% endblock %}
+{% endblock %}
 
-                </body>
-              </html>
+</body>
+</html>

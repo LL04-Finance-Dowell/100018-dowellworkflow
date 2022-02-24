@@ -190,31 +190,22 @@ h2, .h2 {
  <div class="tab-content " id="myTimes">
         <div class="tab-pane fade show active" id="companyList" role="tabpanel"  aria-labelledby="company"  >
             <div class="row">
-
-                {% for comp in company %}
-                    <div class="col-md-3 col-sm-6 col-xs-12">
-                        <a  id = "allDash" href="{% url 'admin_v2:dashboard' %}" >
-                            <div class="panel
-                                {% if forloop.counter|divisibleby:2 %}
-                                    panel-color-two-company
-                                {% else %}
-                                    panel-color-one-company
-                                {%endif%}
-                                    panel-colorful">
-                                <div class="panel-body text-center">
-                                    <p class="text-uppercase mar-btm text-sm">{{comp.company_name}}</p>
-                                    <i class="fa fa-folder fa-5x"></i>
-                                    <hr>
-                                    <small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>{{comp.members.count}} </span>Members</small>
-                                    <small><span class="text-semibold"><i class="fa fa-user fa-fw" style="border-left: 1px solid"></i>{{comp.organizations.count}} </span>Organizations</small><br>
-                                                                <!--<small><span class="text-semibold"></span> </small>-->
-                                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <a  id = "allDash" href="{% url 'admin_v2:dashboard' %}" >
+                        <div class="panel panel-colorful">
+                            <div class="panel-body text-center">
+                                <p class="text-uppercase mar-btm text-sm">{{company.company_name}}</p>
+                                <i class="fa fa-folder fa-5x"></i>
+                                <hr>
+                                <small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>{{company.members.count}} </span>Members</small>
+                                <small><span class="text-semibold"><i class="fa fa-building fa-fw" style="border-left: 1px solid"></i>{{comp.organizations.count}} </span>Organizations</small><br>
+                                                            <!--<small><span class="text-semibold"></span> </small>-->
                             </div>
-                        </a>
-                    </div>
-                {% empty %}
-                <small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>No such company created.</span>Members</small>
-                {% endfor %}
+                        </div>
+                    </a>
+                </div>
+                <!--<small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>No such company created.</span>Members</small> -->
+
 
                 <!--div class="col-md-8 col-sm-6 col-xs-12">
                     <a  id = "allDash" href="#" >
@@ -231,9 +222,6 @@ h2, .h2 {
 
             </div>
         </div>
-
-
-
 
         <div class="tab-pane fade" id="company_usersList" role="tabpanel"  aria-labelledby="company_users"  >
             <div class="row">
@@ -254,7 +242,7 @@ h2, .h2 {
                                         <i class="fa fa-folder fa-5x"></i>
                                         <hr>
                                         <small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>{{company.members.count}} </span>Members</small>
-                                          <small><span class="text-semibold"><i class="fa fa-user fa-fw" style="border-left: 1px solid"></i> {{company.organizations.count}} </span>Organizations</small><br>
+                                          <small><span class="text-semibold"><i class="fa fa-building fa-fw" style="border-left: 1px solid"></i> {{company.organizations.count}} </span>Organizations</small><br>
                                         <!--<small><span class="text-semibold"></span> </small>-->
                                     </div>
                                 </div>
@@ -264,9 +252,6 @@ h2, .h2 {
                 {% endif %}
             </div>
         </div>
-
-
-
 
         <div class="tab-pane fade" id="organizationsList" role="tabpanel"  aria-labelledby="organizations"  >
             <div class="row">
@@ -287,9 +272,9 @@ h2, .h2 {
                             <i class="fa fa-folder fa-5x"></i>
                             <hr>
                              <small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>{{organization.members.count}} </span>Members</small>
-                              <small><span class="text-semibold"><i class="fa fa-user fa-fw" style="border-left: 1px solid"></i>{{organization.projects.count}}  </span>Projects</small><br>
-                             <small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>{{organization.templates.count}}  </span>Templates</small>
-                            <small><span class="text-semibold"><i class="fa fa-user-o fa-fw" style="border-left: 1px solid"></i>{{organization.workflows.count}}  </span>Workflows</small>
+                              <small><span class="text-semibold"><i class="fa fa-clone fa-fw" style="border-left: 1px solid"></i>{{organization.projects.count}}  </span>Projects</small><br>
+                             <small><span class="text-semibold"><i class="fa fa-building fa-fw"></i>{{organization.templates.count}}  </span>Templates</small>
+                            <small><span class="text-semibold"><i class="fa fa-square fa-fw" style="border-left: 1px solid"></i>{{organization.workflows.count}}  </span>Workflows</small>
 
 
                                     </div>

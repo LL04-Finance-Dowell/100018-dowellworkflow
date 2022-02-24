@@ -568,9 +568,9 @@ class StatusView2(View):
 
 def dashboard(request):
     user = request.user
+    company=Company.objects.get(admin=user)
     user_projects = [] #  user is a member of project
     user_companies = []
-    cmpani = []
 
     projects=Project.objects.all()
     for project in projects:
@@ -580,20 +580,20 @@ def dashboard(request):
 
     companies = Company.objects.all()
     for company in companies:
-
         if user in company.members.all():
             user_companies.append(company)
 
-    print('Printing company by rt company', cmpani)
-
     if user.is_admin and company is not None:
-        organizations=Organizationv2.objects.filter(organization_lead=user)
-        departments=Project.objects.filter(project_lead=user)
+        organizations=company.organizations.all()
+        departments=[]
+        for organization in organizations:
+            dpts=organization.projects.all()
+            for dpt in dpts:
+                departments.append(dpt)
         context={
             'user_companies':user_companies,
             'user_projects':user_projects,
-            'company': Company.objects.filter(admin=request.user),
-            #'company': company,
+            'company': company,
             'organizations':organizations,
             'departments':departments,
             'user':user
@@ -615,6 +615,7 @@ def dashboard(request):
     else:
         context={'user_companies':user_companies, 'user_projects':user_projects, 'user':user}
         return render(request, 'editor/landing_page.html', context)
+
 
 
 class RequestedDocuments(View):
