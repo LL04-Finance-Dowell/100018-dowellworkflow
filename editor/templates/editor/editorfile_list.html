@@ -131,10 +131,6 @@ Documents{% endblock %}
 /*    }*/
 </style>
 <div class="container" style="max-width: 80%; overflow: auto; background-color: #fff; margin-top:20px;">
-{% if message %}
-    <h3> {{ message }} </h3>
-{% endif%}
-
 <div class="row justify-content-center mt-5">
     <article class="col-md-12">
         <div class="boxed-md3 boxed-padded">
@@ -234,14 +230,6 @@ Documents{% endblock %}
     </tr>
  {% endfor %}
                     </tbody>
-                    <tfoot>
-                        <tr>
-  <th>ID</th>
-  <th>Name</th>
-  <th>Pending Step</th>
-  <th>Signing Link</th>
-</tr>
-                    </tfoot>
                 </table>
               </div>
 

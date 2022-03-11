@@ -50,170 +50,48 @@ table.dataTable tfoot th {
         justify-content: space-evenly;
 
     }
-
-/*	.home-content-container{*/
-/*        display:  flex;*/
-/*        height: 100vh;*/
-/*        justify-content: center;*/
-        /*background-color: #343a40;*/
-        /*background-color:#fdec00;*/
-        /*background-color: rgba(203, 203, 210, 0.5);*/
-/*        color:  black;*/
-        /*background-image: url("https://www.eitco.de/wp-content/uploads/2020/04/digitale-akte.jpg");*/
-
-
-/*    }*/
-
-
-/*.dropbtn {*/
-/*  background-color: #04AA6D;*/
-/*  color: black;*/
-/*  padding: 16px;*/
-/*  font-size: 16px;*/
-/*  border: none;*/
-/*  cursor: pointer;*/
-/*}*/
-
-/*.dropbtn:hover, .dropbtn:focus {*/
-/*  background-color: #3e8e41;*/
-  /*background-color: #04AA6D;*/
-/*}*/
-
-/*#myInput {*/
-/*  box-sizing: border-box;*/
-/*  background-image: url('searchicon.png');*/
-/*  min-width: 80%;*/
-/*  background-position: 14px 12px;*/
-/*  background-repeat: no-repeat;*/
-/*  font-size: 16px;*/
-/*  padding: 14px 20px 12px 45px;*/
-/*  border: none;*/
-  /*border-bottom: 1px solid #ddd;*/
-/*  border-bottom: 1px solid black;*/
-/*}*/
-
-/*#myInput:focus {outline: 3px solid #ddd;}*/
-
-/*.dropdown {*/
-/*  position: relative;*/
-/*  display: inline-block;*/
-/*}*/
-
-/*.dropdown-content {*/
-/*  display: none;*/
-/*  position: absolute;*/
-/*  background-color: #f6f6f6;*/
-/*  min-width: 70%;*/
-  /*height: 70%;*/
-/*  overflow: auto;*/
-/*  border: 1px solid #ddd;*/
-/*  z-index: 1;*/
-/*}*/
-
-/*.dropdown-content a {*/
-/*  color: black;*/
-/*  padding: 12px 16px;*/
-/*  text-decoration: none;*/
-/*  display: block;*/
-/*}*/
-
-/*.dropdown a:hover {background-color: #ddd;}*/
-
-/*.show {display: block;}*/
-
-
-
-/*.boxed-md.boxed-padded {*/
-/*    padding-bottom: 13px;*/
-/*    padding-left: 20px;*/
-/*    padding-right: 20px;*/
-/*}*/
-/*.boxed-md {*/
-/*    border: 1px solid #ccc;*/
-/*    margin-bottom: 14px;*/
-/*    margin-top: 14px;*/
-/*}*/
-
-/*.boxed-md>.text-center .h3 {*/
-/*    background-color: #fff;*/
-/*    padding-left: 10px;*/
-/*    padding-right: 10px;*/
-/*}*/
-
-/*.h3 {*/
-/*    margin-top: 15px;*/
-/*    margin-bottom:18px;*/
-/*       font-size: 20px;*/
-/*}*/
-/*.boxed-md>.text-center {*/
-/*    margin-top: -12px;*/
-/*    margin-bottom: 12px;*/
-/*}*/
-/*Old css*/
-/*	.home-content-container {*/
-/*        display:  flex;*/
-/*        height: 100vh;*/
-/*        justify-content: center;*/
-        /*background-color: #343a40;*/
-        /*background-color:#fdec00;*/
-/*        background-color: rgba(203, 203, 210, 0.5);*/
-/*        color:  black;*/
-        /*background-image: url("https://www.eitco.de/wp-content/uploads/2020/04/digitale-akte.jpg");*/
-/*    }*/
-
-/*    .card {*/
-/*        display: flex;*/
-/*        justify-content: center;*/
-/*        background-color: #607d8b;*/
-/*        color: aliceblue;*/
-/*    }*/
-
-/*
-
 </style>
 
 <div class="home-content-container">
 
-        <div class="container"  style="max-width: 60%; height: 60%; background-color: #fff; margin-top:30px;">
+        <div class="container"  style="max-width: 80%; height: 80%; background-color: #fff; margin-top:30px;">
 
 
-
-{% if message %}
-    <h3> {{ message }} </h3>
-{% endif%}
       <div>
 
 
 </div>
 <div class="row justify-content-center mt-5">
 	<article class="col-md-8">
-
       <div class="boxed-md boxed-padded">
         <div class="text-center"><span class="h3">Create Organization</span></div>
+        <form class="form" action="" method="POST">
+          {% csrf_token %}
+          <div class="form__group">
+            <label for="name">Organization Name</label>
+            {{form.name}}
+          </div>
+          <!--<div class="form-group">-->
+          <!--  <label for="organization_lead">Organization Lead</label>-->
+          <!--  <input class="form-control" required type="text" name="organization_lead" list="all_members-list" />-->
 
+          <!--</div>-->
+          <div class="form-group">
+              <!--<datalist id="all_members-list">-->
+                          <label for="organization_lead">Organization Lead</label>
 
-        	<form method="post" enctype="multipart/form-data">{% csrf_token %}
+              <select  data-live-search="true" class="selectpicker form-control" name="organization_lead" id="company_all_members">
+                {% for member in all_members %}
+                <option value="{{member}}">{{member.username}}</option>
+                {% endfor %}
+              </select>
+            <!--</datalist>-->
+          </div>
+          <div class="form-group">
+            <button class="btn btn-dark" type="submit">Submit</button>
+          </div>
+        </form>
 
-                    {{form|crispy}}
-        	<!--<div id = "div_id_name" class="form-group">-->
-                    <!--<label for="name" class="col-lg-2 control-label">Name</label>-->
-                    <!--<div class="col-lg-10">-->
-
-                    <!--</div>-->
-                    <!-- /.col -->
-                <!--</div>-->
-                <!-- /form-group
-<!--<div class="form-group">-->
-                    <!--<label for="organization_lead" class="col-lg-2 control-label">Organisation Lead</label>-->
-                    <!--<div class="col-lg-10">-->
-                        <!--{{form.organization_lead}}-->
-
-                    <!--</div>-->
-                    <!-- /.col -->
-                <!--</div>-->
-
-		    <input type="submit" class="btn btn-outline-success " value="Create">
-	    </form>
       </div>
     </article>
 	</div>
@@ -240,6 +118,9 @@ table.dataTable tfoot th {
     <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.2.0/js/dataTables.fixedHeader.min.js"></script>
 
 <script>
+
+$("#id_name").addClass('form-control');
+
 $( "#id_organization_lead" ).addClass('selectpicker');
 // $('#id_organization_lead').attr('multiple',true);
 $("#id_organization_lead").attr("data-live-search", "true");

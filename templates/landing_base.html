@@ -181,7 +181,7 @@
           src="{% static 'images/doc_logo1.png'  %}"></a>
 
   </div>
-      <h1><a href="index.html" class="logo">Dowell Docedit</a></h1>
+      <h1><a href="{% url 'home' %}" class="logo">Dowell Docedit</a></h1>
 
       <ul class="list-unstyled components mb-5" >
 
@@ -208,13 +208,14 @@ Member Companies
 
 <li class="nav-item">
   <a data-toggle="tab" id="user_projects" class="nav-link nav-link-status" href="#user_projectsList" role="tab"  aria-controls="user_projectsList" aria-selected="false" >
-  Depts Leading
+
+  Depts Members
   </a>
 </li>
 
 <li class="nav-item">
   <a data-toggle="tab" id="departments" class="nav-link nav-link-status" href="#departmentsList" role="tab"  aria-controls="departmentsList" aria-selected="false" >
-    Depts Members
+    Depts Leading
   </a>
 </li>
 

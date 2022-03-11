@@ -41,6 +41,8 @@ class DocumentType(models.Model):
 	def __str__(self):
 		return self.title
 
+
+
 class Document(models.Model):
 	document_name 		= models.CharField(max_length=100, null=False)
 	document_type 		= models.ForeignKey(DocumentType, on_delete=models.SET_NULL, null=True)

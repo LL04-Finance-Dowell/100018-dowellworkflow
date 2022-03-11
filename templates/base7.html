@@ -164,12 +164,33 @@
         height:100%;
     }
 
+
   </style>
 </head>
                 <body>
+ {% if message %}
 
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+  <strong> {{ message }} </strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+        {% endif%}
+        	{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+          <div class="alert alert-info alert-dismissible fade show" role="alert">
+  <strong> {{ message }} </strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+        {% endfor %}
+    </ul>
+    {% endif %}
                   <div class="wrapper d-flex align-items-stretch">
-                    <nav id="sidebar">
+                    <nav id="sidebar" style="position:fixed;">
                       <div class="custom-menu">
                         <button type="button" id="sidebarCollapse" class="btn btn-primary">
                            <i class="fa fa-bars"></i>
@@ -182,32 +203,34 @@
                           src="{% static 'images/doc_logo1.png'  %}"></a>
 
                   </div>
-                      <h1><a href="#" class="logo">Dowell Docedit</a></h1>
+                      <h1><a href="{% url 'home' %}" class="logo">Dowell Docedit</a></h1>
 
                       <ul class="list-unstyled components mb-5" >
-                 {% if user.is_admin %}
+                 {% if user.is_admin or is_admin %}
                 <li>
 
                   <a href="{% url 'admin_v2:dashboard' %}">Admin Dashboard
                   </a>
                 </li>
                 {% endif %}
-                           {% if user.is_org_lead %}
+                {% if org %}
+                           {% if user.is_org_lead or is_org_lead %}
                 <li>
 
                   <a href="{% url 'organizationv2:org-lead-management' org.id  %}">Org. Lead Dashboard
                   </a>
                 </li>
                 {% endif %}
-
-                 {% if user.is_project_lead %}
+              {% endif %}
+                {% if proj %}
+                 {% if user.is_project_lead or is_project_lead %}
                 <li>
 
                   <a href="{% url 'organizationv2:proj-lead-management' proj.id  %}">Dpt. Lead DashBoard
                   </a>
                 </li>
                 {% endif %}
-
+ {% endif %}
                         <li>
                           <a href="{% url 'editor:get-dashboard' %}"><span class="fa fa-home mr-3"></span> Dashboard</a>
                         </li>
@@ -236,34 +259,36 @@
                     <span class="textside">Saved Docs</span>
                   </a>
                 </li>
-                <li >
-                  <a  href ="{% url 'editor:get-status' 'test_docs' %}">
-                    <span class="textside">Test Docs</span>
-                  </a>
-                </li>
+                <!--<li >-->
+                <!--  <a  href ="{% url 'editor:get-status' 'test_docs' %}">-->
+                <!--    <span class="textside">Test Docs</span>-->
+                <!--  </a>-->
+                <!--</li>-->
               </ul>
 
 
 
             </div>
                         </li>
-                {% if is_project_lead or is_org_lead or is_admin %}
-                        <li class="sidebar-dropdown">
-                          <a href="#"><span class="fa fa-table mr-3"></span> Manage Templates</a>
-                          <div class="sidebar-submenu">
-              <ul>
-                <li>
+{% if org %}
+                    {% if user.is_project_lead or is_project_lead or user.is_org_lead or is_org_lead or user.is_admin or is_admin %}
+                            <li class="sidebar-dropdown">
+                              <a href="#"><span class="fa fa-table mr-3"></span> Manage Templates</a>
+                              <div class="sidebar-submenu">
+                    <ul>
+                        <li>
 
-                  <a href="{% url 'organizationv2:create-template' org.id project.id %}">Create Template
-                  </a>
-                </li>
-                <li>
-                  <a href="{% url 'organizationv2:previous-templates' org.id project.id %}">Previous Templates</a>
-                </li>
-                 </ul>
-                </div>
+                          <a href="{% url 'organizationv2:create-template' org.id %}">Create Template
+                          </a>
                         </li>
+                        <li>
+                          <a href="{% url 'organizationv2:previous-templates' org.id  %}">Previous Templates</a>
+                        </li>
+                     </ul>
+                    </div>
+                            </li>
                 {% endif %}
+ {% endif %}
                         <li class="sidebar-dropdown">
                           <a href="#"><span class="fa fa-folder-open mr-3"></span> Documents</a>
                           <div class="sidebar-submenu">
@@ -278,31 +303,26 @@
                   <a href="{% url 'editor:rejected-documents' %}">Rejected Docs
                   </a>
                 </li>
-                {% if is_member %}
+                <!--{ if user.is_member or is_member } -->
                 <li>
                   <a href="{% url 'editor:requested-docs' %}">Requested Documents</a>
                 </li>
-                {% endif%}
-                {% if is_member %}
                 <li>
-
                     <a href="{% url 'editor:get-prevdocuments' %}">Previous Docs</a>
-
-                  </li>
-                  <li>
+                </li>
+                <li>
                     <a href="{% url 'editor:create-document' %}">Request Docs</a>
-
-                  </li>
-                  <li>
+                </li>
+                <li>
                     <a href= "{% url 'editor:created-document-list' %}">View Docs</a>
-
-                  </li>
-                  {% endif%}
+                </li>
+                <!-- { endif%} -->
 
               </ul>
             </div>
                         </li>
-                                  {% if  is_org_lead or is_admin  %}
+                        {% if org %}
+                                  {% if  user.is_org_lead or user.is_admin or is_org_lead or is_admin %}
                         <li class="sidebar-dropdown">
                           <a href="#"><span class="fa fa-building-o mr-3"></span> Manage Org</a>
                           <div class="sidebar-submenu">
@@ -315,42 +335,46 @@
 
 
                   <li>
-                    <a href="{%url 'organizationv2:workflow-management' org.id project.id%}">Manage Workflow</a>
+                    <a href="{%url 'organizationv2:workflow-management' org.id %}">Manage Workflow</a>
 
                   </li>
                  </ul>
                 </div>
                         </li>
                          {% endif%}
-
-      {% if  is_project_lead  %}
+{% endif%}
+{% if org %}
+{% if proj %}
+      {% if  user.is_project_lead or is_project_lead %}
                         <li class="sidebar-dropdown">
                           <a href="#"><span class="fa fa-building-o mr-3"></span> Manage Dept.</a>
                           <div class="sidebar-submenu">
               <ul>
-                <li>
-                  <a href="#">Add Members</a>
-                </li>
+                <!--<li>-->
+                <!--  <a href="#">Add Members</a>-->
+                <!--</li>-->
                 <li>
 
-                  <a href="{%url 'organizationv2:project-management' org.id project.id%}">View Dpt.
+                  <a href="{%url 'organizationv2:project-management' org.id proj.id%}">View Dpt.
                   </a>
                 </li>
 
 
 
                   <li>
-                    <a href="{%url 'organizationv2:workflow-management' org.id project.id%}">Manage Workflow</a>
+                    <a href="{%url 'organizationv2:workflow-management' org.id %}">Manage Workflow</a>
 
                   </li>
                  </ul>
                 </div>
                         </li>
                          {% endif%}
+                          {% endif%}
+                          {% endif%}
                       </ul>
                       </div>
                     <div class="sidebar-footer">
-      <a href="#">
+      <a href="{% url 'home' %}">
         <i class="fa fa-home"></i>
 
       </a>
@@ -388,8 +412,35 @@
                   <script src="{% static 'js/main.js' %}"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
                   <script>
-            jQuery(function ($) {
+                  let n_clicks=0;
+                  $(document).ready(function() {
+      $( "#content" ).css( "margin-left", "20vw" );
+      $("#sidebarCollapse").click(function() {
+    if (n_clicks%2 ==0){
+        $( "#content" ).css( "margin-left", "auto" );
+         console.log("nclidc mod == 0");
+         console.log(n_clicks);
+    }
+    else{
+                 $( "#content" ).css( "margin-left", "20vw" );
 
+
+        console.log("nclidc mod == 1");
+         console.log(n_clicks);
+    }
+    // if ($( "#sidebar" ).hasClass('active')) {
+// 	$( "#content" ).css( "margin-left", "auto" );
+// } else {
+//   $( "#content" ).css( "margin-left", "20vw" );
+// }
+n_clicks=n_clicks+1
+});
+
+});
+
+
+            jQuery(function ($) {
+////////////////
 $(".sidebar-dropdown > a").click(function() {
 $(".sidebar-submenu").slideUp(200);
 if (

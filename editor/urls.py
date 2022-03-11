@@ -46,6 +46,8 @@ urlpatterns = [
 
     #get previous documents
      path('get-prevdocuments/', login_required(PreviousDocuments.as_view()), name="get-prevdocuments"),
+     path('get-pdf/', login_required(views.get_pdf), name="get_pdf"),
+     path('get-pdf-json/', views.get_pdf_json, name="get_pdf_json"),
     # path('get-prevdocuments/', login_required(views.previous_documents), name="get-prevdocuments"),
     # path('get-templates/', login_required(views.previous_templates), name="get-templates"),
 

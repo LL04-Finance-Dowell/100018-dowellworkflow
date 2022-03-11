@@ -16,8 +16,6 @@ from editor.forms import CreateTemplateForm
 from editor.views import get_name, get_userlist
 
 from django.contrib.sites.models import Site
-
-
 from django.core.mail import send_mail
 from django.contrib.auth import logout
 
@@ -184,7 +182,7 @@ class CreateTemplate(View):
             }
             return render(request, 'doc_template/create_template.html', context=context)
 
-
+@xframe_options_exempt
 def remove_staff_member(request, *args, **kwargs):
     if request.method == 'POST':
         credentials = json.loads(request.body)

@@ -156,7 +156,7 @@ h2, .h2 {
                             <th>{{ forloop.counter }}</th>
                             <td>{{ member.username|truncatechars:7 }}</td>
                             <td>
-                                <a method="POST" href="{% url 'organizationv2:add-member-to-project' project.id member.id %}" class="btn btn-outline-success">Add to Project</a>
+                                <a method="POST" href="{% url 'organizationv2:add-member-to-project' proj.id member.id %}" class="btn btn-outline-success">Add to Project</a>
                             </td>
                         </tr>
 
@@ -195,7 +195,24 @@ h2, .h2 {
                 </div>
                 </a>
             </div>
+            {% empty %}
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <a  id = "allDash" href="#" >
+                <div class="panel
+
+                panel-colorful">
+                    <div class="panel-body text-center">
+                        <p class="text-uppercase mar-btm text-sm">No Members Created</p>
+                        <i class="fa fa-user fa-5x"></i>
+                        <hr>
+                        <p class="h2 text-thin"></p>
+                        <!--<small><span class="text-semibold"></span> </small>-->
+                    </div>
+                </div>
+                </a>
+            </div>
             {% endfor %}
+
         </div>
     </div>
 </div>

@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .views import CreateOrganizationv2, CreateProjectView, Organizationv2Home, project_management, workflow_management, org_lead_view,proj_lead_view
 from .views import create_document_type, workflow_delete_view, workflow_update_view, create_template, add_member_view, add_member, previous_templates,member_dummy,project_dummy, org_dummy, profile
 from .views import MembersView
-from .views import add_member_to_project
+from .views import add_member_to_project, add_member_to_organization
 app_name = 'organizationv2'
 
 urlpatterns = [
@@ -21,14 +21,15 @@ urlpatterns = [
     path('proj-lead-management/<int:id>', login_required(proj_lead_view), name="proj-lead-management"),
 
     path('add-member-to-project/<int:project_id>/<int:member_id>', login_required(add_member_to_project), name="add-member-to-project"),
+    path('add-member-to-organization/<int:org_id>/<int:member_id>', login_required(add_member_to_organization), name="add-member-to-organization"),
 
-    path('<int:org_id>/<int:project_id>/workflow-management', login_required(workflow_management), name="workflow-management"),
-    path('<int:org_id>/<int:project_id>/workflow-management/add', login_required(create_document_type), name="add-new-workflow"),
-    path('<int:org_id>/<int:project_id>/workflow-management/delete', login_required(workflow_delete_view), name="delete-workflow"),
-    path('<int:org_id>/<int:project_id>/workflow-management/update', login_required(workflow_update_view), name="update-workflow"),
+    path('<int:org_id>/workflow-management', login_required(workflow_management), name="workflow-management"),
+    path('<int:org_id>/workflow-management/add', login_required(create_document_type), name="add-new-workflow"),
+    path('<int:org_id>/workflow-management/delete', login_required(workflow_delete_view), name="delete-workflow"),
+    path('<int:org_id>/workflow-management/update', login_required(workflow_update_view), name="update-workflow"),
 
-    path('<int:org_id>/<int:project_id>/create-template', login_required(create_template), name="create-template"),
-    path('<int:org_id>/<int:project_id>/previous-templates/', login_required(previous_templates), name="previous-templates"),
+    path('<int:org_id>/create-template', login_required(create_template), name="create-template"),
+    path('<int:org_id>/previous-templates/', login_required(previous_templates), name="previous-templates"),
 
     path('member-dummy/', login_required(member_dummy), name="member-dummy"),
     path('project-dummy/', login_required(project_dummy), name="project-dummy"),

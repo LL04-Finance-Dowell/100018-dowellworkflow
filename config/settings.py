@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-&e$!s@q3ldo8@c6gt6*a$6#qle3!&h&ol^0cl*=3gumi$okzaq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','100018.pythonanywhere.com']
+ALLOWED_HOSTS = ['127.0.0.1', '100018.pythonanywhere.com']
 
 
 # Application definition
@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'jquery',
     'chat',
 
-    #v2
+    # v2
     'admin_v2',
     'organizationv2',
 ]
@@ -130,7 +130,6 @@ STATIC_ROOT = '/static/'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    '/var/www/static/',
 ]
 
 
@@ -151,9 +150,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
-
 MEDIA_URL = 'media/'
-MEDIA_ROOT = os.path.join(BASE_DIR , 'media', 'files')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media', 'files')
 
 
 SUMMERNOTE_THEME = 'bs4'
@@ -221,7 +219,7 @@ BOOTSTRAP4 = {
     'success_css_class': 'is-valid',
 
     # Renderers (only set these if you have studied the source and understand the inner workings)
-    'formset_renderers':{
+    'formset_renderers': {
         'default': 'bootstrap4.renderers.FormsetRenderer',
     },
     'form_renderers': {
