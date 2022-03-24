@@ -516,7 +516,7 @@ const toogleTxtFormBlock =  ()=>{
             textP.setAttribute("class", "editPara");
             textP.setAttribute("id", "textBox");
             const textPara = document.createElement('p');
-            textPara.innerHTML = "Input Here"
+            // textPara.innerHTML = "Input Here"
             textP.appendChild(textPara);
             textP.type = 'text';
             textP.style.width = '100%';
@@ -1784,7 +1784,7 @@ $(".table-condensed").addClass("table-success");
                         height: 80%; margin: 1%; font-size: 1em; border: none; \
                         resize: none; background-color: rgba(0, 0, 0, 0);\
                          border-radius: 0px; outline: 0px; overflow: overlay;">\
-                         <p>Input Here</p> </div>';
+                         <p></p> </div>';
                         let myWDiv = '<div style= width:inherit;>'+holderMenuStr + '</div>';
 
                         let td = '<td>'+myWDiv+'</td>';
@@ -1807,7 +1807,7 @@ $(".table-condensed").addClass("table-success");
         // text_format.toogleTxtFormBlock();
         // });
                         }
-                        textPara.innerHTML = "Input Here";
+                        // textPara.innerHTML = "Input Here";
                         testDiv.appendChild(textPara);
 
 
