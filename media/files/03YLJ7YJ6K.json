@@ -1,0 +1,1 @@
+[{"width": "300px", "height": "50px", "top": "81px", "left": "238px", "type": "EDIT_P", "auth_user": "test"}, {"width": "300px", "height": "50px", "top": "182px", "left": "206px", "type": "TEXT_INPUT", "data": "hello", "auth_user": "test"}, {"width": "200px", "height": "100px", "top": "291px", "left": "264px", "type": "SIGN_INPUT", "data": "", "auth_user": "test"}]

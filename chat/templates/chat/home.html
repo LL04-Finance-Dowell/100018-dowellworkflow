@@ -1,0 +1,15 @@
+{% extends 'base2.html' %}
+{% load static %}
+
+{% block content %}
+      <div class="container">
+
+        <form id="post-form" method="POST" action="checkview">
+          {% csrf_token %}
+            <label id="room_name_top">Document/Template Name</label>
+            <textarea id="input1" class="form-control" aria-label="With textarea" type="text" name="room_name" id="room_name" style="margin-top: 10px;"></textarea>
+            <label id="username_top">Username</label>
+            <textarea id="input2" class="form-control" aria-label="With textarea" type="text" name="username" id="username" style="margin-top: 10px;"></textarea><input type="submit" value="Start/Join Chat Now!">
+        </form>
+    </div>
+{% endblock content %}

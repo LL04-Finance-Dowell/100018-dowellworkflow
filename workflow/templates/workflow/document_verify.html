@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+{{object.document_name}}
+{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 640px;">
+<h1>{{ object.document_name |title}}</h1>
+<p>Document Type : {{ object.document_type }}</p>
+<small>{{ object.update_time }}</small>
+
+<br>
+<form method="post">{% csrf_token %}
+  <input type="hidden" name="id_" value="{{ object.id }}" />
+
+
+
+    <input type="submit" class="btn btn-outline-success mt-3" value="Signed"/>
+</form>
+
+
+<!-- partial:index.partial.html -->
+<div class="container">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-sm-6">
+          <h3>Click to sign</h3>
+          <input type="text" id="txt" style="border-radius: 5px;">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+            var sign = $('#txt').SignaturePad({
+                allowToSign: true,
+                img64: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+                border: '1px solid #c7c8c9',
+                width: '300px',
+                height: '150px',
+                callback: function (data, action) {
+                    console.log(data);
+                }
+            });
+
+
+        })
+</script>
+<script type="text/javascript" src="{% static 'js/signscript.js' %}"></script>
+</div>
+{% endblock %}

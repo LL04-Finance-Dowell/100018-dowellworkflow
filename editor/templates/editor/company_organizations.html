@@ -1,0 +1,395 @@
+{% extends 'base_no_side_nav.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+Dashboard{% endblock %}
+
+ {% block content %}
+ <style>
+
+.panel {
+  box-shadow: 0 2px 0 rgba(0,0,0,0.05);
+  border-radius: 0;
+  border: 0;
+  margin-bottom: 24px;
+}
+.panel-color-one-admin{
+    background-color: #0645ad;
+  border-color: #0645ad;
+  color: #fff;
+}
+.panel-color-two-admin{
+    background-color: #AD6E06;
+  border-color: #0645ad;
+  color: #fff;
+}
+.panel-color-one-company{
+    background-color: #1ECBE1;
+  border-color: #1ECBE1;
+  color: #fff;
+}
+.panel-color-two-company{
+    background-color: #E1341E;
+  border-color: #E1341E;
+  color: #fff;
+}
+.panel-color-error{
+    background-color: #899499;
+  border-color: #899499;
+  color: #fff;
+}
+
+.panel-color-one-member{
+    background-color: #3658C9;
+  border-color: #3658C9;
+  color: #fff;
+}
+.panel-color-two-member{
+    background-color: #c9a736;
+  border-color: #c9a736;
+  color: #fff;
+}
+.panel-color-three-admin{
+    background-color: #0645ad;
+
+    /*background-color: #ffff00;*/
+  border-color: #0645ad;
+  color: #fff;
+}
+.panel-color-four-admin{
+    background-color: #AD6E06;
+
+    /*background-color: #0000ff;*/
+  border-color: #0645ad;
+  color: #fff;
+}
+
+
+.panel-color-one{
+    background-color: #63639C;
+  border-color: #63639C;
+  color: #fff;
+}
+.panel-color-two{
+    background-color: #AD6E06;
+  border-color: #0645ad;
+  color: #fff;
+}
+.panel-color-three{
+    background-color: #63639C;
+
+    /*background-color: #ffff00;*/
+  border-color: #63639C;
+  color: #fff;
+}
+.panel-color-four{
+    background-color: #AD6E06;
+
+    /*background-color: #0000ff;*/
+  border-color: #0645ad;
+  color: #fff;
+}
+
+
+
+.panel-dark.panel-colorful {
+  background-color: #0645ad;
+  border-color: #3b4146;
+  color: #fff;
+}
+
+.panel-danger.panel-colorful {
+  background-color: #faa700;
+  border-color: #ddd95f;
+  color: #fff;
+}
+
+.panel-primary.panel-colorful {
+  background-color: #a2dd5f;
+  border-color: #a2dd5f;
+  color: #fff;
+}
+.panel-primary-add.panel-colorful {
+    /*#5fa2dd*/
+  background-color: #AD6E06;
+  border-color: #fff;
+  color: #000;
+}
+
+.panel-info.panel-colorful {
+  background-color: #ffff00;
+  border-color: #dd9a5f;
+  color: #fff;
+}
+.colorp1.panel-colorful {
+  background-color: #0000ff;
+  border-color: #51dcf7;
+  color: #fff;
+}
+.colorp2.panel-colorful {
+  background-color: #f76c51;
+  border-color: #f76c51;
+  color: #fff;
+}
+.colorp3.panel-colorful {
+  background-color: #6c51f7;
+  border-color: #6c51f7;
+  color: #fff;
+}
+.colorp4.panel-colorful {
+  background-color: #51f76c;
+  border-color: #51f76c;
+  color: #fff;
+}
+
+.panel-body {
+  padding: 25px 20px;
+}
+
+.panel hr {
+  border-color: rgba(0,0,0,0.1);
+}
+
+.mar-btm {
+  margin-bottom: 15px;
+}
+
+h2, .h2 {
+  font-size: 28px;
+}
+
+.small, small {
+  font-size: 85%;
+}
+
+.text-sm {
+  font-size: .9em;
+}
+
+.text-thin {
+  font-weight: 300;
+}
+
+.text-semibold {
+  font-weight: 600;
+}
+#allDash:hover{
+    text-decoration: none;
+
+}
+.panel:hover{
+    transform: scale(1.1, 1.1);
+    transition: transform 1s;
+}
+/*.bootdey{*/
+/*    max-width:720px;*/
+/*}*/
+</style>
+<div class="container bootstrap snippets bootdey">
+<!-- context={'user_companies':user_companies, 'user_projects':user_projects,'company':company, 'organizations':organizations,'departments':departments, 'user':user} -->
+
+ <div class="tab-content " id="myTimes">
+        <div class="tab-pane fade " id="companyList" role="tabpanel"  aria-labelledby="company"  >
+            <div class="row">
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <a  id = "allDash" href="{% url 'admin_v2:dashboard' %}" >
+                        <div class="panel panel-colorful panel-color-one-company">
+                            <div class="panel-body text-center">
+                                <p class="text-uppercase mar-btm text-sm">{{company.company_name}}</p>
+                                <i class="fa fa-folder fa-5x"></i>
+                                <hr>
+                                <small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>{{company.members.count}} </span>Members</small>
+                                <small><span class="text-semibold"><i class="fa fa-building fa-fw" style="border-left: 1px solid"></i>{{comp.organizations.count}} </span>Organizations</small><br>
+                                                            <!--<small><span class="text-semibold"></span> </small>-->
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!--<small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>No such company created.</span>Members</small> -->
+
+
+                <!--div class="col-md-8 col-sm-6 col-xs-12">
+                    <a  id = "allDash" href="#" >
+                        <div class="panel  panel-color-error panel-colorful">
+                            <div class="panel-body text-center">
+                                <p class="text-uppercase mar-btm text-sm">No Company Created</p>
+                                <i class="fa fa-folder fa-5x"></i>
+                                <hr>
+
+                            </div>
+                        </div>
+                    </a>
+                </div-->
+
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="company_usersList" role="tabpanel"  aria-labelledby="company_users"  >
+            <div class="row">
+                {% if user_companies %}
+                    {% for company in user_companies %}
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <a  id = "allDash" href="#" >
+                                <div class="panel
+                                {% if forloop.counter|divisibleby:2 %}
+                                panel-color-two-company
+                            {% else %}
+                                panel-color-one-company
+                            {%endif%}
+                                panel-colorful">
+                                    <div class="panel-body text-center">
+                                        <p class="text-uppercase mar-btm text-sm">{{company.company_name}}</p>
+                                        <p class="text-uppercase mar-btm text-sm">{{company.admin.username}}</p>
+                                        <i class="fa fa-folder fa-5x"></i>
+                                        <hr>
+                                        <small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>{{company.members.count}} </span>Members</small>
+                                          <small><span class="text-semibold"><i class="fa fa-building fa-fw" style="border-left: 1px solid"></i> {{company.organizations.count}} </span>Organizations</small><br>
+                                        <!--<small><span class="text-semibold"></span> </small>-->
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="tab-pane fade show active" id="organizationsList" role="tabpanel"  aria-labelledby="organizations"  >
+            <div class="row">
+                <!--kkkkkkkkkkkkkkkkk-->
+                <!--<p class="text-uppercase mar-btm text-sm">{{user_organizations}}</p>-->
+                {% if user_organizations %}
+                {% for organization in user_organizations %}
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <a  id = "allDash" href="{% url 'organizationv2:org-lead-management' id=organization.id %}" >
+                                <div class="panel
+                                {% if forloop.counter|divisibleby:2 %}
+                                 panel-color-two-admin
+                            {% else %}
+                             panel-color-one-admin
+                            {%endif%}
+                                panel-colorful">
+                                    <div class="panel-body text-center">
+                                        <p class="text-uppercase mar-btm text-sm">{{organization.name}} | {{organization.company.company_name}}</p>
+                            <p class="text-uppercase mar-btm text-sm">{{organization.organization_lead.username}}</p>
+                            <i class="fa fa-folder fa-5x"></i>
+                            <hr>
+                             <small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>{{organization.members.count}} </span>Members</small>
+                              <small><span class="text-semibold"><i class="fa fa-clone fa-fw" style="border-left: 1px solid"></i>{{organization.projects.count}}  </span>Departments</small><br>
+                             <small><span class="text-semibold"><i class="fa fa-building fa-fw"></i>{{organization.templates.count}}  </span>Templates</small>
+                            <small><span class="text-semibold"><i class="fa fa-square fa-fw" style="border-left: 1px solid"></i>{{organization.workflows.count}}  </span>Workflows</small>
+
+
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+
+
+
+    <div class="tab-pane fade" id="user_projectsList" role="tabpanel"  aria-labelledby="user_projects"  >
+        <div class="row">
+            {% if user_projects %}
+            {% for department in user_projects %}
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <a  id = "allDash" href="{% url 'editor:get-dashboard' company.id %}" >
+                        <div class="panel
+                            {% if forloop.counter|divisibleby:2 %}
+                                panel-color-two
+                            {% else %}
+                                panel-color-one
+                            {%endif%}
+                            panel-colorful">
+                            <div class="panel-body text-center">
+                                <p class="text-uppercase mar-btm text-sm">{{department.project_name}} </p>
+                                <p class="text-uppercase mar-btm text-sm">{{department.project_lead.username}} </p>
+                                <i class="fa fa-folder fa-5x"></i>
+                                <hr>
+
+                                <small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>{{department.members.count}} </span>Members</small>
+                                <small><span class="text-semibold"><i class="fa fa-user fa-fw" style="border-left: 1px solid"></i>  {{department.organization.name}} </span>Organization</small><br>
+                                <!--<small><span class="text-semibold"></span> </small>-->
+                             </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+
+
+
+    <div class="tab-pane fade" id="departmentsList" role="tabpanel"  aria-labelledby="departments"  >
+        <div class="row">
+            {% if departments %}
+            {% for department in departments %}
+
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <a  id = "allDash" href="{% url 'organizationv2:proj-lead-management' department.id %}" >
+                                <div class="panel
+                                {% if forloop.counter|divisibleby:2 %}
+                                panel-color-two-member
+                            {% else %}
+                             panel-color-one-member
+                            {%endif%}
+                                panel-colorful">
+
+                                    <div class="panel-body text-center">
+<p class="text-uppercase mar-btm text-sm">{{department.organization.name}}</p>
+                                <p class="text-uppercase mar-btm text-sm">{{department.project_name}}   </p>
+
+                                        <i class="fa fa-folder fa-5x"></i>
+                                        <hr>
+                            <small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>Project Leader:{{department.project_lead}} </span></small><br>
+                            <small><span class="text-semibold"><i class="fa fa-user-o fa-fw"></i>{{department.members.count}}   </span>Members</small>
+
+
+                                     </div>
+                                </div>
+                            </a>
+                        </div>
+
+
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+      {% endblock content %}
+
+    {% block additionalscript %}
+<!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/b4aae4cb0e.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/leafo/sticky-kit/v1.1.2/jquery.sticky-kit.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.2.0/js/dataTables.fixedHeader.min.js"></script>
+    <script type="text/javascript">
+
+    	$(".sidebar").stick_in_parent();
+        $(document).ready(function() {
+    let table1 = $('#example1').DataTable( {
+        fixedHeader: true
+    } );
+    let table2 = $('#example2').DataTable( {
+        fixedHeader: true
+    } );
+    let table3 = $('#example3').DataTable( {
+        fixedHeader: true
+    } );
+} );
+    </script>
+
+{% endblock %}

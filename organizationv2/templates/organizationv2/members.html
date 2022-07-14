@@ -1,0 +1,207 @@
+{% extends 'base7.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}Manage Members{% endblock %}
+
+
+
+
+{% block content %}
+<style type="text/css">
+	.home-content-container{
+       display:  flex;
+       height: 100vh;
+       justify-content: center;
+        /*background-color: #343a40;*/
+        /*background-color:#fdec00;*/
+        background-color: rgba(203, 203, 210, 0.5);
+        color:  black;
+        /*background-image: url("https://www.eitco.de/wp-content/uploads/2020/04/digitale-akte.jpg");*/
+
+
+    }
+
+
+    .model-container-docedit{
+        position: absolute;
+        background-color: #0000006b;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        z-index: 1000;
+        align-items: center;
+    }
+    .email-form{
+        height: 10em;
+        width: 50vw;
+        padding: 1em;
+        text-align: center;
+        justify-content: space-evenly;
+
+    }
+</style>
+
+<div id="org_id" style="display:none">{{org.id}}</div>{% csrf_token %}
+
+<div class="home-content-container">
+    <div class="container"  style="max-width: 80%; overflow: auto; background-color: #fff; margin-top:20px;">
+    <div>
+    	<div class="row justify-content-center mt-5">
+    		<article class="col-md-12">
+
+                <div class="boxed-md boxed-padded">
+                    <div class="text-center"><span class="h3">{{org.organization_name}} Members</span></div>
+                    <div class="tab-pane fade show active" id="mList"   aria-labelledby="all1" >
+                        <button id="add-member-btn" class="btn btn-primary">Add member</button><br>
+                        <table id="memberList" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for mem in member_list %}
+                                <tr>
+                                    <td>{{mem}}</td>
+                                    <td>
+                                        <!-- Keep this div in order to work delete button -->
+                                        <div style="display:none">
+                                            <span>{{mem.id}}</span>
+                                            <span>{{org.id}}</span>
+                                        </div>
+                                        <button class="btn btn-outline-danger" onclick="requestMemberDelete(this)">Delete</button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <td colspan="2" class="text-center">
+                                    No members added.
+                                </td>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+      				</div>
+                </div>
+            </article>
+    	</div>
+	</div>
+</div>
+
+<script>
+    const requestMemberDelete = (btn) => {
+        const user_id = btn.parentNode.children[0].children[0].innerHTML;
+        const org_id = btn.parentNode.children[0].children[1].innerHTML;
+
+        const requestURL = 'remove-member/';
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const saveFileRequest = new Request(requestURL, {headers: {'X-CSRFToken': csrftoken}} );
+
+        const body = {
+            user_id: user_id,
+            org_id: org_id
+        }
+
+        fetch(saveFileRequest, {
+            method: 'POST',
+            mode: 'same-origin',
+            body: JSON.stringify(body)
+        }).then(async function(response) {
+            const resJson = await response.json();
+            alert('Member removed from organization.');
+            console.log(resJson)
+            window.location.reload();
+        });
+
+    };
+
+    function submitEmail(emailId, membership) {
+        const org_id = document.getElementById("org_id");
+        const requestURL = 'submit-member/';//'organization/'+ org_id.innerHTML +'/submit-member/'; //window.location.pathname ;
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const saveFileRequest = new Request(requestURL, {headers: {'X-CSRFToken': csrftoken}} );
+
+        const body = {
+            email: emailId,
+            member: membership
+        }
+
+        fetch(saveFileRequest, {
+            method: 'POST',
+            mode: 'same-origin',
+            body: JSON.stringify(body)
+        }).then(async function(response) {
+            const resJson = await response.json();
+            alert('An invitation mail sent at '+ emailId + ' .');
+            console.log(resJson)
+        });
+
+    }
+
+    function emailForm(designation, targetDiv) {
+        const homeContainer = document.getElementById('wrapper');//targetDiv;//wrapper//home-content-container
+
+        const modelContainer = document.createElement('div');
+        modelContainer.className = "model-container-docedit";
+        modelContainer.id = "model-container";
+
+        modelContainer.onclick = (event) => {
+            if(event.target.className === "model-container-docedit"){
+                event.target.remove();
+            }
+        };
+
+        const contentBox = document.createElement('div');
+        contentBox.className = 'card email-form';
+
+
+        const heading = document.createElement('h5');
+        heading.style.color = "black";
+        heading.innerHTML = "Enter member's email";
+
+        const emailInput = document.createElement('input');
+        emailInput.setAttribute('type', "email");
+        emailInput.setAttribute('id', 'emailInput');
+
+        const submitBtn = document.createElement('input');
+        submitBtn.setAttribute('type', 'submit');
+        submitBtn.className = "btn btn-success";
+        submitBtn.innerHTML = "Submit";
+        submitBtn.style.width =  '10em';
+        submitBtn.style.margin = 'auto';
+
+        submitBtn.onclick = (event) => {
+            event.preventDefault();
+            const email  = document.getElementById('emailInput');
+            submitEmail(email.value, designation);
+            modelContainer.click();
+        };
+
+        contentBox.append(heading);
+        contentBox.append(emailInput);
+        contentBox.append(submitBtn);
+        modelContainer.append(contentBox);
+        console.log(homeContainer)
+        homeContainer.append(modelContainer);
+    }
+
+    const addMemberBtn = document.getElementById('add-member-btn');
+    addMemberBtn.onclick = (event) => {
+        event.preventDefault();
+        const targetDiv = event.target.parentNode;
+        emailForm('MEMBER', targetDiv);
+    }
+
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+

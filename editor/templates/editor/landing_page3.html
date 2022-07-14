@@ -1,0 +1,254 @@
+
+{% load static %}
+<html>
+
+    <head>
+        <title>Selected Text</title>
+        <!-- <link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+        ---- Include the above in your HEAD tag --------
+
+         <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet"> -->
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+
+   <style>
+          .section{
+              margin: 30px;
+          }
+         .rect1{
+            /* position: absolute;
+         width: 1440px;
+         height: 479px; */
+            position: relative;
+         width: 90%;
+         height: 60%;
+         left: 5%;
+         top: 0px;
+
+         /*background:linear-gradient( rgba(26, 75, 9, 0.79), rgba(26, 75, 9, 0.79)100%),url("uxbg-1.png");*/
+         background:linear-gradient( rgba(26, 75, 9, 0.79), rgba(26, 75, 9, 0.79)100%),url("{% static 'images/uxbg-1.png'  %}");
+
+         /* background: rgba(26, 75, 9, 0.79); */
+         mix-blend-mode: darken;
+         }
+         .rect2{
+            box-sizing: border-box;
+
+position: absolute;
+/* width: 1198px; */
+/* height: 714px; */
+width: 66%;
+height: 70%;
+/* left: 121px; */
+left:17%;
+/* top: 155px; */
+top:25%;
+
+background: #F1FFE3;
+border: 1px solid #B6B6B6;
+box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.25);
+border-radius: 75px;
+         }
+         .rect3 , .rect4, .rect5{
+               box-sizing: border-box;
+
+position: absolute;
+/* width: 357px; */
+width:20%;
+/* height: 384px; */
+/*height:43%;*/
+height:35%;
+/* top: 1032px; */
+top:100%;
+
+background: #F1FFE3;
+border: 1px solid #B6B6B6;
+box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.25);
+border-radius: 75px;
+         }
+         .rect3{
+/* left: 121px; */
+/*left:15%;*/
+left:17%;
+         }
+         .rect4{
+/* left: 542px; */
+/*left: 43%;*/
+left: 40%;
+         }
+         .rect5 {
+/*left: 73%;*/
+left: 63%;
+/* top: 1032px; */
+         }
+
+         .rect3:hover,.rect4:hover,.rect5:hover {
+	/* background-color: blue; */
+   box-sizing: border-box;
+
+
+
+background: rgba(41, 74, 7, 0.73);
+border: 6px solid #F1FFE3;
+border-radius: 75px;
+}
+
+         .uxbg-1 {
+          /* height: 479px; */
+          position: absolute;
+
+          left: 0;
+          width: 100%;
+         height: 100%;
+         z-index: -1;
+          object-fit: cover;
+          top: 0;
+          /* width: 1440px; */
+        }
+.card-label{
+    position:relative;
+    /* left:100px; */
+    /* margin-top: auto;
+margin-bottom: auto;
+padding-top: auto;
+padding-bottom: auto; */
+    top: 96px;
+    font-family: 'Inter';
+font-style: normal;
+font-weight: 700;
+font-size: 36px;
+line-height: 44px;
+/* identical to box height */
+
+text-align: center;
+letter-spacing: 0.01em;
+
+color: #115010;
+}
+.ellpse{
+    box-sizing: border-box;
+
+position: relative;
+/* width: 257px;
+height: 251px;
+left: 590px;
+top: 252px; */
+width: 25%;
+height: 55%;
+left: 37%;
+/* top: 252px; */
+top:10%;
+
+background: #ECECEC;
+border: 1px solid #B6B6B6;
+border-radius: 100%;
+text-align: center;
+
+}
+.ellpse >.fa{
+    position: relative;
+    color:rgba(26, 75, 9, 0.79);
+    /* color:green; */
+    /* vertical-align: middle; */
+    top:35%;
+}
+.name-label{
+    width: 10%;
+    position: relative;
+    top:-10%;
+    margin-left: 10%;
+}
+.company-label{
+    width: 20%;
+    position: relative;
+    top:-22%;
+    /* right:0; */
+    margin-right: 5%;
+    float:right ;
+}
+.heading-name, .company-name{
+    font-family: 'Inter';
+font-style: normal;
+font-weight: 600;
+font-size: 18px;
+line-height: 22px;
+
+color: #115010;
+
+}
+.heading-text, .company-text{
+    font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 15px;
+line-height: 16px;
+/* identical to box height */
+
+letter-spacing: 0.005em;
+
+color: #000000;
+}
+a, a:hover, a:focus, a:active {
+     text-decoration: none;
+     color: inherit;
+ }
+      </style>
+    </head>
+
+    <body>
+    <div class="section">
+         <div class="rect1" >
+            <!-- <img class="uxbg-1" src="uxbg-1.png" /> -->
+
+
+         </div>
+         <div class="rect2">
+<div class="ellpse">
+    <i class="fa fa-camera-retro fa-4x"></i>
+
+
+</div>
+<div class="name-label">
+    <div class="heading-name">User Name</div>
+    <div class="heading-text">Eric</div>
+</div>
+<div class="company-label">
+    <div class="company-name">Company Name</div>
+    <div class="company-text">Company Text</div>
+</div>
+         </div>
+         <div class="rect3">
+            <div class="card-label justify-content-center">
+               <a class="card-link" href="{% url 'pages:organizations' %}"> Organizations</a>
+            </div>
+         </div>
+         <div class="rect4">
+            <div class="card-label justify-content-center">
+                           <a class="card-link" href="{% url 'pages:departments' %}"> Departments</a>
+
+            </div>
+
+         </div>
+         <div class="rect5">
+            <div class="card-label justify-content-center">Members
+            </div>
+
+        </div>
+
+
+   </div>
+
+
+
+        <script>
+
+
+        </script>
+
+
+    </body>
+
+    </html>

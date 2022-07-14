@@ -1,0 +1,254 @@
+{% extends 'base7.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+Dashboard{% endblock %}
+
+ {% block content %}
+ <style>
+
+.panel {
+  box-shadow: 0 2px 0 rgba(0,0,0,0.05);
+  border-radius: 0;
+  border: 0;
+  margin-bottom: 24px;
+}
+.panel-color-one{
+    background-color: #3658C9;
+  border-color: #3658C9;
+  color: #fff;
+}
+.panel-color-two{
+    background-color: #c9a736;
+  border-color: #c9a736;
+  color: #fff;
+}
+.panel-color-three{
+    background-color: #3658C9;
+
+    /*background-color: #ffff00;*/
+  border-color: #3658C9;
+  color: #fff;
+}
+.panel-color-four{
+    background-color: #c9a736;
+
+    /*background-color: #0000ff;*/
+  border-color: #c9a736;
+  color: #fff;
+}
+.panel-dark.panel-colorful {
+  background-color: #0645ad;
+  border-color: #3b4146;
+  color: #fff;
+}
+
+.panel-danger.panel-colorful {
+  background-color: #faa700;
+  border-color: #ddd95f;
+  color: #fff;
+}
+
+.panel-primary.panel-colorful {
+  background-color: #a2dd5f;
+  border-color: #a2dd5f;
+  color: #fff;
+}
+.panel-primary-add.panel-colorful {
+    /*#5fa2dd*/
+  background-color: #AD6E06;
+  border-color: #fff;
+  color: #000;
+}
+
+.panel-info.panel-colorful {
+  background-color: #ffff00;
+  border-color: #dd9a5f;
+  color: #fff;
+}
+.colorp1.panel-colorful {
+  background-color: #0000ff;
+  border-color: #51dcf7;
+  color: #fff;
+}
+.colorp2.panel-colorful {
+  background-color: #f76c51;
+  border-color: #f76c51;
+  color: #fff;
+}
+.colorp3.panel-colorful {
+  background-color: #6c51f7;
+  border-color: #6c51f7;
+  color: #fff;
+}
+.colorp4.panel-colorful {
+  background-color: #51f76c;
+  border-color: #51f76c;
+  color: #fff;
+}
+
+.panel-body {
+  padding: 25px 20px;
+}
+
+.panel hr {
+  border-color: rgba(0,0,0,0.1);
+}
+
+.mar-btm {
+  margin-bottom: 15px;
+}
+
+h2, .h2 {
+  font-size: 28px;
+}
+
+.small, small {
+  font-size: 85%;
+}
+
+.text-sm {
+  font-size: .9em;
+}
+
+.text-thin {
+  font-weight: 300;
+}
+
+.text-semibold {
+  font-weight: 600;
+}
+#allDash:hover{
+    text-decoration: none;
+
+}
+.panel:hover{
+    transform: scale(1.1, 1.1);
+    transition: transform 1s;
+}
+/*.bootdey{*/
+/*    max-width:720px;*/
+/*}*/
+</style>
+
+
+   <div class="container bootstrap snippets bootdey">
+       <div > <label style="display:inline;"><u></u></label><h3 style="display:inline;"> {{proj.project_name}}</h3></div>
+
+<div > <label style="display:inline;"><u>Organization</u></label><h6 style="display:inline;"> {{org.name}}</h6></div>
+       <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#addmemberModel" data-whatever="addmember">ADD MEMBER</button>
+        <div class="modal fade" id="addmemberModel" tabindex="-1" role="dialog" aria-labelledby="addmemberModelLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addmemberModelLabel">Add Member to Project</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="memberList" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Add New Member to Project</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in all_members %}
+                        <tr>
+                            <th>{{ forloop.counter }}</th>
+                            <td>{{ member.username|truncatechars:22 }}</td>
+                            <td>
+                                <a method="POST" href="{% url 'organizationv2:add-member-to-project' proj.id member.id %}" class="btn btn-outline-success">Add</a>
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+            </div>
+        </div>
+        </div>
+
+<div class="tab-content " id="myTimes">
+    <div class="tab-pane fade show active" id="oneWeekPage" role="tabpanel"  aria-labelledby="oneWeekBtn"  >
+        <div class="row">
+            {% for member in members %}
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <a  id = "allDash" href="#" >
+                <div class="panel
+                 {% if forloop.counter|divisibleby:2 %}
+                                    panel-color-two
+                                {% else %}
+                                    panel-color-one
+                                {%endif%}
+
+                panel-colorful">
+                    <div class="panel-body text-center">
+                        <p class="text-uppercase mar-btm text-sm">{{member.username | truncatechars:22 }}</p>
+                        <i class="fa fa-user fa-5x"></i>
+                        <hr>
+
+                        <!--<small><span class="text-semibold"></span> </small>-->
+                    </div>
+                </div>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <a  id = "allDash" href="#" >
+                <div class="panel
+
+                panel-colorful">
+                    <div class="panel-body text-center">
+                        <p class="text-uppercase mar-btm text-sm">No Members Created</p>
+                        <i class="fa fa-user fa-5x"></i>
+                        <hr>
+                        <p class="h2 text-thin"></p>
+                        <!--<small><span class="text-semibold"></span> </small>-->
+                    </div>
+                </div>
+                </a>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+    </div>
+      {% endblock content %}
+
+    {% block additionalscript %}
+<!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <!--<script src="https://use.fontawesome.com/b4aae4cb0e.js"></script>-->
+    <script type="text/javascript" src="https://cdn.rawgit.com/leafo/sticky-kit/v1.1.2/jquery.sticky-kit.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.2.0/js/dataTables.fixedHeader.min.js"></script>
+    <script type="text/javascript">
+
+    	$(".sidebar").stick_in_parent();
+        $(document).ready(function() {
+    let table1 = $('#example1').DataTable( {
+        fixedHeader: true
+    } );
+    let table2 = $('#example2').DataTable( {
+        fixedHeader: true
+    } );
+    let table3 = $('#example3').DataTable( {
+        fixedHeader: true
+    } );
+} );
+    </script>
+
+{% endblock %}

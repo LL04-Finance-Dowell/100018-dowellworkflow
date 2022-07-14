@@ -1,0 +1,84 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+  <head>
+  	<title>Dowell Docedit</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/style.css">
+		<link href="{% static 'css/style.css'  %}" rel='stylesheet' type='text/css'>
+  </head>
+  <body>
+
+		<div class="wrapper d-flex align-items-stretch">
+			<nav id="sidebar">
+				<div class="custom-menu">
+					<button type="button" id="sidebarCollapse" class="btn btn-primary">
+        	           <i class="fa fa-bars"></i>
+        	          <span class="sr-only">Toggle Menu</span>
+        	        </button>
+                </div>
+            <div style="height:100vh; overflow-y: auto;">
+                <div class="sidebar-header" >
+                  <a  href="{% url 'editor:create-document' %}"><img class="my-3" style="border-radius: 3em; width:auto; height:auto%"
+                    src="https://i1.wp.com/dowellresearch.de/wp-content/uploads/2018/10/true-moments-logo-1-1-442919954-1538479590775.png?w=160&ssl=1"></a>
+                <div class="user-info" >
+                <span class="user-role">Administrator</span>
+                        <span class="user-name">
+                        </span>
+                      </div>
+                    </div>
+        	  		<h1><a href="index.html" class="logo">Dowell Docedit</a></h1>
+                <ul class="list-unstyled components mb-5">
+                  <li class="active">
+                    <a href="#"><span class="fa fa-home mr-3"></span> Dashboard</a>
+                  </li>
+                  <li>
+                      <a href="#"><span class="fa fa-user mr-3"></span> Status</a>
+                  </li>
+                  <li>
+                    <a href="#"><span class="fa fa-sticky-note mr-3"></span> Manage Templates</a>
+                  </li>
+                  <li>
+                    <a href="#"><span class="fa fa-sticky-note mr-3"></span> Documents</a>
+                  </li>
+                  <li>
+                  <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><span class="fa fa-paper-plane mr-3"></span> Manage Org</a>
+                      <ul class="collapse list-unstyled" id="pageSubmenu">
+                        <li>
+                            <a href="#">View Organization</a>
+                        </li>
+                        <li>
+                            <a href="#">Add Member</a>
+                        </li>
+                        <li>
+                            <a href="#">Add Staff</a>
+                        </li>
+                        <li>
+                            <a href="#">Manage Workflow</a>
+                        </li>
+                      </ul>
+                  </li>
+                  <li>
+                    <a href="#"><span class="fa fa-paper-plane mr-3"></span> Information</a>
+                  </li>
+                </ul>
+            </div>
+        	</nav>
+
+            <!-- Page Content  -->
+          <div id="content" class="p-4 p-md-5 pt-5">
+            <h2 class="mb-4">Docedit Test Information</h2>
+            <p>Content to Come Here</p>
+          </div>
+    	</div>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/popper.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+  </body>
+</html>
